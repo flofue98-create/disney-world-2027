@@ -1,288 +1,192 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffffff"><title>Disney World 2027</title>
-<style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f6fa;color:#171923}header{position:sticky;top:0;z-index:5;background:#fffffff2;backdrop-filter:blur(10px);border-bottom:1px solid #e4e6ee;padding:13px 14px 8px}.brand{font-size:20px;font-weight:850}.sub,.muted{color:#697083;font-size:12px}.nav,.days,.filters{display:flex;gap:7px;overflow:auto;padding-top:9px}.nav button,.days button,.filters button{white-space:nowrap;border:1px solid #e1e4ec;background:#fff;border-radius:999px;padding:8px 11px;font-weight:750}.nav .on,.days .on,.filters .on{background:#1d2230;color:white}main{max-width:760px;margin:auto;padding:14px 14px 28px}.card{background:#fff;border:1px solid #e4e6ee;border-radius:18px;padding:15px;margin-bottom:12px}.big{font-size:24px;font-weight:850;margin:4px 0}.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:800;color:#697083}.row{padding:10px 0;border-top:1px solid #e7e9ef;line-height:1.4}.row:first-child{border-top:0}.time{font-weight:850}.tag{display:inline-block;margin:4px 4px 0 0;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3157d5;font-size:11px;font-weight:800}.warn{background:#fff4d6;color:#795900}.good{background:#eaf8ef;color:#176135}.search{width:100%;font-size:16px;padding:12px;border:1px solid #dddfe7;border-radius:13px}.attr{display:flex;gap:10px;padding:10px 0;border-top:1px solid #e7e9ef}.attr input{width:20px;height:20px}.name{font-weight:800}.small{font-size:12px;color:#697083;margin-top:2px}.notice{background:#fff8e6}
-.progressline{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:10px 0 7px}
-.progressbar{height:10px;background:#eceef3;border-radius:999px;overflow:hidden}
-.progressfill{height:100%;background:#1d2230;border-radius:999px}
-.attr.done .name{text-decoration:line-through;opacity:.58}
-.attr.done .small{opacity:.55}
-.actionrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.actionbtn{border:1px solid #dfe2ea;background:#fff;border-radius:12px;padding:9px 11px;font-weight:750;color:#171923}
-.actionbtn.on{background:#1d2230;color:#fff}
-.actionbtn.danger{color:#9b1c1c}
-.mapframe{width:100%;height:68vh;min-height:520px;border:1px solid #dfe2ea;border-radius:14px;background:white}
-.mapnote{font-size:12px;color:#697083;margin-top:8px}
-.clickable{cursor:pointer}
-.blockattrs{margin-top:10px;padding:10px 11px;background:#f7f8fb;border-radius:12px}
-.blocktitle{font-size:11px;font-weight:850;letter-spacing:.05em;text-transform:uppercase;color:#697083;margin-bottom:5px}
-.dayattr{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-top:1px solid #e7e9ef}
-.dayattr:first-of-type{border-top:0}
-.dayattr input{width:20px;height:20px;flex:0 0 auto;margin-top:1px}
-.dayattr.done .dayattrname{text-decoration:line-through;opacity:.55}
-.dayattrname{font-weight:750;line-height:1.3}
-.dayattrstatus{font-size:11px;color:#697083;margin-top:2px}
-.blockgroup{margin-top:12px;padding:7px 0 4px;font-size:12px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#3157d5;border-bottom:1px solid #dfe5f2}
-.blockgroup:first-child{margin-top:0}
-.blockhint{font-size:11px;color:#697083;margin:-1px 0 6px}
-</style></head><body>
-<header><div class="brand">Disney World 2027</div><div class="sub">Aug 21–29 • Disney World 2027</div><div class="nav" id="nav"></div></header><main id="app"></main><script>const D={"days": [["Sat Aug 21", "Arrival + EPCOT", "", "Pool/decompress then early Beach Club Quick-Service then International Gateway then relaxed western World Showcase.", [["~2:15–2:30 PM", "Arrive Beach Club"], ["~2:45–4:15", "Pool + decompress"], ["~4:15–4:45", "Early resort Quick-Service dinner"], ["~5:00", "Walk to EPCOT International Gateway; enter together"], ["Evening", "UK / Canada / France / Morocco / Japan as energy allows; nighttime show optional"]]], ["Sun Aug 22", "Animal Kingdom", "", "Na’vi together then Africa/Safari then Rafiki then 12:30 Quick-Service then Asia then Discovery Island then late Pandora.", [["Early Entry", "Na’vi River Journey FIRST together"], ["~8:30", "Kilimanjaro Safaris"], ["~9:05", "Gorilla Falls"], ["~10:00", "Festival of the Lion King"], ["~10:50–12:00", "Rafiki: Conservation Station + Affection Section"], ["~12:30", "Quick-Service lunch — Harambe Market leading"], ["Afternoon", "Feathered Friends then Maharajah then Everest adult split then Kali then Nemo"], ["~3:30–4:45", "Zootopia, Mickey & Minnie, Tree of Life, Moana, Kevin, Winged Encounters"], ["Late", "Pandora + Flight of Passage adult split"], ["If early close", "Disney Springs + T-REX; if 8 PM+ close, protect nighttime Pandora instead"]]], ["Mon Aug 23", "Magic Kingdom #1", "", "Castle reveal then Bibbidi Bobbidi Boutique then Fantasyland/princesses then Festival of Fantasy then Cinderella’s Royal Table then Starlight + Happily Ever After.", [["Park entry", "Enter together; Main Street + Castle moment first"], ["~7:30–9:00", "Earliest practical Bibbidi Bobbidi Boutique + photos"], ["~9:00–12:15", "Fantasyland: Seven Dwarfs, Pooh, Tea Party, Under the Sea, Ariel, Dumbo, Barnstormer; princesses/Belle as returns fit"], ["~12:30", "Quick-Service lunch — Pinocchio leading"], ["~2:00", "Festival of Fantasy placeholder — protected"], ["~2:30–5:15", "Peter Pan / Belle / Princess Hall / Mirabel / overflow"], ["~5:30–6:00", "Cinderella’s Royal Table — 2 Table-Service"], ["~7:00–8:30", "Pirates, Carpets, Tiki, Haunted as fit"], ["Evening", "Disney Starlight + Happily Ever After if non-party night"]]], ["Tue Aug 24", "EPCOT Full Day", "", "Remy then World Nature then Imagination/Celebration then Discovery then eastern World Showcase then split dinner then finale.", [["Early Entry", "Remy’s Ratatouille Adventure together"], ["Morning", "Moana then Nemo then SeaBase then Soarin’ then Living with the Land then Awesome Planet"], ["Late morning", "Figment then ImageWorks then Shorts then Club Cool / Spaceship Earth"], ["~12:30", "Connections leading Quick-Service"], ["~1:15–2:30", "Test Track then Guardians adult split"], ["Afternoon", "Mexico then Norway then China then Germany then Italy/American Adventure; Kidcot + characters/shows"], ["~6:00", "Split dinner: San Angel Inn group / parents choose Via Napoli or Tutto Italia"], ["~7:30", "Reunite near American Adventure"], ["Evening", "Voices of Liberty / American Adventure as showtimes permit then nighttime spectacular"]]], ["Wed Aug 25", "Hollywood Studios #1", "", "Slinky then Toy Story Land then Galaxy’s Edge then shows/Runaway then H&V Fantasmic Dining Package.", [["Early Entry", "Slinky Dog Dash FIRST together"], ["Morning", "Toy Story Mania then Alien Swirling Saucers then Toy Story characters"], ["~9:30–12:15", "Rise then Smugglers Run then Galaxy’s Edge exploration/characters/First Order"], ["~12:30", "ABC Commissary leading Quick-Service"], ["Afternoon", "Indiana Jones, Frozen, Beauty & Beast, Little Mermaid, Villains, Walt Disney Presents, Runaway Railway"], ["As useful", "Tower / Muppets RnRC adult split; otherwise Saturday"], ["~6:15", "Hollywood & Vine Fantasmic Dining Package — 1 Table-Service"], ["Evening", "Fantasmic reserved seating"]]], ["Thu Aug 26", "Magic Kingdom #2", "", "Tomorrowland then Tiana/Big Thunder then Hall/Country Bears then Adventureland then Liberty Tree then flex evening.", [["Early Entry", "Enter together then Buzz first"], ["Morning", "Buzz then Speedway then PeopleMover then Carousel of Progress; later TRON/Space adult split"], ["Late morning", "Tiana then Big Thunder"], ["~12:30", "Pecos Bill leading Quick-Service"], ["~1:15–3:30", "Country Bears then Hall of Presidents MUST then Haunted if missed"], ["~3:30–5:15", "Jungle Cruise + Swiss Family Treehouse + Monday overflow"], ["Throughout", "Fit Railroad, Mickey, Mirabel, Friendship Faire, cavalcade to actual schedule"], ["~5:45", "Liberty Tree Tavern — 1 Table-Service"], ["Evening", "Finish priorities / recover MK nighttime / EPCOT / Beach Club pool"]]], ["Fri Aug 27", "Recovery / Resort", "", "1900 Park Fare then genuine Stormalong Bay block then nap/decompress then optional easy evening.", [["~8:00", "Wake naturally"], ["~9:00–9:30", "1900 Park Fare character breakfast — 1 Table-Service"], ["~11:30–3:30+", "Stormalong Bay — genuine pool block"], ["~3:30–5:00", "Room / nap / BoardWalk"], ["~5:00", "Choose evening based on actual energy"], ["~6:00–7:00", "Flexible Quick-Service dinner"], ["Evening", "Easy EPCOT / resort / more pool; no required spectacular"]]], ["Sat Aug 28", "Disney’s Hollywood Studios — Second Day then EPCOT Finale", "", "HS completion/repeats/Monstropolis buffer then EPCOT western cleanup then Garden Grill then final spectacular.", [["Morning", "Recover Wednesday misses OR favorite repeat; Monstropolis if open"], ["Saved items", "Vacation Fun, Launch Bay, Pixar Plaza, Animation/Off Page, Disney Jr, adult rides if wanted"], ["~12:30", "Woody’s Lunch Box leading Quick-Service if route fits"], ["~3:30–4:00", "Leave HS; walk/boat toward International Gateway"], ["~4:00–6:00", "Canada / UK / France / Morocco / Japan cleanup, Kidcot, characters, films"], ["~6:00–6:30", "Garden Grill final family dinner — 1 Table-Service"], ["Evening", "Favorite attraction or relaxed World Showcase then final EPCOT nighttime spectacular then walk home"]]], ["Sun Aug 29", "Departure", "", "Relaxed checkout. No park pressure.", [["Morning", "Wake without park alarm; breakfast / remaining credits as useful"], ["Before checkout", "Pack + final resort/BoardWalk time"], ["TBD", "Airport transfer + MCO then EWR"]]]], "attractions": {"Magic Kingdom": [["WDW Railroad", "Yes"], ["Mickey at Town Square Theater", "Yes"], ["Adventure Friends Cavalcade", "Yes"], ["Dapper Dans / Main Street atmosphere", "If Convenient"], ["Main Street Vehicles", "If Convenient"], ["Happily Ever After", "Yes"], ["Mickey’s Magical Friendship Faire", "Yes"], ["Jungle Cruise", "Yes"], ["Pirates of the Caribbean", "Yes"], ["Magic Carpets of Aladdin", "Yes"], ["Enchanted Tiki Room", "Yes"], ["Swiss Family Treehouse", "Yes"], ["A Pirate’s Adventure", "Maybe"], ["Aladdin & Jasmine", "Yes"], ["Tiana’s Bayou Adventure", "Yes"], ["Big Thunder Mountain Railroad", "Yes"], ["Country Bear Musical Jamboree", "Yes"], ["Disney Starlight", "Yes"], ["Haunted Mansion", "Yes"], ["Hall of Presidents", "Yes"], ["Peter Pan’s Flight", "Yes"], ["it’s a small world", "Yes"], ["Prince Charming Carrousel", "Yes"], ["Winnie the Pooh", "Yes"], ["Mad Tea Party", "Yes"], ["Mickey’s PhilharMagic", "Yes"], ["Princess Fairytale Hall", "Yes"], ["Seven Dwarfs Mine Train — FINALLY", "Yes"], ["Under the Sea", "Yes"], ["Enchanted Tales with Belle", "Yes"], ["Ariel at Her Grotto", "Yes"], ["Bibbidi Bobbidi Boutique", "Yes"], ["Dumbo", "Yes"], ["Barnstormer", "Yes"], ["Pete’s Silly Sideshow", "Maybe"], ["Casey Jr. Splash ’N’ Soak", "Maybe"], ["Cinderella Castle / Castle Hub", "Yes"], ["Mirabel", "Yes"], ["Pooh characters", "Maybe"], ["Peter Pan character", "If Convenient"], ["Roaming Fantasyland characters", "If Convenient"], ["TRON", "Adults Only"], ["Space Mountain", "Adults Only"], ["Buzz Lightyear", "Yes"], ["PeopleMover", "Yes"], ["Carousel of Progress", "Yes"], ["Monsters, Inc. Laugh Floor", "Maybe"], ["Astro Orbiter", "Maybe"], ["Tomorrowland Speedway", "Yes"], ["Festival of Fantasy", "Yes"], ["Casey’s Corner Pianist", "No"], ["Flag Retreat", "No"]], "EPCOT": [["Spaceship Earth", "Yes"], ["CommuniCore Hall/Plaza", "If Convenient"], ["Meet Mickey & Friends", "If Convenient"], ["Disney & Pixar Short Film Festival", "Yes"], ["Journey Into Imagination with Figment", "Yes"], ["ImageWorks", "Yes"], ["Guardians of the Galaxy: Cosmic Rewind", "Adults Only"], ["Mission: SPACE Orange", "No"], ["Mission: SPACE Green", "No"], ["Advanced Training Lab", "No"], ["Test Track", "Yes"], ["Soarin’", "Yes"], ["Living with the Land", "Yes"], ["Awesome Planet", "Yes"], ["The Seas with Nemo & Friends", "Yes"], ["SeaBase", "Yes"], ["Turtle Talk", "If Convenient"], ["Journey of Water — Moana", "Yes"], ["Gran Fiesta Tour", "Yes"], ["Mexico exploration/exhibits", "Yes"], ["Frozen Ever After", "Yes"], ["Anna & Elsa", "Yes"], ["Stave Church Gallery", "Yes"], ["Reflections of China", "Yes"], ["Mulan", "Yes"], ["Germany miniature train", "Yes"], ["Snow White", "Yes"], ["American Adventure", "Yes"], ["Voices of Liberty", "Yes"], ["American Heritage Gallery", "Yes"], ["Mitsukoshi", "Yes"], ["Bijutsu-kan Gallery", "Yes"], ["Matsuriza", "Maybe"], ["Morocco exploration/gallery", "Yes"], ["Remy’s Ratatouille Adventure", "Yes"], ["Beauty & Beast Sing-Along", "Yes"], ["Impressions de France", "Yes"], ["Belle", "Yes"], ["Aurora", "Yes"], ["Alice", "Yes"], ["Winnie the Pooh — UK", "Yes"], ["Canada Far and Wide", "Yes"], ["Victoria Gardens", "Yes"], ["Club Cool", "Yes"], ["Nighttime spectacular", "Yes"], ["Kidcot — all 11 pavilions", "Yes"], ["2027 festival activities", "Yes"], ["Rotating characters", "Yes"]], "Hollywood Studios": [["Mickey & Minnie’s Runaway Railway", "Yes"], ["Indiana Jones", "Yes"], ["Frozen Sing-Along", "Yes"], ["Vacation Fun", "Yes"], ["Olaf", "Yes"], ["Hollywood atmosphere", "If Convenient"], ["Slinky Dog Dash", "Yes"], ["Toy Story Mania", "Yes"], ["Alien Swirling Saucers", "Yes"], ["Toy Story characters", "Yes"], ["Green Army", "If Convenient"], ["Explore Toy Story Land", "Yes"], ["Rise of the Resistance", "Yes"], ["Smugglers Run", "Yes"], ["Explore Galaxy’s Edge", "Yes"], ["Star Wars characters", "Yes"], ["Datapad", "Maybe"], ["Droid Depot", "No"], ["Savi’s Workshop", "No"], ["First Order Searches for Resistance", "Yes"], ["Tower of Terror", "Adults Only"], ["Muppets Rock ’n’ Roller Coaster", "Adults Only"], ["Beauty & Beast Live", "Yes"], ["Fantasmic", "Yes"], ["Little Mermaid Musical Adventure", "Yes"], ["Walt Disney Presents", "Yes"], ["WDP character meets", "Yes"], ["Disney Jr characters", "Yes"], ["Disney Jr entertainment", "If Convenient"], ["Monstropolis land", "Yes"], ["Monsters door coaster", "Adults Only"], ["Monstropolis characters/explore", "Yes"], ["Grand Avenue atmosphere", "Yes"], ["Mickey & Minnie Red Carpet Dreams", "Yes"], ["Chewbacca / Darth Vader", "Yes"], ["Pixar Plaza characters", "Yes"], ["Wonderful World of Animation", "Yes"], ["Disney Villains: Unfairly Ever After", "Yes"], ["Disney Jr Mickey Mouse Clubhouse Live", "Maybe"], ["Hollygroove Swingin’", "If Convenient"], ["Magic of Disney Animation / Off the Page", "Yes"]], "Animal Kingdom": [["Oasis Exhibits", "Yes"], ["Discovery Island Trails", "Yes"], ["Tree of Life carvings", "Yes"], ["Zootopia: Better Zoogether!", "Yes"], ["Mickey & Minnie Adventurers Outpost", "Yes"], ["Discovery Island characters", "Yes"], ["Kilimanjaro Safaris", "Yes"], ["Gorilla Falls", "Yes"], ["Festival of the Lion King", "Yes"], ["Harambe exploration", "Yes"], ["Harambe live entertainment", "Maybe"], ["Wildlife Express Train", "Yes"], ["Conservation Station", "Yes"], ["Affection Section", "Yes"], ["Animation Experience", "No"], ["Animal-care demos", "Yes"], ["Expedition Everest", "Adults Only"], ["Kali River Rapids", "Yes"], ["Maharajah Jungle Trek", "Yes"], ["Feathered Friends in Flight", "Yes"], ["Anandapur exploration", "Yes"], ["Asia live entertainment", "Maybe"], ["Tropical Americas land", "Yes"], ["Indiana Jones — Tropical Americas", "Yes"], ["Encanto attraction", "Yes"], ["Pueblo Esperanza exploration", "Yes"], ["Flight of Passage", "Adults Only"], ["Na’vi River Journey", "Yes"], ["Pandora daytime", "Yes"], ["Pandora after dark", "Yes"], ["Finding Nemo: Big Blue... and Beyond", "Yes"], ["Wilderness Explorers", "Yes"], ["Tree of Life Awakenings", "Yes"], ["Unique AK characters", "Yes"], ["Adventures with Kevin", "Yes"], ["Moana Character Landing", "Yes"], ["Winged Encounters", "Yes"], ["Tam Tam Drummers", "Maybe"], ["Bluey’s Wild World", "Yes"]]}, "dining": [["Sat 8/21", "Resort Quick-Service dinner", "1 Quick-Service"], ["Sun 8/22", "AK Quick-Service lunch + conditional T-REX", "1 Quick-Service + 1 Table-Service"], ["Mon 8/23", "MK Quick-Service + Cinderella’s Royal Table", "1 Quick-Service + 2 Table-Service"], ["Tue 8/24", "EPCOT Quick-Service + split dinner", "1 Quick-Service + 1 Table-Service"], ["Wed 8/25", "HS Quick-Service + Hollywood & Vine Fantasmic Package", "1 Quick-Service + 1 Table-Service"], ["Thu 8/26", "MK Quick-Service + Liberty Tree Tavern ~5:45", "1 Quick-Service + 1 Table-Service"], ["Fri 8/27", "1900 Park Fare + flexible Quick-Service dinner", "1 Table-Service + 1 Quick-Service"], ["Sat 8/28", "HS Quick-Service + Garden Grill", "1 Quick-Service + 1 Table-Service"]], "ll": [["Animal Kingdom", "Default NO Lightning Lane Multi Pass; Avatar Flight of Passage paid access only if useful."], ["Magic Kingdom #1", "YES Lightning Lane Multi Pass. Fantasyland/Peter Pan focus; recheck 7DMT paid-access rules in 2027."], ["EPCOT", "Default NO Lightning Lane Multi Pass; Remy via International Gateway Early Entry; Guardians paid access if useful."], ["Hollywood Studios #1", "YES Lightning Lane Multi Pass. Slinky/family headliners; strongly consider Rise paid access."], ["Magic Kingdom #2", "Default NO; buy only for meaningful Monday backlog."], ["Recovery Day", "NO."], ["Disney’s Hollywood Studios — Second Day then EPCOT", "Default NO; only buy to recover meaningful Wednesday misses."]], "watch": ["2027 MNSSHP dates", "Extended Evening Hours", "Tropical Americas / Pueblo Esperanza opening", "Monstropolis opening", "Bluey’s Wild World status", "2027 Lightning Lane rules and tiers", "Actual late-August park hours and showtimes", "2027 EPCOT festival", "Carousel of Progress reopening/status", "Character schedules", "Muppets Rock ’n’ Roller Coaster status"], "family": ["Nonna: no thrill rides; claustrophobia concerns; aisle/end theater seating; natural Liliana companion during adult splits.", "Liliana: age 5; remeasure height closer to trip; reassess darkness/drop tolerance.", "Mike: afraid of heights; never assume participation in adult thrill rides.", "Angelo: vegetarian; restaurant choices need a real vegetarian option.", "First-entry rule: family stays together for the opening park experience before splitting.", "Parallel touring: every adult split gets a real nearby activity for Nonna + Liliana.", "Lightning Lane serves the walking route; do not zigzag for a return time."]};
-const DAY_ATTRACTIONS={"0": {"4": [["EPCOT","Alice"],["EPCOT","Winnie the Pooh — UK"],["EPCOT","Canada Far and Wide"],["EPCOT","Victoria Gardens"],["EPCOT","Beauty & Beast Sing-Along"],["EPCOT","Impressions de France"],["EPCOT","Belle"],["EPCOT","Aurora"],["EPCOT","Morocco exploration/gallery"],["EPCOT","Mitsukoshi"],["EPCOT","Bijutsu-kan Gallery"],["EPCOT","Matsuriza"]]}, "1": {"0": [["Animal Kingdom", "Na’vi River Journey"], ["Animal Kingdom", "Pandora daytime"]], "1": [["Animal Kingdom", "Kilimanjaro Safaris"]], "2": [["Animal Kingdom", "Gorilla Falls"]], "3": [["Animal Kingdom", "Festival of the Lion King"], ["Animal Kingdom", "Harambe exploration"]], "4": [["Animal Kingdom", "Wildlife Express Train"], ["Animal Kingdom", "Conservation Station"], ["Animal Kingdom", "Affection Section"], ["Animal Kingdom", "Animal-care demos"]], "6": [["Animal Kingdom", "Feathered Friends in Flight"], ["Animal Kingdom", "Maharajah Jungle Trek"], ["Animal Kingdom", "Expedition Everest"], ["Animal Kingdom", "Kali River Rapids"], ["Animal Kingdom", "Anandapur exploration"], ["Animal Kingdom", "Asia live entertainment"], ["Animal Kingdom", "Finding Nemo: Big Blue... and Beyond"]], "7": [["Animal Kingdom", "Zootopia: Better Zoogether!"], ["Animal Kingdom", "Mickey & Minnie Adventurers Outpost"], ["Animal Kingdom", "Discovery Island Trails"], ["Animal Kingdom", "Tree of Life carvings"], ["Animal Kingdom", "Discovery Island characters"], ["Animal Kingdom", "Adventures with Kevin"], ["Animal Kingdom", "Moana Character Landing"], ["Animal Kingdom", "Winged Encounters"], ["Animal Kingdom", "Wilderness Explorers"], ["Animal Kingdom", "Unique AK characters"]], "8": [["Animal Kingdom", "Flight of Passage"], ["Animal Kingdom", "Pandora after dark"], ["Animal Kingdom", "Tree of Life Awakenings"]]}, "2": {"0": [["Magic Kingdom", "WDW Railroad"], ["Magic Kingdom", "Mickey at Town Square Theater"], ["Magic Kingdom", "Main Street Vehicles"], ["Magic Kingdom", "Dapper Dans / Main Street atmosphere"], ["Magic Kingdom", "Cinderella Castle / Castle Hub"]], "1": [["Magic Kingdom", "Bibbidi Bobbidi Boutique"]], "2": [["Magic Kingdom", "Seven Dwarfs Mine Train — FINALLY"], ["Magic Kingdom", "Winnie the Pooh"], ["Magic Kingdom", "Mad Tea Party"], ["Magic Kingdom", "Under the Sea"], ["Magic Kingdom", "Ariel at Her Grotto"], ["Magic Kingdom", "Dumbo"], ["Magic Kingdom", "Barnstormer"], ["Magic Kingdom", "Prince Charming Carrousel"], ["Magic Kingdom", "Mickey’s PhilharMagic"], ["Magic Kingdom", "Pete’s Silly Sideshow"], ["Magic Kingdom", "Casey Jr. Splash ’N’ Soak"]], "4": [["Magic Kingdom", "Festival of Fantasy"]], "5": [["Magic Kingdom", "Peter Pan’s Flight"], ["Magic Kingdom", "Enchanted Tales with Belle"], ["Magic Kingdom", "Princess Fairytale Hall"], ["Magic Kingdom", "Mirabel"], ["Magic Kingdom", "Pooh characters"], ["Magic Kingdom", "Peter Pan character"], ["Magic Kingdom", "Roaming Fantasyland characters"]], "7": [["Magic Kingdom", "Pirates of the Caribbean"], ["Magic Kingdom", "Magic Carpets of Aladdin"], ["Magic Kingdom", "Enchanted Tiki Room"], ["Magic Kingdom", "Haunted Mansion"], ["Magic Kingdom", "Aladdin & Jasmine"], ["Magic Kingdom", "A Pirate’s Adventure"]], "8": [["Magic Kingdom", "Disney Starlight"], ["Magic Kingdom", "Happily Ever After"], ["Magic Kingdom", "Mickey’s Magical Friendship Faire"], ["Magic Kingdom", "Adventure Friends Cavalcade"]]}, "3": {"0": [["EPCOT", "Remy’s Ratatouille Adventure"]], "1": [["EPCOT", "Journey of Water — Moana"], ["EPCOT", "The Seas with Nemo & Friends"], ["EPCOT", "SeaBase"], ["EPCOT", "Turtle Talk"], ["EPCOT", "Soarin’"], ["EPCOT", "Living with the Land"], ["EPCOT", "Awesome Planet"]], "2": [["EPCOT", "Journey Into Imagination with Figment"], ["EPCOT", "ImageWorks"], ["EPCOT", "Disney & Pixar Short Film Festival"], ["EPCOT", "Club Cool"], ["EPCOT", "Spaceship Earth"], ["EPCOT", "CommuniCore Hall/Plaza"], ["EPCOT", "Meet Mickey & Friends"]], "4": [["EPCOT", "Test Track"], ["EPCOT", "Guardians of the Galaxy: Cosmic Rewind"]], "5": [["EPCOT", "Gran Fiesta Tour"], ["EPCOT", "Mexico exploration/exhibits"], ["EPCOT", "Frozen Ever After"], ["EPCOT", "Anna & Elsa"], ["EPCOT", "Stave Church Gallery"], ["EPCOT", "Reflections of China"], ["EPCOT", "Mulan"], ["EPCOT", "Germany miniature train"], ["EPCOT", "Snow White"], ["EPCOT", "American Adventure"], ["EPCOT", "American Heritage Gallery"], ["EPCOT", "Kidcot — all 11 pavilions"], ["EPCOT", "2027 festival activities"], ["EPCOT", "Rotating characters"]], "7": [["EPCOT", "Voices of Liberty"]], "8": [["EPCOT", "Nighttime spectacular"]]}, "4": {"0": [["Hollywood Studios", "Slinky Dog Dash"]], "1": [["Hollywood Studios", "Toy Story Mania"], ["Hollywood Studios", "Alien Swirling Saucers"], ["Hollywood Studios", "Toy Story characters"], ["Hollywood Studios", "Green Army"], ["Hollywood Studios", "Explore Toy Story Land"]], "2": [["Hollywood Studios", "Rise of the Resistance"], ["Hollywood Studios", "Smugglers Run"], ["Hollywood Studios", "Explore Galaxy’s Edge"], ["Hollywood Studios", "Star Wars characters"], ["Hollywood Studios", "Datapad"], ["Hollywood Studios", "First Order Searches for Resistance"]], "4": [["Hollywood Studios", "Indiana Jones"], ["Hollywood Studios", "Frozen Sing-Along"], ["Hollywood Studios", "Beauty & Beast Live"], ["Hollywood Studios", "Little Mermaid Musical Adventure"], ["Hollywood Studios", "Disney Villains: Unfairly Ever After"], ["Hollywood Studios", "Walt Disney Presents"], ["Hollywood Studios", "WDP character meets"], ["Hollywood Studios", "Mickey & Minnie’s Runaway Railway"], ["Hollywood Studios", "Olaf"], ["Hollywood Studios", "Hollywood atmosphere"]], "5": [["Hollywood Studios", "Tower of Terror"], ["Hollywood Studios", "Muppets Rock ’n’ Roller Coaster"]], "7": [["Hollywood Studios", "Fantasmic"]]}, "5": {"0": [["Magic Kingdom", "Buzz Lightyear"]], "1": [["Magic Kingdom", "Tomorrowland Speedway"], ["Magic Kingdom", "PeopleMover"], ["Magic Kingdom", "Carousel of Progress"], ["Magic Kingdom", "TRON"], ["Magic Kingdom", "Space Mountain"], ["Magic Kingdom", "Monsters, Inc. Laugh Floor"], ["Magic Kingdom", "Astro Orbiter"]], "2": [["Magic Kingdom", "Tiana’s Bayou Adventure"], ["Magic Kingdom", "Big Thunder Mountain Railroad"]], "4": [["Magic Kingdom", "Country Bear Musical Jamboree"], ["Magic Kingdom", "Hall of Presidents"], ["Magic Kingdom", "Haunted Mansion"]], "5": [["Magic Kingdom", "Jungle Cruise"], ["Magic Kingdom", "Swiss Family Treehouse"]], "6": [["Magic Kingdom", "WDW Railroad"], ["Magic Kingdom", "Mickey at Town Square Theater"], ["Magic Kingdom", "Mirabel"], ["Magic Kingdom", "Mickey’s Magical Friendship Faire"], ["Magic Kingdom", "Adventure Friends Cavalcade"]]}, "7": {"0": [["Hollywood Studios", "Monstropolis land"], ["Hollywood Studios", "Monsters door coaster"], ["Hollywood Studios", "Monstropolis characters/explore"]], "1": [["Hollywood Studios", "Vacation Fun"], ["Hollywood Studios", "Disney Jr characters"], ["Hollywood Studios", "Disney Jr entertainment"], ["Hollywood Studios", "Mickey & Minnie Red Carpet Dreams"], ["Hollywood Studios", "Chewbacca / Darth Vader"], ["Hollywood Studios", "Pixar Plaza characters"], ["Hollywood Studios", "Wonderful World of Animation"], ["Hollywood Studios", "Disney Jr Mickey Mouse Clubhouse Live"], ["Hollywood Studios", "Hollygroove Swingin’"], ["Hollywood Studios", "Magic of Disney Animation / Off the Page"], ["Hollywood Studios", "Grand Avenue atmosphere"]], "5": [["EPCOT", "Canada Far and Wide"], ["EPCOT", "Victoria Gardens"], ["EPCOT", "Winnie the Pooh — UK"], ["EPCOT", "Alice"], ["EPCOT", "Beauty & Beast Sing-Along"], ["EPCOT", "Impressions de France"], ["EPCOT", "Belle"], ["EPCOT", "Aurora"], ["EPCOT", "Morocco exploration/gallery"], ["EPCOT", "Mitsukoshi"], ["EPCOT", "Bijutsu-kan Gallery"], ["EPCOT", "Matsuriza"], ["EPCOT", "Kidcot — all 11 pavilions"], ["EPCOT", "2027 festival activities"], ["EPCOT", "Rotating characters"]], "7": [["EPCOT", "Nighttime spectacular"]]}};
-
-const LOCATIONS={
-  "EPCOT":{
-    "Spaceship Earth":"World Celebration","CommuniCore Hall/Plaza":"World Celebration","Meet Mickey & Friends":"World Celebration",
-    "Disney & Pixar Short Film Festival":"World Celebration","Journey Into Imagination with Figment":"World Celebration","ImageWorks":"World Celebration",
-    "Club Cool":"World Celebration",
-    "Guardians of the Galaxy: Cosmic Rewind":"World Discovery","Test Track":"World Discovery",
-    "Mission: SPACE Orange":"World Discovery","Mission: SPACE Green":"World Discovery","Advanced Training Lab":"World Discovery",
-    "Soarin’":"World Nature","Living with the Land":"World Nature","Awesome Planet":"World Nature",
-    "The Seas with Nemo & Friends":"World Nature","SeaBase":"World Nature","Turtle Talk":"World Nature","Journey of Water — Moana":"World Nature",
-    "Gran Fiesta Tour":"Mexico","Mexico exploration/exhibits":"Mexico",
-    "Frozen Ever After":"Norway","Anna & Elsa":"Norway","Stave Church Gallery":"Norway",
-    "Reflections of China":"China","Mulan":"China",
-    "Germany miniature train":"Germany","Snow White":"Germany",
-    "American Adventure":"The American Adventure","Voices of Liberty":"The American Adventure","American Heritage Gallery":"The American Adventure",
-    "Mitsukoshi":"Japan","Bijutsu-kan Gallery":"Japan","Matsuriza":"Japan",
-    "Morocco exploration/gallery":"Morocco",
-    "Remy’s Ratatouille Adventure":"France","Beauty & Beast Sing-Along":"France","Impressions de France":"France","Belle":"France","Aurora":"France",
-    "Alice":"United Kingdom","Winnie the Pooh — UK":"United Kingdom",
-    "Canada Far and Wide":"Canada","Victoria Gardens":"Canada",
-    "Nighttime spectacular":"World Showcase Lagoon","Kidcot — all 11 pavilions":"World Showcase","2027 festival activities":"World Showcase","Rotating characters":"World Showcase"
-  },
-  "Magic Kingdom":{
-    "WDW Railroad":"Main Street, U.S.A.","Mickey at Town Square Theater":"Main Street, U.S.A.","Adventure Friends Cavalcade":"Main Street, U.S.A.",
-    "Dapper Dans / Main Street atmosphere":"Main Street, U.S.A.","Main Street Vehicles":"Main Street, U.S.A.","Happily Ever After":"Cinderella Castle Hub",
-    "Mickey’s Magical Friendship Faire":"Cinderella Castle Hub","Cinderella Castle / Castle Hub":"Cinderella Castle Hub","Festival of Fantasy":"Parade Route",
-    "Jungle Cruise":"Adventureland","Pirates of the Caribbean":"Adventureland","Magic Carpets of Aladdin":"Adventureland",
-    "Enchanted Tiki Room":"Adventureland","Swiss Family Treehouse":"Adventureland","A Pirate’s Adventure":"Adventureland","Aladdin & Jasmine":"Adventureland",
-    "Tiana’s Bayou Adventure":"Frontierland","Big Thunder Mountain Railroad":"Frontierland","Country Bear Musical Jamboree":"Frontierland",
-    "Disney Starlight":"Parade Route","Haunted Mansion":"Liberty Square","Hall of Presidents":"Liberty Square",
-    "Peter Pan’s Flight":"Fantasyland","it’s a small world":"Fantasyland","Prince Charming Carrousel":"Fantasyland","Winnie the Pooh":"Fantasyland",
-    "Mad Tea Party":"Fantasyland","Mickey’s PhilharMagic":"Fantasyland","Princess Fairytale Hall":"Fantasyland","Seven Dwarfs Mine Train — FINALLY":"Fantasyland",
-    "Under the Sea":"Fantasyland","Enchanted Tales with Belle":"Fantasyland","Ariel at Her Grotto":"Fantasyland","Bibbidi Bobbidi Boutique":"Fantasyland",
-    "Dumbo":"Storybook Circus","Barnstormer":"Storybook Circus","Pete’s Silly Sideshow":"Storybook Circus","Casey Jr. Splash ’N’ Soak":"Storybook Circus",
-    "Mirabel":"Fairytale Garden","Pooh characters":"Fantasyland","Peter Pan character":"Fantasyland","Roaming Fantasyland characters":"Fantasyland",
-    "TRON":"Tomorrowland","Space Mountain":"Tomorrowland","Buzz Lightyear":"Tomorrowland","PeopleMover":"Tomorrowland","Carousel of Progress":"Tomorrowland",
-    "Monsters, Inc. Laugh Floor":"Tomorrowland","Astro Orbiter":"Tomorrowland","Tomorrowland Speedway":"Tomorrowland"
-  },
-  "Hollywood Studios":{
-    "Mickey & Minnie’s Runaway Railway":"Hollywood Boulevard","Indiana Jones":"Echo Lake","Frozen Sing-Along":"Echo Lake","Vacation Fun":"Echo Lake","Olaf":"Echo Lake",
-    "Hollywood atmosphere":"Hollywood Boulevard","Slinky Dog Dash":"Toy Story Land","Toy Story Mania":"Toy Story Land","Alien Swirling Saucers":"Toy Story Land",
-    "Toy Story characters":"Toy Story Land","Green Army":"Toy Story Land","Explore Toy Story Land":"Toy Story Land",
-    "Rise of the Resistance":"Star Wars: Galaxy’s Edge","Smugglers Run":"Star Wars: Galaxy’s Edge","Explore Galaxy’s Edge":"Star Wars: Galaxy’s Edge",
-    "Star Wars characters":"Star Wars: Galaxy’s Edge","Datapad":"Star Wars: Galaxy’s Edge","First Order Searches for Resistance":"Star Wars: Galaxy’s Edge",
-    "Tower of Terror":"Sunset Boulevard","Muppets Rock ’n’ Roller Coaster":"Sunset Boulevard","Beauty & Beast Live":"Sunset Boulevard","Fantasmic":"Sunset Boulevard",
-    "Little Mermaid Musical Adventure":"Animation Courtyard","Walt Disney Presents":"Animation Courtyard","WDP character meets":"Animation Courtyard",
-    "Disney Jr characters":"Animation Courtyard","Disney Jr entertainment":"Animation Courtyard","Monstropolis land":"Monstropolis",
-    "Monsters door coaster":"Monstropolis","Monstropolis characters/explore":"Monstropolis","Grand Avenue atmosphere":"Grand Avenue",
-    "Mickey & Minnie Red Carpet Dreams":"Commissary Lane","Chewbacca / Darth Vader":"Animation Courtyard","Pixar Plaza characters":"Pixar Plaza",
-    "Wonderful World of Animation":"Chinese Theatre","Disney Villains: Unfairly Ever After":"Sunset Boulevard",
-    "Disney Jr Mickey Mouse Clubhouse Live":"Animation Courtyard","Hollygroove Swingin’":"Hollywood Boulevard",
-    "Magic of Disney Animation / Off the Page":"Animation Courtyard"
-  },
-  "Animal Kingdom":{
-    "Oasis Exhibits":"The Oasis","Discovery Island Trails":"Discovery Island","Tree of Life carvings":"Discovery Island","Zootopia: Better Zoogether!":"Discovery Island",
-    "Mickey & Minnie Adventurers Outpost":"Discovery Island","Discovery Island characters":"Discovery Island","Kilimanjaro Safaris":"Africa",
-    "Gorilla Falls":"Africa","Festival of the Lion King":"Africa","Harambe exploration":"Africa","Harambe live entertainment":"Africa",
-    "Wildlife Express Train":"Africa / Rafiki’s Planet Watch","Conservation Station":"Rafiki’s Planet Watch","Affection Section":"Rafiki’s Planet Watch",
-    "Animal-care demos":"Rafiki’s Planet Watch","Expedition Everest":"Asia","Kali River Rapids":"Asia","Maharajah Jungle Trek":"Asia",
-    "Feathered Friends in Flight":"Asia","Anandapur exploration":"Asia","Asia live entertainment":"Asia",
-    "Tropical Americas land":"Tropical Americas","Indiana Jones — Tropical Americas":"Tropical Americas","Encanto attraction":"Tropical Americas","Pueblo Esperanza exploration":"Tropical Americas",
-    "Flight of Passage":"Pandora — The World of Avatar","Na’vi River Journey":"Pandora — The World of Avatar","Pandora daytime":"Pandora — The World of Avatar",
-    "Pandora after dark":"Pandora — The World of Avatar","Finding Nemo: Big Blue... and Beyond":"DinoLand / Theater in the Wild",
-    "Wilderness Explorers":"Park-wide","Tree of Life Awakenings":"Discovery Island","Unique AK characters":"Park-wide",
-    "Adventures with Kevin":"Discovery Island","Moana Character Landing":"Discovery Island","Winged Encounters":"Discovery Island","Tam Tam Drummers":"Africa","Bluey’s Wild World":"TBD / 2027"
-  }
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Disney World 2027</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f5f2ec;--card:#fff;--ink:#1f2933;--muted:#667085;--blue:#174f86;--line:#e6e6e6;--ll:#fff3c4;--ll2:#ffe08a;--show:#edf5ff;--meal:#f5edff;--done:#eef8ef}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #ddd;padding:16px}
+.brand{font-size:25px;font-weight:850}.sub{font-size:12px;color:var(--muted);margin-top:3px}
+.nav{display:flex;gap:8px;overflow:auto;padding-top:12px}
+.nav button{border:1px solid #ccd3dc;background:#fff;border-radius:999px;padding:8px 12px;color:var(--blue);font-weight:750;white-space:nowrap}
+.nav button.active{background:var(--blue);color:#fff}
+main{max-width:780px;margin:auto;padding:14px 14px 80px}
+.screen{display:none}.screen.active{display:block}
+.daytabs{display:flex;gap:8px;overflow:auto;margin-bottom:12px}
+.daytabs button{border:1px solid #d6dbe1;background:#fff;border-radius:14px;padding:9px 11px;white-space:nowrap;font-weight:700}
+.daytabs button.active{background:#1f2933;color:#fff}
+.hero,.block,.info{background:#fff;border:1px solid #ddd;border-radius:18px;padding:15px;margin-bottom:12px}
+.hero h1{font-size:27px;margin:0 0 4px}.muted{color:var(--muted)}
+.progress{height:8px;background:#e9edf2;border-radius:999px;overflow:hidden;margin-top:10px}.bar{height:100%;background:#1f2933;width:0}
+.block h2{font-size:18px;margin:0 0 4px}.blocktime{font-size:12px;font-weight:800;color:var(--blue);margin-bottom:9px}
+.item{position:relative;border-top:1px solid var(--line);padding:11px 4px 11px 36px;min-height:46px}
+.item:first-of-type{border-top:0}.item.done{background:var(--done);opacity:.72}
+.check{position:absolute;left:3px;top:12px;width:23px;height:23px}
+.name{font-weight:780}.meta{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35}
+.badge{display:inline-block;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:850;margin:3px 4px 0 0}
+.ll{background:var(--ll)}.lltop{background:var(--ll2)}.show{background:var(--show)}.meal{background:var(--meal)}
+.actions{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}.actions button,.mapbtn{border:1px solid #ccd3dc;background:#fff;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:750;color:var(--blue);text-decoration:none}
+.later{border-left:4px solid #a7b4c3}.skipped{opacity:.45}
+.next{border:2px solid #1f2933}
+.mapbtn{display:inline-block;margin-top:8px}
+.legend{font-size:11px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.legend span{padding:3px 7px;border-radius:999px}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+.reservation{background:#fff;border:1px solid #ddd;border-radius:16px;padding:14px}
+.reservation b{display:block}
+@media(min-width:650px){.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand">Disney World 2027</div>
+ <div class="sub">August 21–29, 2027 • Beach Club</div>
+ <div class="nav">
+  <button class="active" data-screen="today">Daily Itinerary</button>
+  <button data-screen="dining">Dining</button>
+  <button data-screen="maps">Maps</button>
+  <button data-screen="trip">Trip</button>
+ </div>
+</header>
+<main>
+<section id="today" class="screen active">
+ <div class="daytabs" id="daytabs"></div>
+ <div id="day"></div>
+</section>
+<section id="dining" class="screen"><div class="hero"><h1>Dining</h1><div class="muted">Reservations and meals for the trip</div></div><div class="grid" id="dininglist"></div></section>
+<section id="maps" class="screen"><div class="hero"><h1>Maps</h1><div class="muted">Park maps in one place</div></div><div class="grid" id="maplist"></div></section>
+<section id="trip" class="screen"><div class="hero"><h1>Trip</h1><p><b>August 21–29, 2027</b></p><p>Disney’s Beach Club Resort • Park Hopper tickets</p></div><div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div></section>
+</main>
+<script>
+const maps={
+ "Magic Kingdom":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/MK_0626_EN-DIGITAL.pdf?2026-06-23T16:48:45+00:00",
+ "EPCOT":"https://disneyworld.disney.go.com/destinations/epcot/",
+ "Disney’s Hollywood Studios":"https://disneyworld.disney.go.com/destinations/hollywood-studios/",
+ "Disney’s Animal Kingdom":"https://disneyworld.disney.go.com/destinations/animal-kingdom/",
+ "Disney’s Beach Club Resort":"https://disneyworld.disney.go.com/resorts/beach-club-resort/",
+ "Disney Springs":"https://disneyworld.disney.go.com/destinations/disney-springs/"
 };
-function locationFor(p,n){return (LOCATIONS[p]&&LOCATIONS[p][n])||p}
+const I=(name,meta="",tag="",kind="ride")=>({name,meta,tag,kind});
+const days=[
+{d:"Sat 8/21",title:"Arrival + EPCOT",park:"EPCOT",blocks:[
+ {t:"Afternoon",area:"Disney’s Beach Club Resort",items:[I("Arrive at Disney’s Beach Club Resort"),I("Stormalong Bay pool time")]},
+ {t:"4:15 PM",area:"Beach Club",items:[I("Quick-Service dinner","","","meal")]},
+ {t:"5:00 PM",area:"EPCOT — International Gateway",items:[I("Enter EPCOT through International Gateway"),I("France Pavilion"),I("United Kingdom Pavilion"),I("Canada Pavilion")]},
+ {t:"Evening",area:"World Showcase",items:[I("Morocco Pavilion"),I("Japan Pavilion"),I("EPCOT nighttime spectacular","World Showcase Lagoon","show","show")]}
+]},
+{d:"Sun 8/22",title:"Disney’s Animal Kingdom",park:"Disney’s Animal Kingdom",blocks:[
+ {t:"Early Entry",area:"Pandora — The World of Avatar",items:[I("Na’vi River Journey","Pandora","Lightning Lane","ll"),I("Explore the Valley of Mo’ara")]},
+ {t:"Morning",area:"Africa",items:[I("Kilimanjaro Safaris","Africa","Lightning Lane priority","lltop"),I("Gorilla Falls Exploration Trail"),I("Festival of the Lion King","Harambe Theatre • use 2026 performance schedule","show","show")]},
+ {t:"Late Morning",area:"Rafiki’s Planet Watch",items:[I("Wildlife Express Train"),I("Conservation Station"),I("Bluey’s Wild World","Conservation Station • 2026 experience","show","show"),I("Affection Section")]},
+ {t:"12:30 PM",area:"Africa",items:[I("Harambe Market","Quick-Service lunch","","meal")]},
+ {t:"Afternoon",area:"Asia",items:[I("Feathered Friends in Flight!","use 2026 performance schedule","show","show"),I("Maharajah Jungle Trek"),I("Kali River Rapids","","Lightning Lane","ll"),I("Expedition Everest","Adults / interested riders","Lightning Lane","ll")]},
+ {t:"Late Afternoon",area:"Discovery Island",items:[I("Zootopia: Better Zoogether!","Tree of Life Theater • 2026","show","show"),I("Tree of Life trails"),I("Wilderness Explorers")]},
+ {t:"Before Leaving",area:"Pandora",items:[I("Avatar Flight of Passage","Adults / interested riders","Lightning Lane priority","lltop")]},
+ {t:"Evening",area:"Disney Springs",items:[I("T-REX dinner","","","meal")]}
+]},
+{d:"Mon 8/23",title:"Magic Kingdom — First Day",park:"Magic Kingdom",blocks:[
+ {t:"First Thing",area:"Fantasyland — Cinderella Castle",items:[I("Bibbidi Bobbidi Boutique","Earliest practical reservation","reservation","meal")]},
+ {t:"After Bibbidi Bobbidi Boutique",area:"Fantasyland",items:[I("Seven Dwarfs Mine Train","Fantasyland","Lightning Lane priority","lltop"),I("The Many Adventures of Winnie the Pooh","Fantasyland","Lightning Lane","ll"),I("Mad Tea Party","Fantasyland"),I("Under the Sea — Journey of The Little Mermaid","Fantasyland"),I("Meet Ariel at Her Grotto","Fantasyland"),I("Dumbo the Flying Elephant","Storybook Circus"),I("The Barnstormer","Storybook Circus")]},
+ {t:"Late Morning",area:"Fantasyland",items:[I("Peter Pan’s Flight","Fantasyland","Lightning Lane priority","lltop"),I("it’s a small world","Fantasyland"),I("Mickey’s PhilharMagic","Fantasyland")]},
+ {t:"12:15 PM",area:"Fantasyland",items:[I("Pinocchio Village Haus","Quick-Service lunch","","meal")]},
+ {t:"Afternoon",area:"Castle Hub / Parade Route",items:[I("Disney Festival of Fantasy Parade","2026 reference: commonly scheduled at 12:00 PM and 3:00 PM; use the performance that fits the day","show","show")]},
+ {t:"5:30 PM",area:"Cinderella Castle",items:[I("Cinderella’s Royal Table","Dinner reservation","","meal")]},
+ {t:"Evening",area:"Liberty Square + Adventureland",items:[I("Haunted Mansion","Liberty Square","Lightning Lane","ll"),I("Pirates of the Caribbean","Adventureland","Lightning Lane","ll"),I("The Magic Carpets of Aladdin","Adventureland"),I("Walt Disney’s Enchanted Tiki Room","Adventureland")]},
+ {t:"Night",area:"Main Street, U.S.A. / Castle Hub",items:[I("Disney Starlight: Dream the Night Away","2026 nighttime parade","show","show"),I("Happily Ever After","Nighttime spectacular","show","show")]}
+]},
+{d:"Tue 8/24",title:"EPCOT",park:"EPCOT",blocks:[
+ {t:"Early Entry",area:"World Showcase — France",items:[I("Remy’s Ratatouille Adventure","France Pavilion","Lightning Lane priority","lltop")]},
+ {t:"Morning",area:"World Nature",items:[I("Journey of Water, Inspired by Moana"),I("The Seas with Nemo & Friends"),I("SeaBase"),I("Soarin’ Around the World","","Lightning Lane priority","lltop"),I("Living with the Land"),I("Awesome Planet")]},
+ {t:"Late Morning",area:"World Celebration / World Nature",items:[I("Journey Into Imagination with Figment"),I("ImageWorks"),I("Disney and Pixar Short Film Festival"),I("Club Cool")]},
+ {t:"12:30 PM",area:"World Celebration",items:[I("Connections Eatery","Quick-Service lunch","","meal")]},
+ {t:"Early Afternoon",area:"World Celebration / World Discovery",items:[I("Spaceship Earth","","Lightning Lane","ll"),I("Test Track","","Lightning Lane priority","lltop"),I("Guardians of the Galaxy: Cosmic Rewind","Adults / interested riders","Lightning Lane Single Pass","lltop")]},
+ {t:"Afternoon",area:"World Showcase — clockwise",items:[I("Mexico Pavilion"),I("Gran Fiesta Tour Starring The Three Caballeros","Mexico"),I("Norway Pavilion"),I("Frozen Ever After","Norway","Lightning Lane priority","lltop"),I("China Pavilion"),I("Germany Pavilion"),I("Italy Pavilion"),I("The American Adventure","American Adventure Pavilion","show","show")]},
+ {t:"6:00 PM",area:"World Showcase",items:[I("Dinner","San Angel Inn / Via Napoli / Tutto Italia","","meal")]},
+ {t:"Evening",area:"World Showcase Lagoon",items:[I("EPCOT nighttime spectacular","","show","show")]}
+]},
+{d:"Wed 8/25",title:"Disney’s Hollywood Studios — First Day",park:"Disney’s Hollywood Studios",blocks:[
+ {t:"Early Entry",area:"Toy Story Land",items:[I("Slinky Dog Dash","Toy Story Land","Lightning Lane priority","lltop"),I("Toy Story Mania!","Toy Story Land","Lightning Lane","ll"),I("Alien Swirling Saucers","Toy Story Land","Lightning Lane","ll")]},
+ {t:"Late Morning",area:"Star Wars: Galaxy’s Edge",items:[I("Star Wars: Rise of the Resistance","Galaxy’s Edge","Lightning Lane priority","lltop"),I("Millennium Falcon: Smugglers Run","Galaxy’s Edge","Lightning Lane","ll")]},
+ {t:"12:30 PM",area:"Commissary Lane",items:[I("ABC Commissary","Quick-Service lunch","","meal")]},
+ {t:"Afternoon",area:"Shows + Hollywood Boulevard",items:[I("The Little Mermaid — A Musical Adventure","2026 performances include 2:05, 2:40, 3:15, 3:50, 4:25, 5:00, 5:35, 6:10, 6:45, 7:20 and 7:55 PM","show","show"),I("Beauty and the Beast — Live on Stage","2026 performances include 1:00, 2:00, 4:00 and 5:00 PM","show","show"),I("Disney Villains: Unfairly Ever After","2026 frequent performances through 7:50 PM","show","show"),I("Mickey & Minnie’s Runaway Railway","","Lightning Lane priority","lltop")]},
+ {t:"6:15 PM",area:"Echo Lake",items:[I("Hollywood & Vine Fantasmic! Dining Package","Dinner","","meal")]},
+ {t:"Night",area:"Sunset Boulevard",items:[I("Fantasmic!","Reserved dining-package seating","show","show")]}
+]},
+{d:"Thu 8/26",title:"Magic Kingdom — Second Day",park:"Magic Kingdom",blocks:[
+ {t:"Morning",area:"Tomorrowland",items:[I("Buzz Lightyear’s Space Ranger Spin","","Lightning Lane","ll"),I("Tomorrowland Speedway"),I("Tomorrowland Transit Authority PeopleMover"),I("Walt Disney’s Carousel of Progress"),I("TRON Lightcycle / Run","Adults / interested riders","Lightning Lane Single Pass","lltop"),I("Space Mountain","Adults / interested riders","Lightning Lane","ll")]},
+ {t:"Late Morning",area:"Frontierland",items:[I("Tiana’s Bayou Adventure","","Lightning Lane priority","lltop"),I("Big Thunder Mountain Railroad","","Lightning Lane priority","lltop")]},
+ {t:"12:30 PM",area:"Frontierland",items:[I("Pecos Bill Tall Tale Inn and Cafe","Quick-Service lunch","","meal")]},
+ {t:"Afternoon",area:"Frontierland → Liberty Square → Adventureland",items:[I("Country Bear Musical Jamboree"),I("The Hall of Presidents"),I("Jungle Cruise","","Lightning Lane priority","lltop"),I("Swiss Family Treehouse")]},
+ {t:"5:45 PM",area:"Liberty Square",items:[I("Liberty Tree Tavern","Dinner","","meal")]}
+]},
+{d:"Fri 8/27",title:"Pool + Resort Day",park:"Disney’s Beach Club Resort",blocks:[
+ {t:"9:00–9:30 AM",area:"Disney’s Grand Floridian Resort & Spa",items:[I("1900 Park Fare","Character breakfast","","meal")]},
+ {t:"11:30 AM–3:30 PM",area:"Disney’s Beach Club Resort",items:[I("Stormalong Bay")]},
+ {t:"Afternoon",area:"Beach Club / BoardWalk",items:[I("Room time / nap"),I("BoardWalk stroll")]},
+ {t:"Evening",area:"Beach Club / EPCOT",items:[I("Quick-Service dinner","","","meal"),I("Optional EPCOT evening")]}
+]},
+{d:"Sat 8/28",title:"Hollywood Studios + EPCOT",park:"Disney’s Hollywood Studios",blocks:[
+ {t:"Morning",area:"Disney’s Hollywood Studios",items:[I("Unfinished attractions and favorite repeats"),I("Monstropolis","If open for the 2027 trip")]},
+ {t:"Late Morning",area:"Walt Disney Studios area",items:[I("The Magic of Disney Animation","2026 opening September 14; include if operating in 2027","show","show"),I("Disney Jr. Mickey Mouse Clubhouse Live!","2026 performances include 10:15, 11:15 AM, 12:15, 1:15, 3:05, 3:55, 4:45 and 5:35 PM","show","show")]},
+ {t:"12:30 PM",area:"Hollywood Studios",items:[I("Woody’s Lunch Box","If nearby","","meal")]},
+ {t:"3:30–4:00 PM",area:"Transportation",items:[I("Walk or Friendship Boat to EPCOT International Gateway")]},
+ {t:"Late Afternoon",area:"EPCOT — World Showcase",items:[I("Remaining pavilion experiences"),I("Kidcot Fun Stops"),I("Favorite repeats")]},
+ {t:"6:00–6:30 PM",area:"World Nature",items:[I("Garden Grill Restaurant","Final family dinner","","meal")]},
+ {t:"Evening",area:"World Showcase Lagoon",items:[I("EPCOT nighttime spectacular","","show","show")]}
+]},
+{d:"Sun 8/29",title:"Departure",park:"Disney’s Beach Club Resort",blocks:[
+ {t:"Morning",area:"Disney’s Beach Club Resort",items:[I("Breakfast"),I("Final packing"),I("Resort time before departure")]}
+]}
+];
 
-const MAPS={
-  "Magic Kingdom":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/MK_0626_EN-DIGITAL.pdf?2026-06-23T16:48:45+00:00",
-  "EPCOT":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/EPCOT-guidemap_0726_ENG-DIGITAL.pdf?2026-06-12T14:25:45+00:00",
-  "Hollywood Studios":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/DHS_052626_EN-KM.pdf?2026-05-12T14:18:43+00:00",
-  "Animal Kingdom":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/DAK_0526_ENG_DIGITAL.pdf?2026-05-13T17:38:10+00:00"
-};
+function key(di,bi,ii){return `dw27_${di}_${bi}_${ii}`}
+function state(k){return localStorage.getItem(k)||""}
+function setState(k,v){localStorage.setItem(k,v);renderDay(currentDay);updateTrip()}
+let currentDay=0;
 
-let view="Home",di=0,park="Magic Kingdom",filter="All",remainingOnly=false;
-const V=["Home","Days","Attractions","Maps","Dining","Lightning Lane","Family","2027 Watch","Then & Now"];
-
-function nav(){
-  document.getElementById("nav").innerHTML=V.map(v =>
-    `<button class="${view===v?'on':''}" data-view="${esc(v)}">${v}</button>`
-  ).join("");
+function renderTabs(){
+ daytabs.innerHTML=days.map((x,i)=>`<button class="${i===currentDay?'active':''}" onclick="currentDay=${i};renderTabs();renderDay(${i})">${x.d}</button>`).join("")
 }
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-function card(t,b){return `<section class="card"><div class="big">${t}</div>${b}</section>`}
-
-function home(){
-  return `<section class="card"><div class="eyebrow">THE TRIP</div><div class="big">Beach Club-centered • Park Hopper</div>
-  <span class="tag good">9 days</span><span class="tag">Party of 6</span><span class="tag">2 major rest/pool blocks</span>
-  <p class="muted">Your phone-friendly Walt Disney World trip guide.</p></section>
-  ${card("Trip at a glance",D.days.map((x,i)=>`<div class="row clickable" data-day="${i}"><b>${x[0]} — ${x[1]}</b><div class="small">${x[3]}</div></div>`).join(""))}`;
+function renderDay(di){
+ const d=days[di]; let total=0,done=0;
+ d.blocks.forEach((b,bi)=>b.items.forEach((x,ii)=>{total++;if(state(key(di,bi,ii))==="done")done++}));
+ const pct=total?done/total*100:0;
+ let h=`<div class="hero"><h1>${d.title}</h1><div class="muted">${d.d}</div><div class="progress"><div class="bar" style="width:${pct}%"></div></div><div class="muted" style="margin-top:7px">${done} of ${total} completed</div><div class="legend"><span class="lltop">Lightning Lane priority</span><span class="ll">Lightning Lane</span><span class="show">Show / entertainment</span><span class="meal">Dining / reservation</span></div></div>`;
+ let nextMarked=false;
+ d.blocks.forEach((b,bi)=>{
+   h+=`<div class="block"><div class="blocktime">${b.t}</div><h2>${b.area}</h2>`;
+   b.items.forEach((x,ii)=>{
+    const k=key(di,bi,ii),s=state(k), cls=s==="done"?"done":s==="later"?"later":s==="skip"?"skipped":"";
+    let next="";
+    if(!nextMarked && !s){next=" next";nextMarked=true}
+    const badge=x.tag?`<span class="badge ${x.kind==='lltop'?'lltop':x.kind==='ll'?'ll':x.kind==='show'?'show':'meal'}">${x.tag}</span>`:"";
+    h+=`<div class="item ${cls}${next}"><input class="check" type="checkbox" ${s==="done"?"checked":""} onchange="setState('${k}',this.checked?'done':'')"><div class="name">${x.name}</div>${x.meta?`<div class="meta">${x.meta}</div>`:""}${badge}<div class="actions"><button onclick="setState('${k}','later')">Later</button><button onclick="setState('${k}','skip')">Skip</button><button onclick="setState('${k}','')">Reset</button></div></div>`;
+   });
+   if(maps[d.park]) h+=`<a class="mapbtn" href="${maps[d.park]}" target="_blank" rel="noopener">Open ${d.park} Map</a>`;
+   h+=`</div>`;
+ });
+ day.innerHTML=h;
 }
-
-
-function statusFor(p,n){
-  const row=(D.attractions[p]||[]).find(x=>x[0]===n);
-  return row?row[1]:"";
+function updateTrip(){
+ let total=0,done=0;
+ days.forEach((d,di)=>d.blocks.forEach((b,bi)=>b.items.forEach((x,ii)=>{total++;if(state(key(di,bi,ii))==="done")done++})));
+ tripbar.style.width=(total?done/total*100:0)+"%";tripprogress.textContent=`${done} of ${total} itinerary items completed`;
 }
-function blockAttractions(dayIndex,blockIndex){
-  const items=(DAY_ATTRACTIONS[dayIndex]&&DAY_ATTRACTIONS[dayIndex][blockIndex])||[];
-  if(!items.length)return "";
-  let lastGroup="";
-  let body="";
-  items.forEach(([p,n])=>{
-    const checked=isDone(p,n);
-    const status=statusFor(p,n);
-    const group=locationFor(p,n);
-    if(group!==lastGroup){
-      body+=`<div class="blockgroup">${group}</div>`;
-      lastGroup=group;
-    }
-    body+=`<label class="dayattr ${checked?'done':''}">
-      <input type="checkbox" data-attraction="${esc(n)}" data-attraction-park="${esc(p)}" ${checked?'checked':''}>
-      <div><div class="dayattrname">${n}</div><div class="dayattrstatus">${status}</div></div>
-    </label>`;
-  });
-  return `<div class="blockattrs"><div class="blocktitle">Experiences in this block</div>
-    <div class="blockhint">Grouped by park area so you can follow the route more easily.</div>${body}</div>`;
+function renderDining(){
+ let rows=[];
+ days.forEach(d=>d.blocks.forEach(b=>b.items.filter(x=>x.kind==="meal").forEach(x=>rows.push(`<div class="reservation"><b>${x.name}</b><div class="muted">${d.d} • ${b.t}${x.meta?" • "+x.meta:""}</div></div>`))));
+ dininglist.innerHTML=rows.join("");
 }
-function day(){
-  let x=D.days[di];
-  return `<div class="days">${D.days.map((y,i)=>`<button class="${i===di?'on':''}" data-day="${i}">${y[0]}</button>`).join("")}</div>
-  <section class="card"><div class="eyebrow">${x[0]}</div><div class="big">${x[1]}</div>
-  <p class="muted">${x[3]}</p></section>
-  ${card("Full Day",x[4].map((r,bi)=>`<div class="row"><div class="time">${r[0]}</div>${r[1]}${blockAttractions(di,bi)}</div>`).join(""))}`;
+function renderMaps(){
+ maplist.innerHTML=Object.entries(maps).map(([n,u])=>`<div class="reservation"><b>${n}</b><a class="mapbtn" href="${u}" target="_blank" rel="noopener">Open Map</a></div>`).join("");
 }
-
-function plannedList(p){return D.attractions[p].filter(x=>x[1]!=="No")}
-function keyFor(p,n){return "dw27-"+p+"-"+n}
-function isDone(p,n){return !!localStorage.getItem(keyFor(p,n))}
-function progressFor(p){
-  const planned=plannedList(p);
-  const done=planned.filter(x=>isDone(p,x[0])).length;
-  return {done,total:planned.length,pct:planned.length?Math.round(done/planned.length*100):0};
-}
-function filteredAttractions(){
-  let q=(document.getElementById("q")?.value||"").toLowerCase();
-  return D.attractions[park].filter(x=>{
-    const statusOk=filter==="All"||x[1]===filter;
-    const searchOk=!q||x.join(" ").toLowerCase().includes(q);
-    const remainingOk=!remainingOnly||!isDone(park,x[0]);
-    return statusOk&&searchOk&&remainingOk;
-  });
-}
-function attrs(){
-  const a=filteredAttractions();
-  const p=progressFor(park);
-  return `<div class="days">${Object.keys(D.attractions).map(pn=>`<button class="${pn===park?'on':''}" data-park="${esc(pn)}">${pn}</button>`).join("")}</div>
-  <section class="card">
-    <div class="progressline"><b>${p.done} of ${p.total} planned experiences completed</b><span class="small">${p.pct}%</span></div>
-    <div class="progressbar"><div class="progressfill" style="width:${p.pct}%"></div></div>
-    <div class="actionrow">
-      <button class="actionbtn ${remainingOnly?'on':''}" data-action="remaining">${remainingOnly?'Showing Remaining':'Show Remaining Only'}</button>
-      <button class="actionbtn" data-action="open-map">Official ${park} Map</button>
-      <button class="actionbtn danger" data-action="reset-park">Reset ${park} Progress</button>
-    </div>
-  </section>
-  <section class="card"><input class="search" id="q" placeholder="Search ${park}…">
-    <div class="filters">${["All","Yes","Maybe","Adults Only","If Convenient","No"].map(f=>`<button class="${f===filter?'on':''}" data-filter="${esc(f)}">${f}</button>`).join("")}</div>
-    <div class="small" id="matchcount">${a.length} matching experiences</div>
-  </section>
-  <section class="card" id="alist">${ah(a)}</section>`;
-}
-function ah(a){
-  return a.map(x=>{
-    const checked=isDone(park,x[0]);
-    return `<label class="attr ${checked?'done':''}">
-      <input type="checkbox" data-attraction="${esc(x[0])}" ${checked?'checked':''}>
-      <div><div class="name">${x[0]}</div><div class="small">${x[1]}</div></div>
-    </label>`;
-  }).join("");
-}
-function updateA(){
-  const alist=document.getElementById("alist");
-  if(!alist)return;
-  const a=filteredAttractions();
-  alist.innerHTML=ah(a);
-  const mc=document.getElementById("matchcount");
-  if(mc)mc.textContent=`${a.length} matching experiences`;
-}
-
-function mapsView(){
-  const url=MAPS[park];
-  return `<div class="days">${Object.keys(MAPS).map(pn=>`<button class="${pn===park?'on':''}" data-mappark="${esc(pn)}">${pn}</button>`).join("")}</div>
-  <section class="card">
-    <div class="eyebrow">OFFICIAL DISNEY GUIDE MAP</div>
-    <div class="big">${park}</div>
-    <iframe class="mapframe" src="${url}" title="Official ${park} guide map"></iframe>
-  </section>`;
-}
-
-function dining(){
-  return `<section class="card"><div class="eyebrow">DINING PLAN</div><div class="big">8 Table-Service + 8 Quick-Service per person</div>
-  <p class="muted">Most snack credits are intended for breakfast. Friday uses 1900 Park Fare instead. Credits are trip-wide, not forced daily.</p></section>
-  ${card("Meals",D.dining.map(x=>`<div class="row"><b>${x[0]} — ${x[1]}</b><div class="small">${x[2]}</div></div>`).join(""))}
-  <section class="card notice"><b>Decision still open</b><p class="muted">Tuesday: Nonna and Nonno still choose Via Napoli or Tutto Italia. Wednesday is Hollywood & Vine Fantasmic Dining Package.</p></section>`;
-}
-function lightning(){
-  return `<section class="card"><div class="eyebrow">WORKING STRATEGY</div><div class="big">Buy Lightning Lane only when it solves a real problem</div>
-  <p class="muted">Definite working Lightning Lane Multi Pass days: Magic Kingdom First Day and Disney’s Hollywood Studios First Day. Reverify all rules for 2027.</p></section>
-  ${card("Day by day",D.ll.map(x=>`<div class="row"><b>${x[0]}</b><div class="small">${x[1]}</div></div>`).join(""))}`;
-}
-function family(){return card("Family & accessibility",D.family.map(x=>`<div class="row">${x}</div>`).join(""))}
-function watch(){return card("2027 verification list",D.watch.map(x=>`<div class="row"><span class="tag warn">VERIFY</span> ${x}</div>`).join(""))}
-function thennow(){return card("Then & Now",`<div class="row"><b>1987</b><div class="small">First Walt Disney World trip.</div></div>
-<div class="row"><b>About 8 trips total</b><div class="small">Many in the 1990s and early 2000s; last trip 2015.</div></div>
-<div class="row"><b>Seven Dwarfs Mine Train</b><div class="small">You saw New Fantasyland but missed Mine Train by only weeks. 2027 is the finally-get-to-ride-it trip.</div></div>
-<div class="row"><b>Toy Story Mania</b><div class="small">Nostalgic repeat after the remembered nearly two-hour wait; Slinky Dog Dash and Alien Swirling Saucers are new to you.</div></div>
-<div class="row"><b>Big post-2015 worlds</b><div class="small">Galaxy’s Edge, Pandora, Remy, Runaway Railway, Journey of Water, Guardians and more make this trip fundamentally different from 2015.</div></div>`)}
-
-function render(){
-  nav();
-  const app=document.getElementById("app");
-  app.innerHTML=view==="Home"?home():
-    view==="Days"?day():
-    view==="Attractions"?attrs():
-    view==="Maps"?mapsView():
-    view==="Dining"?dining():
-    view==="Lightning Lane"?lightning():
-    view==="Family"?family():
-    view==="2027 Watch"?watch():thennow();
-  window.scrollTo(0,0);
-}
-
-document.addEventListener("click",e=>{
-  const b=e.target.closest("button,[data-day]");
-  if(!b)return;
-
-  if(b.dataset.view){view=b.dataset.view;render();return}
-  if(b.dataset.day!==undefined){di=Number(b.dataset.day);view="Days";render();return}
-  if(b.dataset.park){park=b.dataset.park;remainingOnly=false;render();return}
-  if(b.dataset.mappark){park=b.dataset.mappark;render();return}
-  if(b.dataset.filter){filter=b.dataset.filter;render();return}
-
-  if(b.dataset.action==="remaining"){remainingOnly=!remainingOnly;render();return}
-  if(b.dataset.action==="open-map"){view="Maps";render();return}
-  if(b.dataset.action==="reset-park"){
-    if(confirm(`Reset all completed checkmarks for ${park}?`)){
-      D.attractions[park].forEach(x=>localStorage.removeItem(keyFor(park,x[0])));
-      render();
-    }
-  }
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(b.dataset.screen).classList.add("active");
 });
-
-document.addEventListener("input",e=>{
-  if(e.target.id==="q")updateA();
-});
-
-document.addEventListener("change",e=>{
-  if(!e.target.matches('input[type="checkbox"][data-attraction]'))return;
-  const name=e.target.dataset.attraction;
-  const checkboxPark=e.target.dataset.attractionPark||park;
-  if(e.target.checked)localStorage.setItem(keyFor(checkboxPark,name),"1");
-  else localStorage.removeItem(keyFor(checkboxPark,name));
-  render();
-});
-
-render();
-</script></body></html>
+renderTabs();renderDay(0);renderDining();renderMaps();updateTrip();
+</script>
+</body></html>
