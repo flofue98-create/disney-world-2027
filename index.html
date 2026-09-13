@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Disney World 2027 — Park Mode</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;margin:0;background:#f5f6fa;color:#171923}header{position:sticky;top:0;background:white;padding:16px;border-bottom:1px solid #ddd}main{padding:14px;max-width:700px;margin:auto}.days{display:flex;overflow:auto;gap:7px;margin-bottom:12px}button{padding:9px 12px;border:1px solid #ddd;border-radius:12px;background:white;white-space:nowrap}.active{background:#171923;color:white}.card{background:white;border:1px solid #e4e6ed;border-radius:17px;padding:15px;margin-bottom:11px}.label{font-size:12px;color:#687083;font-weight:700;text-transform:uppercase}.title{font-size:24px;font-weight:800;margin:4px 0}.tag{display:inline-block;background:#eef2ff;color:#3157d5;padding:5px 8px;border-radius:20px;font-size:12px;font-weight:700}.row{padding:9px 0;border-top:1px solid #eee}.row:first-child{border:0}.check{display:flex;gap:9px}.check input{width:20px;height:20px}
+</style></head><body><header><b>Disney World 2027</b><div style="font-size:12px;color:#687083">Park Mode • Version 1 • Aug 21–29</div></header><main><div id="days" class="days"></div><div id="app"></div></main>
+<script>
+const data=[
+["Sat 8/21","Arrival + EPCOT","Relaxed arrival","Beach Club arrival → pool & decompress",["Early resort QS dinner","Walk to EPCOT ~5 PM","Relaxed western World Showcase"],["No-pressure arrival","Western World Showcase taste"]],
+["Sun 8/22","Animal Kingdom","LLMP: default NO","Early Entry → Na’vi River Journey together",["Safari + Gorilla Falls","Lion King + Rafiki’s","Asia → Discovery Island → Pandora"],["Na’vi River Journey","Safari","Lion King","Pandora","Zootopia"]],
+["Mon 8/23","Magic Kingdom #1","LLMP: YES","Enter together → Castle → BBB",["Fantasyland cluster","Festival of Fantasy","CRT → Starlight / HEA"],["BBB","Seven Dwarfs Mine Train","Peter Pan","Princess experiences","Festival of Fantasy","CRT"]],
+["Tue 8/24","EPCOT","LLMP: default NO","International Gateway → Remy together",["World Nature","Imagination + Discovery","World Showcase"],["Remy","Moana","Soarin’","Test Track","Frozen","Kidcot"]],
+["Wed 8/25","Hollywood Studios #1","LLMP: YES","Early Entry → Slinky Dog Dash together",["Toy Story Land","Galaxy’s Edge","Shows → H&V → Fantasmic"],["Slinky","Rise","Toy Story Mania","Runaway Railway","Galaxy’s Edge","Fantasmic"]],
+["Thu 8/26","Magic Kingdom #2","LLMP: default NO","Enter together → Buzz first",["Tomorrowland","Frontierland + Liberty Square","Adventureland → Liberty Tree"],["Tiana","Big Thunder","Hall of Presidents","Jungle Cruise","Railroad"]],
+["Fri 8/27","Recovery Day","LL: NO","Sleep in → 1900 Park Fare",["Stormalong Bay","Nap / BoardWalk","Easy evening + QS"],["Real recovery day","Large pool block"]],
+["Sat 8/28","HS #2 → EPCOT","LLMP: default NO","Recover misses or favorite repeat",["Monstropolis if open","Leave HS ~3:30–4","Garden Grill → EPCOT finale"],["HS unfinished priorities","Garden Grill","Final EPCOT spectacular"]],
+["Sun 8/29","Departure","No park pressure","Relaxed resort morning",["Breakfast / resort time","Pack + check out","Airport"],["No rushed departure"]]
+]; let a=0;
+function k(i){return "dw27_"+a+"_"+i}
+function render(){
+days.innerHTML=data.map((x,i)=>`<button class="${i==a?'active':''}" onclick="a=${i};render()">${x[0]}</button>`).join("");
+let x=data[a];
+app.innerHTML=`<div class="card"><div class="label">${x[0]}</div><div class="title">${x[1]}</div><span class="tag">${x[2]}</span></div>
+<div class="card"><div class="label">NOW</div><h3>${x[3]}</h3></div>
+<div class="card"><div class="label">NEXT 3</div>${x[4].map((v,i)=>`<div class="row"><b>${i+1}.</b> ${v}</div>`).join("")}</div>
+<div class="card"><div class="label">DO NOT MISS</div>${x[5].map((v,i)=>`<div class="row check"><input type="checkbox" ${localStorage.getItem(k(i))?'checked':''} onchange="this.checked?localStorage.setItem('${k(i)}','1'):localStorage.removeItem('${k(i)}')"><span>${v}</span></div>`).join("")}</div>
+<div class="card"><div class="label">IF PLANS SHIFT</div><div class="row"><b>Ahead:</b> use nearby Maybe/repeat/character time—no zigzagging.</div><div class="row"><b>Behind:</b> protect reservations and Do Not Miss items; move overflow to its backup day.</div></div>
+<div class="card"><div class="label">2027 VERIFY</div><div class="row">Park hours • show times • MNSSHP • Lightning Lane rules • new attraction openings.</div></div>`;
+}
+render();
+</script></body></html>
