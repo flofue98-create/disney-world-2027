@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Disney World 2027</title>
+<style>
+*{box-sizing:border-box}
+:root{
+ --bg:#f6f3ee;--card:#fff;--ink:#1f2933;--muted:#667085;--blue:#174f86;--line:#e5e7eb;
+ --ll:#fff5cf;--ll2:#ffe08a;--show:#eaf4ff;--meal:#f4ecff;--done:#edf8ef;--skip:#f3f4f6;--accent:#20364d;
+}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid #ddd;padding:14px 14px 11px}
+.brand{font-size:24px;font-weight:850}.sub{font-size:12px;color:var(--muted);margin-top:3px}
+.nav{display:flex;gap:8px;overflow:auto;padding-top:11px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}
+.nav button{border:1px solid #ccd3dc;background:#fff;border-radius:999px;padding:8px 12px;color:var(--blue);font-weight:750;white-space:nowrap}
+.nav button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+main{max-width:820px;margin:auto;padding:13px 13px 80px}
+.screen{display:none}.screen.active{display:block}
+.daytabs{display:flex;gap:7px;overflow:auto;margin-bottom:11px;scrollbar-width:none}.daytabs::-webkit-scrollbar{display:none}
+.daytabs button{border:1px solid #d6dbe1;background:#fff;border-radius:13px;padding:9px 11px;white-space:nowrap;font-weight:750}
+.daytabs button.active{background:#1f2933;color:#fff;border-color:#1f2933}
+.hero,.block,.info,.nextbox{background:#fff;border:1px solid #ddd;border-radius:18px;padding:15px;margin-bottom:11px}
+.hero h1{font-size:26px;margin:0 0 3px;line-height:1.12}.muted{color:var(--muted)}
+.hours{margin-top:8px;font-size:13px;font-weight:700}
+.heroactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mapbtn{display:inline-block;border:1px solid #ccd3dc;background:#fff;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800;color:var(--blue);text-decoration:none}
+.progress{height:8px;background:#e9edf2;border-radius:999px;overflow:hidden;margin-top:10px}.bar{height:100%;background:#1f2933;width:0}
+.nextbox{border:2px solid #20364d}.nextlabel{text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:900;color:var(--blue)}
+.nextname{font-size:18px;font-weight:850;margin-top:4px}.nextmeta{font-size:12px;color:var(--muted);margin-top:3px}
+.block{padding:0;overflow:hidden}
+.blockhead{padding:14px 14px 10px;background:#fcfcfc;border-bottom:1px solid var(--line)}
+.block h2{font-size:18px;margin:2px 0 0}.blocktime{font-size:11px;font-weight:900;color:var(--blue);text-transform:uppercase;letter-spacing:.04em}
+.item{position:relative;border-top:1px solid var(--line);padding:13px 12px 13px 43px;min-height:54px;background:#fff}
+.item:first-child{border-top:0}.item.done{background:var(--done);opacity:.72}.item.skipped{background:var(--skip);opacity:.52}.item.later{border-left:4px solid #9aa7b4}
+.item.llcard{background:linear-gradient(90deg,var(--ll),#fff 72%)}.item.priority{background:linear-gradient(90deg,var(--ll2),#fff 78%)}
+.check{position:absolute;left:12px;top:15px;width:22px;height:22px}
+.name{font-weight:830;line-height:1.22}.time{font-size:12px;font-weight:850;color:var(--blue);margin-bottom:2px}.meta{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.badges{margin-top:5px}.badge{display:inline-block;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:900;margin:2px 4px 0 0}
+.b-ll{background:var(--ll)}.b-priority{background:var(--ll2)}.b-show{background:var(--show)}.b-meal{background:var(--meal)}
+details{margin-top:6px}.more{font-size:11px;color:var(--blue);font-weight:800;cursor:pointer}
+.detailtext{font-size:12px;color:var(--muted);line-height:1.45;padding:7px 0 2px}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.actions button{border:1px solid #ccd3dc;background:#fff;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:800;color:var(--blue)}
+.legend{font-size:10px;color:var(--muted);display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.legend span{padding:3px 7px;border-radius:999px}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+.reservation{background:#fff;border:1px solid #ddd;border-radius:16px;padding:14px}.reservation b{display:block}.reservation .small{font-size:12px;color:var(--muted);margin-top:4px}
+.tripstamp{font-size:11px;color:var(--muted);margin-top:10px}
+@media(min-width:650px){.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand">Disney World 2027</div>
+ <div class="sub">August 21–29, 2027 • Disney’s Beach Club Resort</div>
+ <div class="nav">
+  <button class="active" data-screen="today">Itinerary</button>
+  <button data-screen="dining">Dining</button>
+  <button data-screen="maps">Maps</button>
+  <button data-screen="trip">Trip</button>
+ </div>
+</header>
+
+<main>
+<section id="today" class="screen active">
+ <div class="daytabs" id="daytabs"></div>
+ <div id="day"></div>
+</section>
+
+<section id="dining" class="screen">
+ <div class="hero"><h1>Dining</h1><div class="muted">Meals and reservations for the trip</div></div>
+ <div class="grid" id="dininglist"></div>
+</section>
+
+<section id="maps" class="screen">
+ <div class="hero"><h1>Maps</h1><div class="muted">Official park maps</div></div>
+ <div class="grid" id="maplist"></div>
+</section>
+
+<section id="trip" class="screen">
+ <div class="hero">
+  <h1>Trip</h1>
+  <p><b>August 21–29, 2027</b></p>
+  <p>Disney’s Beach Club Resort • Park Hopper tickets</p>
+  <div class="tripstamp">Updated September 13, 2026</div>
+ </div>
+ <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
+</section>
+</main>
+
+<script>
+const maps={
+ "Magic Kingdom":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/MK_0626_EN-DIGITAL.pdf?2026-06-23T16:48:45+00:00",
+ "EPCOT":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/EPCOT-guidemap_1125_ENG-DIGITAL.pdf?2025-11-03T16%3A28%3A44+00%3A00=",
+ "Disney’s Hollywood Studios":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/DHS_052626_EN-KM.pdf?2026-05-12T14:18:43+00:00",
+ "Disney’s Animal Kingdom":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/DAK_0526_ENG_DIGITAL.pdf?2026-05-13T17:38:10+00:00",
+ "Disney’s Beach Club Resort":"https://disneyworld.disney.go.com/resorts/beach-club-resort/",
+ "Disney Springs":"https://disneyworld.disney.go.com/destinations/disney-springs/"
+};
+
+const I=(name,opts={})=>({name,kind:"ride",...opts});
+
+const days=[
+{
+ d:"Sat 8/21",title:"Arrival + EPCOT",park:"EPCOT",hours:"9:00 AM–9:00 PM • Early Entry 8:30 AM",
+ blocks:[
+  {t:"Afternoon",area:"Disney’s Beach Club Resort",items:[
+   I("Arrive at Disney’s Beach Club Resort"),
+   I("Stormalong Bay",{meta:"Pool time"})
+  ]},
+  {t:"4:15 PM",area:"Disney’s Beach Club Resort",items:[I("Quick-Service dinner",{kind:"meal"})]},
+  {t:"5:00 PM",area:"EPCOT — International Gateway",items:[
+   I("Enter EPCOT through International Gateway"),
+   I("France Pavilion"),
+   I("United Kingdom Pavilion"),
+   I("Canada Pavilion",{details:"Canada Far and Wide is inside the Canada Pavilion."})
+  ]},
+  {t:"Evening",area:"World Showcase",items:[
+   I("Morocco Pavilion"),I("Japan Pavilion"),
+   I("EPCOT nighttime spectacular",{time:"9:00 PM",kind:"show",meta:"World Showcase Lagoon"})
+  ]}
+ ]
+},
+{
+ d:"Sun 8/22",title:"Disney’s Animal Kingdom",park:"Disney’s Animal Kingdom",hours:"8:00 AM–7:00 PM • Early Entry 7:30 AM",
+ blocks:[
+  {t:"Early Entry",area:"Pandora — The World of Avatar",items:[
+   I("Na’vi River Journey",{ll:"Lightning Lane"}),
+   I("Explore the Valley of Mo’ara")
+  ]},
+  {t:"Morning",area:"Africa",items:[
+   I("Kilimanjaro Safaris",{ll:"Lightning Lane priority"}),
+   I("Gorilla Falls Exploration Trail"),
+   I("Festival of the Lion King",{time:"10:00 AM",kind:"show",meta:"Harambe Theatre",details:"Other 2026 showtimes: 11:00 AM, 12:00 PM, 1:00 PM, 2:00 PM, 3:00 PM, 4:00 PM."})
+  ]},
+  {t:"Late Morning",area:"Rafiki’s Planet Watch",items:[
+   I("Wildlife Express Train"),
+   I("Conservation Station"),
+   I("Bluey’s Wild World",{kind:"show",meta:"8:30 AM–3:45 PM"}),
+   I("Affection Section")
+  ]},
+  {t:"12:30 PM",area:"Africa",items:[I("Harambe Market",{kind:"meal",meta:"Quick-Service lunch"})]},
+  {t:"Afternoon",area:"Asia",items:[
+   I("Feathered Friends in Flight!",{time:"1:45 PM",kind:"show",details:"Other 2026 showtimes: 10:45 AM, 11:45 AM, 2:45 PM, 3:45 PM."}),
+   I("Maharajah Jungle Trek"),
+   I("Kali River Rapids",{ll:"Lightning Lane"}),
+   I("Expedition Everest",{ll:"Lightning Lane",meta:"44-inch height requirement"})
+  ]},
+  {t:"Mid-Afternoon",area:"DinoLand / Theater in the Wild",items:[
+   I("Finding Nemo: The Big Blue… and Beyond!",{time:"3:30 PM",kind:"show",details:"Other 2026 showtimes: 11:00 AM, 12:00 PM, 1:00 PM, 2:30 PM, 4:30 PM."})
+  ]},
+  {t:"Late Afternoon",area:"Discovery Island",items:[
+   I("Zootopia: Better Zoogether!",{kind:"show",meta:"Tree of Life Theater"}),
+   I("Discovery Island Trails"),
+   I("Wilderness Explorers",{meta:"Available through the park"})
+  ]},
+  {t:"Before Leaving",area:"Pandora — The World of Avatar",items:[
+   I("Avatar Flight of Passage",{ll:"Lightning Lane priority",meta:"44-inch height requirement"})
+  ]},
+  {t:"Evening",area:"Disney Springs",items:[I("T-REX",{kind:"meal",meta:"Dinner"})]}
+ ]
+},
+{
+ d:"Mon 8/23",title:"Magic Kingdom — First Day",park:"Magic Kingdom",hours:"9:00 AM–11:00 PM • Early Entry 8:30 AM",
+ blocks:[
+  {t:"First Thing",area:"Cinderella Castle",items:[
+   I("Bibbidi Bobbidi Boutique",{kind:"meal",time:"Morning appointment"})
+  ]},
+  {t:"After Bibbidi Bobbidi Boutique",area:"Fantasyland",items:[
+   I("Seven Dwarfs Mine Train",{ll:"Lightning Lane priority",meta:"38-inch height requirement"}),
+   I("The Many Adventures of Winnie the Pooh",{ll:"Lightning Lane"}),
+   I("Mad Tea Party"),
+   I("Under the Sea — Journey of The Little Mermaid"),
+   I("Meet Ariel at Her Grotto"),
+   I("Dumbo the Flying Elephant",{meta:"Storybook Circus"}),
+   I("The Barnstormer",{meta:"Storybook Circus • 35-inch height requirement"})
+  ]},
+  {t:"Late Morning",area:"Fantasyland",items:[
+   I("Peter Pan’s Flight",{ll:"Lightning Lane priority"}),
+   I("it’s a small world"),
+   I("Mickey’s PhilharMagic")
+  ]},
+  {t:"12:15 PM",area:"Fantasyland",items:[I("Pinocchio Village Haus",{kind:"meal",meta:"Quick-Service lunch"})]},
+  {t:"Afternoon",area:"Castle Hub / Parade Route",items:[
+   I("Disney Festival of Fantasy Parade",{time:"3:00 PM",kind:"show"})
+  ]},
+  {t:"5:30 PM",area:"Cinderella Castle",items:[I("Cinderella’s Royal Table",{kind:"meal",meta:"Dinner"})]},
+  {t:"Evening",area:"Liberty Square + Adventureland",items:[
+   I("Haunted Mansion",{ll:"Lightning Lane",meta:"Liberty Square"}),
+   I("Pirates of the Caribbean",{ll:"Lightning Lane",meta:"Adventureland"}),
+   I("The Magic Carpets of Aladdin",{meta:"Adventureland"}),
+   I("Walt Disney’s Enchanted Tiki Room",{meta:"Adventureland"})
+  ]},
+  {t:"Night",area:"Main Street, U.S.A. / Cinderella Castle",items:[
+   I("Disney Starlight: Dream the Night Away",{kind:"show",meta:"Nighttime parade"}),
+   I("Happily Ever After",{kind:"show",meta:"Cinderella Castle"})
+  ]}
+ ]
+},
+{
+ d:"Tue 8/24",title:"EPCOT",park:"EPCOT",hours:"9:00 AM–9:00 PM • Early Entry 8:30 AM",
+ blocks:[
+  {t:"Early Entry",area:"World Showcase — France",items:[
+   I("Remy’s Ratatouille Adventure",{ll:"Lightning Lane priority",meta:"France Pavilion"})
+  ]},
+  {t:"Morning",area:"World Nature",items:[
+   I("Journey of Water, Inspired by Moana"),
+   I("The Seas with Nemo & Friends"),
+   I("Turtle Talk With Crush"),
+   I("SeaBase"),
+   I("Soarin’ Around the World",{ll:"Lightning Lane priority"}),
+   I("Living with the Land"),
+   I("Awesome Planet")
+  ]},
+  {t:"Late Morning",area:"World Celebration",items:[
+   I("Journey Into Imagination With Figment"),
+   I("ImageWorks"),
+   I("Disney and Pixar Short Film Festival"),
+   I("Club Cool")
+  ]},
+  {t:"12:30 PM",area:"World Celebration",items:[I("Connections Eatery",{kind:"meal",meta:"Quick-Service lunch"})]},
+  {t:"Early Afternoon",area:"World Celebration + World Discovery",items:[
+   I("Spaceship Earth",{ll:"Lightning Lane"}),
+   I("Test Track",{ll:"Lightning Lane priority",meta:"40-inch height requirement"}),
+   I("Guardians of the Galaxy: Cosmic Rewind",{ll:"Lightning Lane priority",meta:"42-inch height requirement"})
+  ]},
+  {t:"Afternoon",area:"World Showcase — Mexico → Norway → China → Germany → Italy → United States",items:[
+   I("Mexico Pavilion"),
+   I("Gran Fiesta Tour Starring The Three Caballeros",{meta:"Mexico Pavilion"}),
+   I("Norway Pavilion"),
+   I("Frozen Ever After",{ll:"Lightning Lane priority",meta:"Norway Pavilion"}),
+   I("China Pavilion"),
+   I("Reflections of China",{meta:"China Pavilion"}),
+   I("Germany Pavilion"),
+   I("Italy Pavilion"),
+   I("The American Adventure",{time:"3:30 PM",kind:"show",meta:"United States Pavilion",details:"Other 2026 showtimes: 11:45 AM, 12:30 PM, 1:15 PM, 2:00 PM, 2:45 PM, 4:30 PM, 5:30 PM, 6:30 PM, 7:30 PM."})
+  ]},
+  {t:"6:00 PM",area:"World Showcase",items:[I("Dinner",{kind:"meal",meta:"San Angel Inn / Via Napoli / Tutto Italia"})]},
+  {t:"Evening",area:"World Showcase — Japan → Morocco → France → United Kingdom → Canada",items:[
+   I("Japan Pavilion"),I("Morocco Pavilion"),
+   I("France Pavilion",{details:"Beauty and the Beast Sing-Along and Impressions de France are inside Palais du Cinéma."}),
+   I("United Kingdom Pavilion"),I("Canada Pavilion"),
+   I("EPCOT nighttime spectacular",{time:"9:00 PM",kind:"show",meta:"World Showcase Lagoon"})
+  ]}
+ ]
+},
+{
+ d:"Wed 8/25",title:"Disney’s Hollywood Studios — First Day",park:"Disney’s Hollywood Studios",hours:"9:00 AM–9:30 PM • Early Entry 8:30 AM",
+ blocks:[
+  {t:"Early Entry",area:"Toy Story Land",items:[
+   I("Slinky Dog Dash",{ll:"Lightning Lane priority",meta:"38-inch height requirement"}),
+   I("Toy Story Mania!",{ll:"Lightning Lane"}),
+   I("Alien Swirling Saucers",{ll:"Lightning Lane",meta:"32-inch height requirement"})
+  ]},
+  {t:"Late Morning",area:"Star Wars: Galaxy’s Edge",items:[
+   I("Star Wars: Rise of the Resistance",{ll:"Lightning Lane priority",meta:"40-inch height requirement"}),
+   I("Millennium Falcon: Smugglers Run",{ll:"Lightning Lane",meta:"38-inch height requirement"})
+  ]},
+  {t:"12:30 PM",area:"Commissary Lane",items:[I("ABC Commissary",{kind:"meal",meta:"Quick-Service lunch"})]},
+  {t:"1:00 PM",area:"Sunset Boulevard",items:[
+   I("Beauty and the Beast — Live on Stage",{time:"1:00 PM",kind:"show",details:"Other 2026 showtimes: 11:00 AM, 2:00 PM, 4:00 PM, 5:00 PM."})
+  ]},
+  {t:"2:05 PM",area:"Animation Courtyard",items:[
+   I("The Little Mermaid — A Musical Adventure",{time:"2:05 PM",kind:"show",details:"Other 2026 showtimes: 10:00 AM, 10:35 AM, 11:10 AM, 11:45 AM, 12:20 PM, 12:55 PM, 1:30 PM, 2:40 PM, 3:15 PM, 3:50 PM, 4:25 PM, 5:00 PM, 5:35 PM, 6:10 PM, 6:45 PM, 7:20 PM, 7:55 PM."}),
+   I("Disney Villains: Unfairly Ever After",{time:"3:10 PM",kind:"show",details:"Other 2026 showtimes: 10:30 AM, 11:10 AM, 11:50 AM, 12:30 PM, 1:10 PM, 1:50 PM, 2:30 PM, 3:50 PM, 4:30 PM, 5:10 PM, 5:50 PM, 6:30 PM, 7:10 PM, 7:50 PM."})
+  ]},
+  {t:"Late Afternoon",area:"Hollywood Boulevard",items:[
+   I("Mickey & Minnie’s Runaway Railway",{ll:"Lightning Lane priority"})
+  ]},
+  {t:"6:15 PM",area:"Echo Lake",items:[I("Hollywood & Vine Fantasmic! Dining Package",{kind:"meal",meta:"Dinner"})]},
+  {t:"Night",area:"Sunset Boulevard",items:[
+   I("Fantasmic!",{time:"8:30 PM",kind:"show",meta:"Reserved dining-package seating",details:"Second 2026 performance: 10:00 PM."})
+  ]}
+ ]
+},
+{
+ d:"Thu 8/26",title:"Magic Kingdom — Second Day",park:"Magic Kingdom",hours:"9:00 AM–11:00 PM • Early Entry 8:30 AM",
+ blocks:[
+  {t:"Morning",area:"Tomorrowland",items:[
+   I("Buzz Lightyear’s Space Ranger Spin",{ll:"Lightning Lane"}),
+   I("Tomorrowland Speedway",{meta:"32-inch height requirement"}),
+   I("Tomorrowland Transit Authority PeopleMover"),
+   I("Walt Disney’s Carousel of Progress"),
+   I("TRON Lightcycle / Run",{ll:"Lightning Lane priority",meta:"48-inch height requirement"}),
+   I("Space Mountain",{ll:"Lightning Lane",meta:"44-inch height requirement"})
+  ]},
+  {t:"Late Morning",area:"Frontierland",items:[
+   I("Tiana’s Bayou Adventure",{ll:"Lightning Lane priority",meta:"40-inch height requirement"}),
+   I("Big Thunder Mountain Railroad",{ll:"Lightning Lane priority",meta:"38-inch height requirement"})
+  ]},
+  {t:"12:30 PM",area:"Frontierland",items:[I("Pecos Bill Tall Tale Inn and Cafe",{kind:"meal",meta:"Quick-Service lunch"})]},
+  {t:"Afternoon",area:"Frontierland → Liberty Square → Adventureland",items:[
+   I("Country Bear Musical Jamboree"),
+   I("The Hall of Presidents"),
+   I("Jungle Cruise",{ll:"Lightning Lane priority"}),
+   I("Swiss Family Treehouse")
+  ]},
+  {t:"5:45 PM",area:"Liberty Square",items:[I("Liberty Tree Tavern",{kind:"meal",meta:"Dinner"})]}
+ ]
+},
+{
+ d:"Fri 8/27",title:"Pool + Resort Day",park:"Disney’s Beach Club Resort",hours:"Resort day",
+ blocks:[
+  {t:"9:00 AM",area:"Disney’s Grand Floridian Resort & Spa",items:[I("1900 Park Fare",{kind:"meal",meta:"Character breakfast"})]},
+  {t:"11:30 AM–3:30 PM",area:"Disney’s Beach Club Resort",items:[I("Stormalong Bay")]},
+  {t:"Afternoon",area:"Disney’s Beach Club Resort + Disney’s BoardWalk",items:[I("Room time"),I("Disney’s BoardWalk")]},
+  {t:"Evening",area:"Disney’s Beach Club Resort / EPCOT",items:[I("Quick-Service dinner",{kind:"meal"}),I("EPCOT evening")]}
+ ]
+},
+{
+ d:"Sat 8/28",title:"Disney’s Hollywood Studios + EPCOT",park:"Disney’s Hollywood Studios",hours:"Hollywood Studios 9:00 AM–9:30 PM • EPCOT 9:00 AM–9:00 PM",
+ blocks:[
+  {t:"Morning",area:"Disney’s Hollywood Studios",items:[
+   I("Favorite repeats"),
+   I("Monstropolis",{meta:"New land scheduled to begin opening in 2027"})
+  ]},
+  {t:"10:15 AM",area:"Walt Disney Studios area",items:[
+   I("Disney Jr. Mickey Mouse Clubhouse Live!",{time:"10:15 AM",kind:"show",details:"Other 2026 showtimes: 11:15 AM, 12:15 PM, 1:15 PM, 3:05 PM, 3:55 PM, 4:45 PM, 5:35 PM."})
+  ]},
+  {t:"Late Morning",area:"Disney’s Hollywood Studios",items:[
+   I("The Magic of Disney Animation",{kind:"show",meta:"Opening September 14, 2026"})
+  ]},
+  {t:"12:30 PM",area:"Toy Story Land",items:[I("Woody’s Lunch Box",{kind:"meal",meta:"Quick-Service lunch"})]},
+  {t:"3:30 PM",area:"Transportation",items:[I("Walk or Friendship Boat to EPCOT International Gateway")]},
+  {t:"Late Afternoon",area:"EPCOT — World Showcase",items:[
+   I("Kidcot Fun Stops"),
+   I("World Showcase pavilion time")
+  ]},
+  {t:"6:00 PM",area:"World Nature",items:[I("Garden Grill Restaurant",{kind:"meal",meta:"Final family dinner"})]},
+  {t:"Evening",area:"World Showcase Lagoon",items:[I("EPCOT nighttime spectacular",{time:"9:00 PM",kind:"show"})]}
+ ]
+},
+{
+ d:"Sun 8/29",title:"Departure",park:"Disney’s Beach Club Resort",hours:"Departure day",
+ blocks:[
+  {t:"Morning",area:"Disney’s Beach Club Resort",items:[I("Breakfast"),I("Final packing"),I("Resort time before departure")]}
+ ]
+}
+];
+
+function key(di,bi,ii){return `dw27_${di}_${bi}_${ii}`}
+function state(k){return localStorage.getItem(k)||""}
+function setState(k,v){localStorage.setItem(k,v);renderDay(currentDay);updateTrip()}
+let currentDay=0;
+
+function renderTabs(){
+ daytabs.innerHTML=days.map((x,i)=>`<button class="${i===currentDay?'active':''}" onclick="currentDay=${i};renderTabs();renderDay(${i})">${x.d}</button>`).join("")
+}
+function itemClass(x,s){
+ let c="";
+ if(s==="done") c+=" done";
+ if(s==="later") c+=" later";
+ if(s==="skip") c+=" skipped";
+ if(x.ll==="Lightning Lane priority") c+=" priority";
+ else if(x.ll) c+=" llcard";
+ return c;
+}
+function badges(x){
+ let out="";
+ if(x.ll==="Lightning Lane priority") out+=`<span class="badge b-priority">Lightning Lane priority</span>`;
+ else if(x.ll) out+=`<span class="badge b-ll">${x.ll}</span>`;
+ if(x.kind==="show") out+=`<span class="badge b-show">Show / entertainment</span>`;
+ if(x.kind==="meal") out+=`<span class="badge b-meal">Dining / reservation</span>`;
+ return out?`<div class="badges">${out}</div>`:"";
+}
+function renderDay(di){
+ const d=days[di]; let total=0,done=0,nextObj=null;
+ d.blocks.forEach((b,bi)=>b.items.forEach((x,ii)=>{
+  total++; const s=state(key(di,bi,ii)); if(s==="done")done++;
+  if(!nextObj && !s) nextObj={x,b};
+ }));
+ const pct=total?done/total*100:0;
+ let h=`<div class="hero">
+   <h1>${d.title}</h1><div class="muted">${d.d}</div>
+   <div class="hours">${d.hours}</div>
+   <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
+   <div class="muted" style="margin-top:7px">${done} of ${total} completed</div>
+   <div class="heroactions">${maps[d.park]?`<a class="mapbtn" href="${maps[d.park]}" target="_blank" rel="noopener">Open ${d.park} Map</a>`:""}</div>
+   <div class="legend"><span class="b-priority">Lightning Lane priority</span><span class="b-ll">Lightning Lane</span><span class="b-show">Show</span><span class="b-meal">Dining</span></div>
+ </div>`;
+ if(nextObj){
+  h+=`<div class="nextbox"><div class="nextlabel">Up Next</div><div class="nextname">${nextObj.x.name}</div><div class="nextmeta">${nextObj.b.t} • ${nextObj.b.area}</div></div>`;
+ }
+ d.blocks.forEach((b,bi)=>{
+   h+=`<div class="block"><div class="blockhead"><div class="blocktime">${b.t}</div><h2>${b.area}</h2></div>`;
+   b.items.forEach((x,ii)=>{
+    const k=key(di,bi,ii),s=state(k);
+    const extra=(x.details||true)?`<details><summary class="more">More</summary><div class="detailtext">${x.details||"Mark this complete, move it later, or skip it for today."}<div class="actions"><button onclick="setState('${k}','later')">Later</button><button onclick="setState('${k}','skip')">Skip</button><button onclick="setState('${k}','')">Reset</button></div></div></details>`:"";
+    h+=`<div class="item${itemClass(x,s)}">
+      <input class="check" type="checkbox" ${s==="done"?"checked":""} onchange="setState('${k}',this.checked?'done':'')">
+      ${x.time?`<div class="time">${x.time}</div>`:""}
+      <div class="name">${x.name}</div>
+      ${x.meta?`<div class="meta">${x.meta}</div>`:""}
+      ${badges(x)}
+      ${extra}
+    </div>`;
+   });
+   h+=`</div>`;
+ });
+ day.innerHTML=h;
+}
+function updateTrip(){
+ let total=0,done=0;
+ days.forEach((d,di)=>d.blocks.forEach((b,bi)=>b.items.forEach((x,ii)=>{total++;if(state(key(di,bi,ii))==="done")done++})));
+ tripbar.style.width=(total?done/total*100:0)+"%";
+ tripprogress.textContent=`${done} of ${total} itinerary items completed`;
+}
+function renderDining(){
+ let rows=[];
+ days.forEach(d=>d.blocks.forEach(b=>b.items.filter(x=>x.kind==="meal").forEach(x=>rows.push(`<div class="reservation"><b>${x.name}</b><div class="small">${d.d} • ${x.time||b.t}${x.meta?" • "+x.meta:""}</div></div>`))));
+ dininglist.innerHTML=rows.join("");
+}
+function renderMaps(){
+ maplist.innerHTML=Object.entries(maps).map(([n,u])=>`<div class="reservation"><b>${n}</b><a class="mapbtn" href="${u}" target="_blank" rel="noopener">Open Map</a></div>`).join("");
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(b.dataset.screen).classList.add("active");
+});
+renderTabs();renderDay(0);renderDining();renderMaps();updateTrip();
+</script>
+</body>
+</html>
