@@ -1,4 +1,9 @@
 <!doctype html>
+<!-- DYNAMIC PLANNER MIGRATION
+     SOURCE: index.html — Final audited app + live Trip Command Center
+     SOURCE SHA256: e38f74e72ae3d235da0917e87ba37714b5a6375220a631bec558ba688b11d48f
+     RULE: future app edits must start from this file or a documented successor, never an older snapshot.
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -159,6 +164,17 @@ main{padding-bottom:88px}
 .dashActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.dashActions button,.dashActions a{display:inline-flex;align-items:center;border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:8px 10px;font-size:11px;font-weight:850;text-decoration:none}.dashActions button.primary{background:#17385e;color:#fff;border-color:#17385e}
 @media(min-width:650px){.dashboardGrid{grid-template-columns:repeat(4,1fr)}}
 
+
+/* Dynamic planner + cloud editing */
+.plannerCard{background:#fff;border:2px solid #9fbadc;border-radius:18px;padding:14px;margin-bottom:11px;box-shadow:var(--shadow)}
+.plannerCard h2{font-size:18px;margin:0 0 5px}.plannerStatus{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:8px 0}.plannerDot{width:9px;height:9px;border-radius:50%;background:#9ca3af}.plannerDot.on{background:#22c55e}.plannerDot.warn{background:#eab308}.plannerDot.off{background:#ef4444}
+.plannerFields{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}.plannerFields label{font-size:10px;font-weight:900;color:#475569}.plannerFields input,.plannerFields select,.plannerFields textarea,.plannerEditor input,.plannerEditor select,.plannerEditor textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;background:#fff;padding:9px 10px;font-size:13px;color:#172033}.plannerFields textarea,.plannerEditor textarea{min-height:70px;resize:vertical}
+.plannerButtons{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.plannerButtons button{border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:8px 10px;font-size:11px;font-weight:850}.plannerButtons button.primary{background:#17385e;color:#fff;border-color:#17385e}.plannerButtons button.danger{color:#991b1b;border-color:#fecaca}.plannerButtons button:disabled{opacity:.45}
+.plannerHint{font-size:10px;line-height:1.4;color:#64748b;margin-top:7px}.plannerError{font-size:11px;color:#991b1b;margin-top:7px}.plannerSuccess{font-size:11px;color:#166534;margin-top:7px}
+.plannerOverlay{position:fixed;inset:0;z-index:100;background:rgba(15,23,42,.62);display:none;align-items:flex-end;justify-content:center}.plannerOverlay.open{display:flex}.plannerEditor{background:#f8fafc;width:100%;max-width:850px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 14px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(15,23,42,.22)}
+.plannerEditorHead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;position:sticky;top:-16px;background:#f8fafc;padding:14px 0 10px;z-index:2;border-bottom:1px solid #e2e8f0}.plannerEditorHead h2{margin:0;font-size:21px}.plannerClose{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:7px 10px;font-weight:900}.plannerSection{background:#fff;border:1px solid #dbe3ec;border-radius:16px;padding:13px;margin-top:11px}.plannerSection h3{font-size:15px;margin:0 0 9px}.plannerGrid{display:grid;grid-template-columns:1fr;gap:8px}.plannerBlock{border:1px solid #dbe3ec;border-radius:14px;padding:11px;margin-top:9px;background:#fff}.plannerBlockTop{display:flex;justify-content:space-between;align-items:center;gap:8px}.plannerBlockTitle{font-size:12px;font-weight:950;color:#17385e}.plannerBlockActions{display:flex;gap:5px}.plannerBlockActions button{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 7px;font-size:10px;font-weight:900}.plannerAttractions{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}.plannerChip{display:inline-flex;align-items:center;gap:4px;background:#edf4fb;border:1px solid #cdddea;border-radius:999px;padding:5px 7px;font-size:10px}.plannerChip button{border:0;background:transparent;padding:0;font-weight:950;color:#991b1b}.plannerSaveBar{position:sticky;bottom:-22px;background:rgba(248,250,252,.98);padding:11px 0 3px;margin-top:10px;border-top:1px solid #e2e8f0}.editBlockBtn{float:right;border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:850;margin-left:8px}
+@media(min-width:650px){.plannerFields,.plannerGrid{grid-template-columns:1fr 1fr}.plannerOverlay{align-items:center}.plannerEditor{border-radius:22px;max-height:90vh;padding:18px}.plannerEditorHead{top:-18px}}
+
 </style>
 </head>
 <body>
@@ -263,6 +279,26 @@ main{padding-bottom:88px}
   <p id="tripSummaryText">Deluxe resort shortlist • Park Hopper planned • Party of 6</p>
   <div class="version" id="tripLiveNote">Live planning summary from the Master Trip Planner</div>
  </div>
+
+ <div class="plannerCard" id="plannerSyncCard">
+  <div class="eyebrow">Editable Trip Planner</div>
+  <h2>Cloud planner sync</h2>
+  <div class="small">Once connected, itinerary changes, restaurant swaps, Lightning Lane times and checklist status can sync through the Master Trip Planner instead of requiring a new GitHub file.</div>
+  <div class="plannerStatus"><span class="plannerDot" id="plannerDot"></span><b id="plannerStatusText">Not connected</b></div>
+  <div class="plannerFields">
+   <label>Apps Script Web App URL<input id="plannerApiUrl" type="url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"></label>
+   <label>Planner access key<input id="plannerAccessKey" type="password" placeholder="Private key from App Control" autocomplete="off"></label>
+  </div>
+  <div class="plannerButtons">
+   <button class="primary" onclick="savePlannerConnection()">Save & connect</button>
+   <button id="plannerInitBtn" onclick="initializeCloudPlanner()" disabled>Initialize from this exact app</button>
+   <button id="plannerEditBtn" onclick="openPlannerEditor()" disabled>Edit trip</button>
+   <button onclick="refreshPlannerData()">Refresh</button>
+  </div>
+  <div class="plannerHint">The access key is stored only on this device. It is not embedded in the public GitHub page. The app keeps the current audited build as a fallback if the cloud planner cannot be reached.</div>
+  <div id="plannerMessage"></div>
+ </div>
+
  <div class="quickActions">
   <a href="./Disney_World_2027_Blueprint.pdf" target="_blank" rel="noopener">Open Printable Blueprint</a>
   <a href="https://disneyworld.app.link/MyDisneyExperienceEN-US" target="_blank" rel="noopener">Open My Disney Experience</a>
@@ -271,9 +307,41 @@ main{padding-bottom:88px}
  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
  <div class="info"><b>Family ride key</b><div style="margin-top:7px"><span class="badge bfamily">Family Ride</span><span class="badge blili">Liliana Optional</span><span class="badge badult">Adult Ride</span><span class="badge bnonna">Nonna sits out</span><span class="badge brider">Rider Switch available</span></div><div class="small">Runaway Railway is within Nonna’s comfortable range. Tiana’s Bayou Adventure stays a decide-later attraction. Liliana’s optional rides can be adjusted as her comfort level becomes clearer.</div></div>
  <div id="needsvisit"></div>
-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Final audited app + live Trip Command Center • Sep 18, 2026</div>
+<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner • Apps Script connected • protected audited base • Sep 18, 2026</div>
 </section>
 </main>
+
+<div class="plannerOverlay" id="plannerOverlay" onclick="plannerOverlayBackdrop(event)">
+ <div class="plannerEditor" role="dialog" aria-modal="true" aria-label="Edit Disney trip planner">
+  <div class="plannerEditorHead"><div><div class="eyebrow">Live Planner</div><h2>Edit trip</h2><div class="small" id="plannerEditorSync">Changes save to the Master Trip Planner.</div></div><button class="plannerClose" onclick="closePlannerEditor()">Close</button></div>
+  <div class="plannerSection">
+   <h3>Trip basics</h3>
+   <div class="plannerGrid">
+    <label>Planning window<input id="editPlanningWindow"></label>
+    <label>Working itinerary<input id="editWorkingItinerary"></label>
+    <label>Resort<input id="editResort"></label>
+    <label>Party<input id="editParty"></label>
+    <label>Tickets<input id="editTickets"></label>
+    <label>Dining strategy<input id="editDiningStrategy"></label>
+   </div>
+  </div>
+  <div class="plannerSection">
+   <h3>Daily itinerary</h3>
+   <div class="plannerGrid">
+    <label>Day<select id="editDaySelect" onchange="renderPlannerDayEditor()"></select></label>
+    <label>Date<input id="editDayDate" type="date"></label>
+    <label>Day label<input id="editDayLabel"></label>
+    <label>Day title<input id="editDayTitle"></label>
+    <label>Park hours<input id="editDayHours"></label>
+    <label>Parks (comma separated)<input id="editDayParks"></label>
+   </div>
+   <div id="plannerBlocks"></div>
+   <div class="plannerButtons"><button onclick="addPlannerBlock()">Add time block</button></div>
+  </div>
+  <div class="plannerSaveBar"><div class="plannerButtons"><button class="primary" onclick="savePlannerEditor()">Save changes</button><button onclick="closePlannerEditor()">Cancel</button></div><div id="plannerEditorMessage"></div></div>
+ </div>
+</div>
+
 
 <script>
 const DASHBOARD_FEED_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRfHQAFUttU6dBzGeU2UfPXRrXPaJvBagNrHM_FOqQHRMTOsaSWRh6PUY9PQwr3Fkn_jHaeYBdv3RM4/pub?gid=1193476012&single=true&output=csv";
@@ -376,6 +444,139 @@ async function loadDashboardFeed(force=false){
   renderDashboard(false);
  }
 }
+
+const DYNAMIC_PLANNER_SOURCE_SHA="e38f74e72ae3d235da0917e87ba37714b5a6375220a631bec558ba688b11d48f";
+const PLANNER_API_DEFAULT="https://script.google.com/macros/s/AKfycbyJqAu0eSXEjJVqoq4VQD2As3-10wlYE3J-kpaFIeuNunZtkIZWiYG6VSKG4blwggy2yA/exec";
+const PLANNER_DEFAULT_SETTINGS={
+ planning_window:"August 18–30, 2027",working_itinerary:"August 21–29, 2027",resort:"Deluxe shortlist — not locked",party:"6 travelers",tickets:"Park Hopper — 7 vs 8 days open",dining_strategy:"Cash-first"
+};
+let plannerSettings={...PLANNER_DEFAULT_SETTINGS};
+let plannerConnected=false;
+let plannerInitialized=false;
+let plannerLoading=false;
+let plannerRemoteStatus=[];
+let plannerEditorDay=0;
+
+function plannerApiUrl(){return (localStorage.getItem('dw27_planner_api')||PLANNER_API_DEFAULT).trim()}
+function plannerKey(){return (localStorage.getItem('dw27_planner_key')||'').trim()}
+function plannerEls(){return {url:document.getElementById('plannerApiUrl'),key:document.getElementById('plannerAccessKey'),dot:document.getElementById('plannerDot'),status:document.getElementById('plannerStatusText'),msg:document.getElementById('plannerMessage'),init:document.getElementById('plannerInitBtn'),edit:document.getElementById('plannerEditBtn')}}
+function setPlannerState(kind,text,message=''){
+ const e=plannerEls(); if(!e.dot)return;
+ e.dot.className='plannerDot '+kind; e.status.textContent=text;
+ e.init.disabled=!plannerConnected||plannerInitialized||plannerLoading;
+ e.edit.disabled=!plannerConnected||!plannerInitialized||plannerLoading;
+ e.msg.className=message?(kind==='off'?'plannerError':'plannerSuccess'):''; e.msg.textContent=message;
+}
+function hydratePlannerInputs(){const e=plannerEls();if(e.url)e.url.value=plannerApiUrl();if(e.key)e.key.value=plannerKey()}
+function savePlannerConnection(){
+ const e=plannerEls(); localStorage.setItem('dw27_planner_api',(e.url.value||'').trim()); localStorage.setItem('dw27_planner_key',(e.key.value||'').trim());
+ refreshPlannerData(true);
+}
+async function plannerRequest(action,payload={}){
+ const url=plannerApiUrl(),key=plannerKey(); if(!url||!key)throw new Error('Enter the Apps Script URL and planner access key first.');
+ if(action==='get'){
+  const sep=url.includes('?')?'&':'?'; const r=await fetch(url+sep+'key='+encodeURIComponent(key)+'&_='+Date.now(),{cache:'no-store',redirect:'follow'});
+  const t=await r.text(); let j; try{j=JSON.parse(t)}catch(e){throw new Error('The planner backend returned an unreadable response. Check the deployed Web App URL.')} if(!j.ok)throw new Error(j.error||'Planner request failed'); return j;
+ }
+ const body={...payload,key,action};
+ const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'});
+ const t=await r.text(); let j; try{j=JSON.parse(t)}catch(e){throw new Error('The planner backend returned an unreadable response.')} if(!j.ok)throw new Error(j.error||'Planner save failed'); return j;
+}
+function applyAttractionMaster(records){
+ if(!Array.isArray(records)||!records.length)return;
+ Object.keys(ATTRACTIONS).forEach(k=>delete ATTRACTIONS[k]); Object.keys(BY_ID).forEach(k=>delete BY_ID[k]);
+ records.forEach(x=>{if(!x||!x.id||!x.park)return;BY_ID[x.id]={...x};const opts={...x};['id','name','area','park'].forEach(k=>delete opts[k]);(ATTRACTIONS[x.park]??=[]).push([x.id,x.name,x.area,opts])});
+}
+function applyPlannerPayload(p){
+ if(Array.isArray(p.days)&&p.days.length){DAYS.splice(0,DAYS.length,...p.days)}
+ if(p.meals&&Object.keys(p.meals).length){Object.keys(MEALS).forEach(k=>delete MEALS[k]);Object.assign(MEALS,p.meals)}
+ if(p.reservations&&Object.keys(p.reservations).length){Object.keys(RESERVATIONS).forEach(k=>delete RESERVATIONS[k]);Object.assign(RESERVATIONS,p.reservations)}
+ if(Array.isArray(p.diningMaster)&&p.diningMaster.length){DINING_MASTER.splice(0,DINING_MASTER.length,...p.diningMaster)}
+ if(Array.isArray(p.attractionMaster)&&p.attractionMaster.length)applyAttractionMaster(p.attractionMaster);
+ plannerSettings={...PLANNER_DEFAULT_SETTINGS,...(p.settings||{})};
+ plannerRemoteStatus=Array.isArray(p.status)?p.status:[]; applyRemoteStatusToLocal();
+ plannerInitialized=!!p.initialized; plannerConnected=true; updatePlannerSummary();
+ if(currentDay>=DAYS.length)currentDay=Math.max(0,DAYS.length-1);
+ renderAll();
+}
+function updatePlannerSummary(){
+ const s=plannerSettings;
+ const header=document.getElementById('headerTripStatus'); if(header)header.textContent=`${s.planning_window||s.working_itinerary} • ${s.resort||'Resort planning'}`;
+ const tw=document.getElementById('tripWindowText'); if(tw)tw.textContent=s.working_itinerary||s.planning_window;
+ const ts=document.getElementById('tripSummaryText'); if(ts)ts.textContent=`${s.resort||'Resort planning'} • ${s.tickets||'Park Hopper'} • ${s.party||'Travel party'}`;
+}
+function applyRemoteStatusToLocal(){
+ plannerRemoteStatus.forEach(r=>{
+  const id=r.attraction_id,day=r.day_date||''; if(!id)return;
+  let di=day?DAYS.findIndex(d=>d.date===day):-1;
+  const statusKey=(REPEATABLE_IDS.has(id)&&di>=0)?`dw27_status_${id}_day${di}`:`dw27_status_${id}`;
+  if(r.status)localStorage.setItem(statusKey,r.status);else localStorage.removeItem(statusKey);
+  if(r.ll_time)localStorage.setItem('dw27_lltime_'+id,r.ll_time);
+ });
+}
+async function refreshPlannerData(showMessage=false){
+ hydratePlannerInputs(); if(!plannerApiUrl()||!plannerKey()){plannerConnected=false;plannerInitialized=false;setPlannerState('warn','Local planner only',showMessage?'Enter the Web App URL and access key to turn on cross-device editing.':'');return}
+ plannerLoading=true;setPlannerState('warn','Connecting…');
+ try{const p=await plannerRequest('get');applyPlannerPayload(p);setPlannerState(plannerInitialized?'on':'warn',plannerInitialized?'Cloud planner connected':'Backend connected — initialization needed',showMessage?(plannerInitialized?'Latest planner data loaded.':'Click “Initialize from this exact app” once to seed the cloud planner from the current audited build.'):'')}
+ catch(err){plannerConnected=false;plannerInitialized=false;setPlannerState('off','Cloud planner unavailable',String(err.message||err))}
+ finally{plannerLoading=false;const e=plannerEls();if(e.init)e.init.disabled=!plannerConnected||plannerInitialized;if(e.edit)e.edit.disabled=!plannerConnected||!plannerInitialized}
+}
+async function initializeCloudPlanner(){
+ if(!confirm('Initialize the cloud planner from this exact current app? This is the protected audited build with the live Trip Command Center.'))return;
+ plannerLoading=true;setPlannerState('warn','Initializing…');
+ try{
+  await plannerRequest('initialize',{canonical_sha256:DYNAMIC_PLANNER_SOURCE_SHA,days:DAYS,meals:MEALS,reservations:RESERVATIONS,settings:plannerSettings,diningMaster:DINING_MASTER,attractionMaster:Object.values(BY_ID)});
+  plannerInitialized=true;await refreshPlannerData(false);setPlannerState('on','Cloud planner connected','Initialized successfully from the current audited app. Future itinerary and dining changes can save without replacing index.html.');
+ }catch(err){setPlannerState('off','Initialization failed',String(err.message||err))}finally{plannerLoading=false}
+}
+function plannerStatusRecord(id,dayIndex=null){const day=(REPEATABLE_IDS.has(id)&&dayIndex!==null&&DAYS[dayIndex])?DAYS[dayIndex].date:'';return {attraction_id:id,day_date:day,status:status(id,dayIndex),ll_time:llTime(id)}}
+async function syncPlannerStatus(id,dayIndex=null){if(!plannerConnected||!plannerInitialized)return;try{await plannerRequest('saveStatus',{record:plannerStatusRecord(id,dayIndex)})}catch(e){console.warn('Planner status sync failed',e)}}
+
+function openPlannerEditor(dayIndex=currentDay){
+ if(!plannerConnected||!plannerInitialized){setPlannerState('warn','Cloud planner not ready','Connect and initialize the planner first.');return}
+ plannerEditorDay=Math.max(0,Math.min(dayIndex,DAYS.length-1));
+ const sel=document.getElementById('editDaySelect');sel.innerHTML=DAYS.map((d,i)=>`<option value="${i}" ${i===plannerEditorDay?'selected':''}>${d.label} — ${d.title}</option>`).join('');
+ document.getElementById('editPlanningWindow').value=plannerSettings.planning_window||'';document.getElementById('editWorkingItinerary').value=plannerSettings.working_itinerary||'';document.getElementById('editResort').value=plannerSettings.resort||'';document.getElementById('editParty').value=plannerSettings.party||'';document.getElementById('editTickets').value=plannerSettings.tickets||'';document.getElementById('editDiningStrategy').value=plannerSettings.dining_strategy||'';
+ renderPlannerDayEditor();document.getElementById('plannerOverlay').classList.add('open');document.body.style.overflow='hidden';
+}
+function closePlannerEditor(){document.getElementById('plannerOverlay').classList.remove('open');document.body.style.overflow=''}
+function plannerOverlayBackdrop(e){if(e.target===document.getElementById('plannerOverlay'))closePlannerEditor()}
+function renderPlannerDayEditor(){
+ const sel=document.getElementById('editDaySelect');plannerEditorDay=Number(sel.value||0);const d=DAYS[plannerEditorDay]; if(!d)return;
+ document.getElementById('editDayDate').value=d.date||'';document.getElementById('editDayLabel').value=d.label||'';document.getElementById('editDayTitle').value=d.title||'';document.getElementById('editDayHours').value=d.hours||'';document.getElementById('editDayParks').value=(d.parks||[]).join(', ');
+ document.getElementById('plannerBlocks').innerHTML=(d.blocks||[]).map((b,i)=>plannerBlockHTML(b,i,d)).join('');
+}
+function escAttr(s){return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function mealNameForId(id){return id&&MEALS[id]?MEALS[id].name:''}
+function mealSelectHTML(value,index,slot){
+ const current=mealNameForId(value); const names=[...new Set(DINING_MASTER.map(x=>x.name).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ const inDirectory=!!current&&names.includes(current); let options=`<option value="">None</option>`;
+ if(value&&current&&!inDirectory)options+=`<option value="mealid:${escAttr(value)}" selected>${escAttr(current)} — current</option>`;
+ names.forEach(n=>{const selected=n===current?' selected':'';options+=`<option value="restaurant:${escAttr(n)}"${selected}>${escAttr(n)}</option>`});
+ return `<select data-block="${index}" data-slot="${slot}" class="plannerMealSelect">${options}</select>`;
+}
+function plannerBlockHTML(b,i,d){
+ const chips=(b.ids||[]).map(id=>`<span class="plannerChip">${escAttr(BY_ID[id]?.name||id)} <button type="button" onclick="plannerRemoveAttraction(${i},'${id}')">×</button></span>`).join('');
+ const dayParks=(d.parks||[]); let choices=[];dayParks.forEach(p=>(ATTRACTIONS[p]||[]).forEach(r=>choices.push(r[0]))); if(!choices.length)choices=Object.keys(BY_ID); choices=[...new Set(choices)].filter(id=>!(b.ids||[]).includes(id)).sort((a,b)=>(BY_ID[a]?.name||a).localeCompare(BY_ID[b]?.name||b));
+ return `<div class="plannerBlock" data-block-index="${i}"><div class="plannerBlockTop"><div class="plannerBlockTitle">Block ${i+1}</div><div class="plannerBlockActions"><button type="button" onclick="movePlannerBlock(${i},-1)">↑</button><button type="button" onclick="movePlannerBlock(${i},1)">↓</button><button type="button" onclick="deletePlannerBlock(${i})">Delete</button></div></div><div class="plannerGrid"><label>Time<input data-field="time" value="${escAttr(b.time||'')}"></label><label>Area<input data-field="area" value="${escAttr(b.area||'')}"></label><label>Meal 1${mealSelectHTML(b.meal||'',i,'meal')}</label><label>Meal 2${mealSelectHTML(b.meal2||'',i,'meal2')}</label></div><label style="display:block;margin-top:8px">Custom note<textarea data-field="custom">${escAttr((b.custom||[]).join('\n'))}</textarea></label><div class="plannerAttractions">${chips||'<span class="small">No attractions in this block.</span>'}</div><div class="plannerGrid"><label>Add attraction<select class="plannerAddAttr"><option value="">Choose attraction…</option>${choices.map(id=>`<option value="${id}">${escAttr(BY_ID[id]?.name||id)}</option>`).join('')}</select></label><div class="plannerButtons"><button type="button" onclick="plannerAddAttraction(${i},this)">Add attraction</button></div></div></div>`;
+}
+function collectPlannerDayFromForm(){
+ const d=DAYS[plannerEditorDay]; d.date=document.getElementById('editDayDate').value||d.date; d.label=document.getElementById('editDayLabel').value; d.title=document.getElementById('editDayTitle').value; d.hours=document.getElementById('editDayHours').value; d.parks=document.getElementById('editDayParks').value.split(',').map(x=>x.trim()).filter(Boolean);
+ document.querySelectorAll('#plannerBlocks .plannerBlock').forEach((el,i)=>{const b=d.blocks[i];b.time=el.querySelector('[data-field="time"]').value;b.area=el.querySelector('[data-field="area"]').value;const c=el.querySelector('[data-field="custom"]').value.split('\n').map(x=>x.trim()).filter(Boolean);if(c.length)b.custom=c;else delete b.custom;['meal','meal2'].forEach(slot=>{const v=el.querySelector(`select[data-slot="${slot}"]`).value;const id=plannerMealValueToId(v);if(id)b[slot]=id;else delete b[slot]})});
+}
+function plannerMealValueToId(v){if(!v)return'';if(v.startsWith('mealid:'))return v.slice(7);if(v.startsWith('restaurant:'))return ensureMealFromDiningName(v.slice(11));return''}
+function ensureMealFromDiningName(name){let existing=Object.keys(MEALS).find(id=>MEALS[id].name===name);if(existing)return existing;const rec=DINING_MASTER.find(x=>x.name===name)||{};let base='custom-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,35);let id=base||('custom-'+Date.now());let n=2;while(MEALS[id])id=base+'-'+n++;MEALS[id]={name,area:rec.area||rec.location||'',meta:rec.type||rec.meal||''};return id}
+function plannerRemoveAttraction(blockIndex,id){collectPlannerDayFromForm();const b=DAYS[plannerEditorDay].blocks[blockIndex];b.ids=(b.ids||[]).filter(x=>x!==id);renderPlannerDayEditor()}
+function plannerAddAttraction(blockIndex,btn){collectPlannerDayFromForm();const el=btn.closest('.plannerBlock');const id=el.querySelector('.plannerAddAttr').value;if(!id)return;const b=DAYS[plannerEditorDay].blocks[blockIndex];b.ids=b.ids||[];if(!b.ids.includes(id))b.ids.push(id);renderPlannerDayEditor()}
+function movePlannerBlock(i,dir){collectPlannerDayFromForm();const a=DAYS[plannerEditorDay].blocks,j=i+dir;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];renderPlannerDayEditor()}
+function deletePlannerBlock(i){collectPlannerDayFromForm();if(!confirm('Delete this time block from the itinerary?'))return;DAYS[plannerEditorDay].blocks.splice(i,1);renderPlannerDayEditor()}
+function addPlannerBlock(){collectPlannerDayFromForm();DAYS[plannerEditorDay].blocks.push({time:'',area:'',ids:[]});renderPlannerDayEditor();setTimeout(()=>{const e=document.getElementById('plannerBlocks');e.lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'})},50)}
+async function savePlannerEditor(){
+ const msg=document.getElementById('plannerEditorMessage');msg.className='';msg.textContent='Saving…';
+ try{collectPlannerDayFromForm();plannerSettings={...plannerSettings,planning_window:document.getElementById('editPlanningWindow').value,working_itinerary:document.getElementById('editWorkingItinerary').value,resort:document.getElementById('editResort').value,party:document.getElementById('editParty').value,tickets:document.getElementById('editTickets').value,dining_strategy:document.getElementById('editDiningStrategy').value};await plannerRequest('saveAll',{days:DAYS,meals:MEALS,reservations:RESERVATIONS,settings:plannerSettings});msg.className='plannerSuccess';msg.textContent='Saved to the Master Trip Planner.';updatePlannerSummary();renderAll();setTimeout(closePlannerEditor,450)}catch(err){msg.className='plannerError';msg.textContent=String(err.message||err)}
+}
+function openPlannerAtBlock(blockIndex){openPlannerEditor(currentDay);setTimeout(()=>document.querySelector(`[data-block-index="${blockIndex}"]`)?.scrollIntoView({behavior:'smooth',block:'center'}),80)}
+
 const MAPS={
  "Magic Kingdom":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/MK_0626_EN-DIGITAL.pdf?2026-06-23T16:48:45+00:00",
  "EPCOT":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/EPCOT-guidemap_1125_ENG-DIGITAL.pdf?2025-11-03T16%3A28%3A44+00%3A00=",
@@ -656,7 +857,7 @@ function familyPlan(x){
  return "";
 }
 function llTime(id){return localStorage.getItem("dw27_lltime_"+id)||""}
-function saveLLTime(id,val){ if(val) localStorage.setItem("dw27_lltime_"+id,val); else localStorage.removeItem("dw27_lltime_"+id); renderAll(); }
+function saveLLTime(id,val){ if(val) localStorage.setItem("dw27_lltime_"+id,val); else localStorage.removeItem("dw27_lltime_"+id); renderAll(); syncPlannerStatus(id,currentDay); }
 function lightningPanel(x){
  if(!x.ll) return "";
  const t=llTime(x.id);
@@ -799,7 +1000,7 @@ function status(id,dayIndex=null){
 function setStatus(id,val,dayIndex=null){
  const key=REPEATABLE_IDS.has(id) && dayIndex!==null ? `dw27_status_${id}_day${dayIndex}` : `dw27_status_${id}`;
  if(val)localStorage.setItem(key,val); else localStorage.removeItem(key);
- renderAll();
+ renderAll(); syncPlannerStatus(id,dayIndex);
 }
 function nextParkDay(origin,park){
  for(let i=origin+1;i<DAYS.length;i++) if(DAYS[i].parks.includes(park)) return i;
@@ -1005,7 +1206,7 @@ function renderDay(){
    const normal=(b.ids||[]).filter(id=>visibleOnDay(id));
    const hasFixed=b.meal||b.meal2||b.reservation||(b.custom&&b.custom.length);
    if(remainingOnly && !carriedHere.length && !normal.length && !hasFixed)return;
-   h+=`<div class="block"><div class="blockhead"><div class="blocktime">${b.time}</div><h2>${b.area}</h2></div>`;
+   h+=`<div class="block"><div class="blockhead">${plannerConnected&&plannerInitialized?`<button class="editBlockBtn" onclick="openPlannerAtBlock(${bi})">Edit</button>`:""}<div class="blocktime">${b.time}</div><h2>${b.area}</h2></div>`;
    carriedHere.forEach(c=>h+=renderItem(c.id,true));
    normal.forEach(id=>h+=renderItem(id,false));
    h+=nearbyForBlock(d,b);
@@ -1198,7 +1399,7 @@ function updateTrip(){
  const stranded=allMoved().filter(x=>x.dest<0);
  needsvisit.innerHTML=stranded.length?`<div class="notice"><b>No later visit is currently scheduled for:</b><br>${stranded.map(x=>`${BY_ID[x.id].name} — ${x.park}`).join("<br>")}</div>`:"";
 }
-function renderAll(){renderDashboard(false);renderTabs();renderDay();renderParkFilters();renderAttractions();renderDining();renderMaps();updateTrip()}
+function renderAll(){renderDashboard(false);renderTabs();renderDay();renderParkFilters();renderAttractions();renderDining();renderMaps();updateTrip();if(plannerConnected)updatePlannerSummary()}
 document.querySelectorAll(".bottomNav button").forEach(b=>b.onclick=()=>{
  document.querySelectorAll(".bottomNav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(b.dataset.screen).classList.add("active");
@@ -1223,7 +1424,7 @@ document.querySelectorAll(".diningFilter").forEach(b=>b.onclick=()=>{
 diningSearch.addEventListener("input",e=>{diningQuery=e.target.value;renderDining()});
 diningLocation.addEventListener("change",e=>{diningLoc=e.target.value;renderDining()});
 
-autoDay();renderAll();loadDashboardFeed();
+autoDay();renderAll();loadDashboardFeed();hydratePlannerInputs();refreshPlannerData(false);
 </script>
 </body>
 </html>
