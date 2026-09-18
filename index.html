@@ -307,7 +307,7 @@ main{padding-bottom:88px}
  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
  <div class="info"><b>Family ride key</b><div style="margin-top:7px"><span class="badge bfamily">Family Ride</span><span class="badge blili">Liliana Optional</span><span class="badge badult">Adult Ride</span><span class="badge bnonna">Nonna sits out</span><span class="badge brider">Rider Switch available</span></div><div class="small">Runaway Railway is within Nonna’s comfortable range. Tiana’s Bayou Adventure stays a decide-later attraction. Liliana’s optional rides can be adjusted as her comfort level becomes clearer.</div></div>
  <div id="needsvisit"></div>
-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner • Apps Script connected • protected audited base • Sep 18, 2026</div>
+<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v1.2 • cross-origin sync fix • protected audited base • Sep 18, 2026</div>
 </section>
 </main>
 
@@ -472,15 +472,46 @@ function savePlannerConnection(){
  const e=plannerEls(); localStorage.setItem('dw27_planner_api',(e.url.value||'').trim()); localStorage.setItem('dw27_planner_key',(e.key.value||'').trim());
  refreshPlannerData(true);
 }
+function plannerJsonp(){
+ const url=plannerApiUrl(),key=plannerKey();
+ return new Promise((resolve,reject)=>{
+  const cb='__dw27_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+  const script=document.createElement('script');
+  const timer=setTimeout(()=>finish(new Error('Planner connection timed out.')),12000);
+  function cleanup(){clearTimeout(timer);try{delete window[cb]}catch(_){window[cb]=undefined}script.remove()}
+  function finish(err,data){cleanup();if(err)reject(err);else resolve(data)}
+  window[cb]=(data)=>{if(!data||!data.ok)finish(new Error((data&&data.error)||'Planner request failed'));else finish(null,data)};
+  script.onerror=()=>finish(new Error('Could not reach the Apps Script web app. Confirm the deployment allows Anyone access.'));
+  const sep=url.includes('?')?'&':'?';
+  script.src=url+sep+'key='+encodeURIComponent(key)+'&prefix='+encodeURIComponent(cb)+'&_='+Date.now();
+  document.head.appendChild(script);
+ });
+}
+function plannerFormPost(body){
+ const url=plannerApiUrl();
+ return new Promise((resolve)=>{
+  const frame=document.createElement('iframe');
+  const name='dw27_post_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+  frame.name=name;frame.style.display='none';document.body.appendChild(frame);
+  const form=document.createElement('form');form.method='POST';form.action=url;form.target=name;form.style.display='none';
+  const field=document.createElement('textarea');field.name='payload';field.value=JSON.stringify(body);form.appendChild(field);document.body.appendChild(form);
+  form.submit();
+  setTimeout(()=>{form.remove();frame.remove();resolve();},900);
+ });
+}
 async function plannerRequest(action,payload={}){
  const url=plannerApiUrl(),key=plannerKey(); if(!url||!key)throw new Error('Enter the Apps Script URL and planner access key first.');
- if(action==='get'){
-  const sep=url.includes('?')?'&':'?'; const r=await fetch(url+sep+'key='+encodeURIComponent(key)+'&_='+Date.now(),{cache:'no-store',redirect:'follow'});
-  const t=await r.text(); let j; try{j=JSON.parse(t)}catch(e){throw new Error('The planner backend returned an unreadable response. Check the deployed Web App URL.')} if(!j.ok)throw new Error(j.error||'Planner request failed'); return j;
+ if(action==='get')return plannerJsonp();
+ const request_id='req_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+ const body={...payload,key,action,request_id};
+ await plannerFormPost(body);
+ for(let i=0;i<12;i++){
+  await new Promise(r=>setTimeout(r,i===0?700:900));
+  const p=await plannerJsonp();
+  if(p.last_error_request_id===request_id)throw new Error(p.last_error||'Planner save failed');
+  if(p.last_request_id===request_id)return p;
  }
- const body={...payload,key,action};
- const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'});
- const t=await r.text(); let j; try{j=JSON.parse(t)}catch(e){throw new Error('The planner backend returned an unreadable response.')} if(!j.ok)throw new Error(j.error||'Planner save failed'); return j;
+ throw new Error('The planner write was sent but could not be confirmed. Open Apps Script → Executions to check whether it completed.');
 }
 function applyAttractionMaster(records){
  if(!Array.isArray(records)||!records.length)return;
