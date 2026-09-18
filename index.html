@@ -173,6 +173,7 @@ main{padding-bottom:88px}
 .plannerHint{font-size:10px;line-height:1.4;color:#64748b;margin-top:7px}.plannerError{font-size:11px;color:#991b1b;margin-top:7px}.plannerSuccess{font-size:11px;color:#166534;margin-top:7px}
 .plannerOverlay{position:fixed;inset:0;z-index:100;background:rgba(15,23,42,.62);display:none;align-items:flex-end;justify-content:center}.plannerOverlay.open{display:flex}.plannerEditor{background:#f8fafc;width:100%;max-width:850px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 14px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(15,23,42,.22)}
 .plannerEditorHead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;position:sticky;top:-16px;background:#f8fafc;padding:14px 0 10px;z-index:2;border-bottom:1px solid #e2e8f0}.plannerEditorHead h2{margin:0;font-size:21px}.plannerClose{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:7px 10px;font-weight:900}.plannerSection{background:#fff;border:1px solid #dbe3ec;border-radius:16px;padding:13px;margin-top:11px}.plannerSection h3{font-size:15px;margin:0 0 9px}.plannerGrid{display:grid;grid-template-columns:1fr;gap:8px}.plannerBlock{border:1px solid #dbe3ec;border-radius:14px;padding:11px;margin-top:9px;background:#fff}.plannerBlockTop{display:flex;justify-content:space-between;align-items:center;gap:8px}.plannerBlockTitle{font-size:12px;font-weight:950;color:#17385e}.plannerBlockActions{display:flex;gap:5px}.plannerBlockActions button{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 7px;font-size:10px;font-weight:900}.plannerAttractions{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}.plannerChip{display:inline-flex;align-items:center;gap:4px;background:#edf4fb;border:1px solid #cdddea;border-radius:999px;padding:5px 7px;font-size:10px}.plannerChip button{border:0;background:transparent;padding:0;font-weight:950;color:#991b1b}.plannerSaveBar{position:sticky;bottom:-22px;background:rgba(248,250,252,.98);padding:11px 0 3px;margin-top:10px;border-top:1px solid #e2e8f0}.editBlockBtn{float:right;border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:850;margin-left:8px}
+.plannerConnectionDetails{margin-top:8px;border:1px solid #dbe3ec;border-radius:12px;background:#f8fafc;padding:0 10px 10px}.plannerConnectionDetails summary{cursor:pointer;font-weight:900;color:#174f86;padding:10px 0}.plannerConnectionDetails .plannerFields{margin-top:2px}.plannerQuickRow{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:8px}.plannerBasicsDetails{padding:0}.plannerBasicsDetails summary{cursor:pointer;font-size:15px;font-weight:900;padding:13px}.plannerBasicsDetails .plannerGrid{padding:0 13px 13px}.contextEditBtn{border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900}.mealEditBtn{border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900}
 @media(min-width:650px){.plannerFields,.plannerGrid{grid-template-columns:1fr 1fr}.plannerOverlay{align-items:center}.plannerEditor{border-radius:22px;max-height:90vh;padding:18px}.plannerEditorHead{top:-18px}}
 
 </style>
@@ -281,21 +282,23 @@ main{padding-bottom:88px}
  </div>
 
  <div class="plannerCard" id="plannerSyncCard">
-  <div class="eyebrow">Editable Trip Planner</div>
-  <h2>Cloud planner sync</h2>
-  <div class="small">Once connected, itinerary changes, restaurant swaps, Lightning Lane times and checklist status can sync through the Master Trip Planner instead of requiring a new GitHub file.</div>
+  <div class="eyebrow">Live Planner</div>
+  <h2>Planner sync</h2>
   <div class="plannerStatus"><span class="plannerDot" id="plannerDot"></span><b id="plannerStatusText">Not connected</b></div>
-  <div class="plannerFields">
-   <label>Apps Script Web App URL<input id="plannerApiUrl" type="url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"></label>
-   <label>Planner access key<input id="plannerAccessKey" type="password" placeholder="Private key from App Control" autocomplete="off"></label>
+  <div class="plannerQuickRow">
+   <button id="plannerEditBtn" onclick="openPlannerEditor()" disabled>Trip settings</button>
+   <button onclick="refreshPlannerData(true)">Refresh</button>
+   <button id="plannerInitBtn" onclick="initializeCloudPlanner()" disabled>Initialize planner</button>
   </div>
-  <div class="plannerButtons">
-   <button class="primary" onclick="savePlannerConnection()">Save & connect</button>
-   <button id="plannerInitBtn" onclick="initializeCloudPlanner()" disabled>Initialize from this exact app</button>
-   <button id="plannerEditBtn" onclick="openPlannerEditor()" disabled>Edit trip</button>
-   <button onclick="refreshPlannerData()">Refresh</button>
-  </div>
-  <div class="plannerHint">The access key is stored only on this device. It is not embedded in the public GitHub page. The app keeps the current audited build as a fallback if the cloud planner cannot be reached.</div>
+  <details class="plannerConnectionDetails" id="plannerConnectionDetails" open>
+   <summary>Connection settings</summary>
+   <div class="plannerFields">
+    <label>Apps Script Web App URL<input id="plannerApiUrl" type="url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"></label>
+    <label>Planner access key<input id="plannerAccessKey" type="password" placeholder="Private key from App Control" autocomplete="off"></label>
+   </div>
+   <div class="plannerButtons"><button class="primary" onclick="savePlannerConnection()">Save & connect</button></div>
+   <div class="plannerHint">The access key is stored only on this device and is not embedded in the public GitHub page.</div>
+  </details>
   <div id="plannerMessage"></div>
  </div>
 
@@ -307,24 +310,13 @@ main{padding-bottom:88px}
  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
  <div class="info"><b>Family ride key</b><div style="margin-top:7px"><span class="badge bfamily">Family Ride</span><span class="badge blili">Liliana Optional</span><span class="badge badult">Adult Ride</span><span class="badge bnonna">Nonna sits out</span><span class="badge brider">Rider Switch available</span></div><div class="small">Runaway Railway is within Nonna’s comfortable range. Tiana’s Bayou Adventure stays a decide-later attraction. Liliana’s optional rides can be adjusted as her comfort level becomes clearer.</div></div>
  <div id="needsvisit"></div>
-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v1.2 • cross-origin sync fix • protected audited base • Sep 18, 2026</div>
+<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v1.3 • contextual editing • protected audited base • Sep 18, 2026</div>
 </section>
 </main>
 
 <div class="plannerOverlay" id="plannerOverlay" onclick="plannerOverlayBackdrop(event)">
  <div class="plannerEditor" role="dialog" aria-modal="true" aria-label="Edit Disney trip planner">
   <div class="plannerEditorHead"><div><div class="eyebrow">Live Planner</div><h2>Edit trip</h2><div class="small" id="plannerEditorSync">Changes save to the Master Trip Planner.</div></div><button class="plannerClose" onclick="closePlannerEditor()">Close</button></div>
-  <div class="plannerSection">
-   <h3>Trip basics</h3>
-   <div class="plannerGrid">
-    <label>Planning window<input id="editPlanningWindow"></label>
-    <label>Working itinerary<input id="editWorkingItinerary"></label>
-    <label>Resort<input id="editResort"></label>
-    <label>Party<input id="editParty"></label>
-    <label>Tickets<input id="editTickets"></label>
-    <label>Dining strategy<input id="editDiningStrategy"></label>
-   </div>
-  </div>
   <div class="plannerSection">
    <h3>Daily itinerary</h3>
    <div class="plannerGrid">
@@ -338,6 +330,17 @@ main{padding-bottom:88px}
    <div id="plannerBlocks"></div>
    <div class="plannerButtons"><button onclick="addPlannerBlock()">Add time block</button></div>
   </div>
+  <details class="plannerSection plannerBasicsDetails">
+   <summary>Trip basics</summary>
+   <div class="plannerGrid">
+    <label>Planning window<input id="editPlanningWindow"></label>
+    <label>Working itinerary<input id="editWorkingItinerary"></label>
+    <label>Resort<input id="editResort"></label>
+    <label>Party<input id="editParty"></label>
+    <label>Tickets<input id="editTickets"></label>
+    <label>Dining strategy<input id="editDiningStrategy"></label>
+   </div>
+  </details>
   <div class="plannerSaveBar"><div class="plannerButtons"><button class="primary" onclick="savePlannerEditor()">Save changes</button><button onclick="closePlannerEditor()">Cancel</button></div><div id="plannerEditorMessage"></div></div>
  </div>
 </div>
@@ -466,6 +469,8 @@ function setPlannerState(kind,text,message=''){
  e.init.disabled=!plannerConnected||plannerInitialized||plannerLoading;
  e.edit.disabled=!plannerConnected||!plannerInitialized||plannerLoading;
  e.msg.className=message?(kind==='off'?'plannerError':'plannerSuccess'):''; e.msg.textContent=message;
+ const cd=document.getElementById('plannerConnectionDetails');if(cd)cd.open=!plannerConnected;
+ if(e.init)e.init.style.display=plannerInitialized?'none':'';
 }
 function hydratePlannerInputs(){const e=plannerEls();if(e.url)e.url.value=plannerApiUrl();if(e.key)e.key.value=plannerKey()}
 function savePlannerConnection(){
@@ -606,7 +611,8 @@ async function savePlannerEditor(){
  const msg=document.getElementById('plannerEditorMessage');msg.className='';msg.textContent='Saving…';
  try{collectPlannerDayFromForm();plannerSettings={...plannerSettings,planning_window:document.getElementById('editPlanningWindow').value,working_itinerary:document.getElementById('editWorkingItinerary').value,resort:document.getElementById('editResort').value,party:document.getElementById('editParty').value,tickets:document.getElementById('editTickets').value,dining_strategy:document.getElementById('editDiningStrategy').value};await plannerRequest('saveAll',{days:DAYS,meals:MEALS,reservations:RESERVATIONS,settings:plannerSettings});msg.className='plannerSuccess';msg.textContent='Saved to the Master Trip Planner.';updatePlannerSummary();renderAll();setTimeout(closePlannerEditor,450)}catch(err){msg.className='plannerError';msg.textContent=String(err.message||err)}
 }
-function openPlannerAtBlock(blockIndex){openPlannerEditor(currentDay);setTimeout(()=>document.querySelector(`[data-block-index="${blockIndex}"]`)?.scrollIntoView({behavior:'smooth',block:'center'}),80)}
+function openPlannerAtBlock(blockIndex){openPlannerAtBlockOnDay(currentDay,blockIndex)}
+function openPlannerAtBlockOnDay(dayIndex,blockIndex){currentDay=dayIndex;openPlannerEditor(dayIndex);setTimeout(()=>document.querySelector(`[data-block-index="${blockIndex}"]`)?.scrollIntoView({behavior:'smooth',block:'center'}),80)}
 
 const MAPS={
  "Magic Kingdom":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/MK_0626_EN-DIGITAL.pdf?2026-06-23T16:48:45+00:00",
@@ -1222,7 +1228,7 @@ function renderDay(){
  const d=DAYS[currentDay], carry=carryMapForDay(currentDay), seq=activeSequence(currentDay);
  let total=0,done=0;
  d.blocks.forEach(b=>(b.ids||[]).forEach(id=>{total++;if(status(id,currentDay)==="done")done++}));
- let h=`<div class="hero"><h1>${d.title}</h1><div class="muted">${d.label}</div><div class="hours">${d.hours}</div><div class="progress"><div class="bar" style="width:${total?done/total*100:0}%"></div></div><div class="muted" style="margin-top:7px">${done} of ${total} planned items completed</div><div class="heroActions"><button class="remainingBtn ${remainingOnly?"active":""}" onclick="toggleRemaining()">Show remaining only</button>${d.parks.map(p=>MAPS[p]?`<a class="mapbtn" href="${MAPS[p]}" target="_blank" rel="noopener">Open ${p} Map</a>`:"").join("")}</div></div>`;
+ let h=`<div class="hero"><h1>${d.title}</h1><div class="muted">${d.label}</div><div class="hours">${d.hours}</div><div class="progress"><div class="bar" style="width:${total?done/total*100:0}%"></div></div><div class="muted" style="margin-top:7px">${done} of ${total} planned items completed</div><div class="heroActions">${plannerConnected&&plannerInitialized?`<button class="contextEditBtn" onclick="openPlannerEditor(currentDay)">Edit this day</button>`:""}<button class="remainingBtn ${remainingOnly?"active":""}" onclick="toggleRemaining()">Show remaining only</button>${d.parks.map(p=>MAPS[p]?`<a class="mapbtn" href="${MAPS[p]}" target="_blank" rel="noopener">Open ${p} Map</a>`:"").join("")}</div></div>`;
  if(seq.length){
    const n=BY_ID[seq[0].id], second=seq[1]?BY_ID[seq[1].id]:null, third=seq[2]?BY_ID[seq[2].id]:null;
    h+=`<div class="nextcard"><div class="eyebrow">Up Next</div><div class="nextname">${displayName(n)}</div><div class="nextmeta">${n.map?`Map ${n.map} • `:""}${n.area} • ${llTime(n.id)?`Lightning Lane ${formatClock(llTime(n.id))}`:seq[0].block.time}</div>${second?`<div class="then"><b>Then:</b> ${second.name}${second.map?` • Map ${second.map}`:""} • ${second.area}</div>`:""}${third?`<div class="then"><b>After:</b> ${third.name} • ${third.area}</div>`:""}</div>`;
@@ -1248,7 +1254,7 @@ function renderDay(){
    [b.meal,b.meal2].filter(Boolean).forEach(mid=>{
      const m=MEALS[mid];
      const rec=findDiningRecord(m.name);
-     h+=`<div class="item mealItem"><div class="name">${m.name}</div><div class="meta">${m.meta||""}</div><span class="badge bmeal">Meal / reservation</span>${rec?`<div class="inlineActions">${rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${rec.details?`<a href="${rec.details}" target="_blank" rel="noopener">Restaurant</a>`:""}</div>`:""}</div>`;
+     h+=`<div class="item mealItem"><div class="name">${m.name}</div><div class="meta">${m.meta||""}</div><span class="badge bmeal">Meal / reservation</span><div class="inlineActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${rec&&rec.details?`<a href="${rec.details}" target="_blank" rel="noopener">Restaurant</a>`:""}${plannerConnected&&plannerInitialized?`<button class="mealEditBtn" onclick="openPlannerAtBlock(${bi})">Change meal</button>`:""}</div></div>`;
    });
    (b.custom||[]).forEach(name=>h+=`<div class="item"><div class="name">${name}</div></div>`);
    h+=`</div>`;
@@ -1378,11 +1384,11 @@ function renderDiningCard(x){
 }
 function renderDining(){
  const planned=[];
- DAYS.forEach(d=>d.blocks.forEach(b=>{
+ DAYS.forEach((d,di)=>d.blocks.forEach((b,bi)=>{
    [b.meal,b.meal2].filter(Boolean).forEach(mid=>{
      const m=MEALS[mid];
      const rec=findDiningRecord(m.name);
-     planned.push(`<div class="reservation"><b>${m.name}</b><div class="small">${d.label} • ${b.time} • ${m.area}${m.meta?" • "+m.meta:""}</div>${rec?`<div class="inlineActions">${rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${rec.details?`<a href="${rec.details}" target="_blank" rel="noopener">Details</a>`:""}</div>`:""}</div>`);
+     planned.push(`<div class="reservation"><b>${m.name}</b><div class="small">${d.label} • ${b.time} • ${m.area}${m.meta?" • "+m.meta:""}</div><div class="inlineActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${rec&&rec.details?`<a href="${rec.details}" target="_blank" rel="noopener">Details</a>`:""}${plannerConnected&&plannerInitialized?`<button class="mealEditBtn" onclick="openPlannerAtBlockOnDay(${di},${bi})">Change</button>`:""}</div></div>`);
    });
  }));
  plannedDining.innerHTML=planned.join("");
