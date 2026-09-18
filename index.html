@@ -177,7 +177,7 @@ main{padding-bottom:88px}
 @media(min-width:650px){.plannerFields,.plannerGrid{grid-template-columns:1fr 1fr}.plannerOverlay{align-items:center}.plannerEditor{border-radius:22px;max-height:90vh;padding:18px}.plannerEditorHead{top:-18px}}
 
 
-/* v1.5 — clean visual planner */
+/* v1.5 — clean visual planner (base for v1.6) */
 :root{--accent:#17385e;--accent2:#2f6f9f;--soft:#f7f8fa;--softblue:#eef5fb;--warm:#fffdf9}
 body{background:#f4f2ed}
 .hero,.block,.info,.reservation,.attrgroup,.plannerCard,.dashSection,.metricCard{box-shadow:0 3px 14px rgba(31,45,61,.045)}
@@ -242,6 +242,58 @@ body{background:#f4f2ed}
  .choiceGrid{grid-template-columns:1fr 1fr}
  .tripSetupGrid{grid-template-columns:1fr 1fr}
 }
+
+
+/* v1.6 — direct itinerary UX prototype */
+.quickSaveState{font-size:10px;color:#64748b;margin-left:auto;align-self:center}
+.dayPrimaryTools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.dayPrimaryTools button,.dayPrimaryTools a{border:1px solid #d3dbe4;background:#fff;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:850;color:#174f86;text-decoration:none}
+.blockhead.quickBlockHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.blockhead.quickBlockHead .blockHeadText{min-width:0}
+.blockMenuBtn{border:0;background:#eef3f8;color:#174f86;border-radius:999px;width:34px;height:34px;font-size:18px;font-weight:900;flex:0 0 auto}
+.itinItem{border-top:1px solid var(--line);background:#fff;padding:10px 12px;display:flex;align-items:center;gap:9px}
+.itinItem.done{background:var(--done)}
+.itinCheck{width:28px;height:28px;border-radius:50%;border:2px solid #b7c1cc;background:#fff;color:#fff;font-size:15px;font-weight:1000;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.itinItem.done .itinCheck{background:#2d7a4b;border-color:#2d7a4b}
+.itinMain{min-width:0;flex:1}
+.itinName{font-size:14px;font-weight:900;line-height:1.25;color:#203040}
+.itinMeta{font-size:10px;color:#788491;margin-top:3px;line-height:1.3}
+.itinMore{border:0;background:transparent;color:#64748b;width:32px;height:32px;border-radius:50%;font-size:18px;font-weight:900;flex:0 0 auto}
+.itinMore:active,.blockMenuBtn:active{background:#e6edf4}
+.blockQuickAdd{display:flex;gap:7px;flex-wrap:wrap;padding:10px 12px 12px;border-top:1px solid #edf0f3;background:#fcfdfe}
+.blockQuickAdd button{border:1px solid #d4dde6;background:#fff;color:#174f86;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900}
+.blockQuickAdd button.primary{background:#eef5fb;border-color:#bfd1e1}
+.quickMealRow{border-top:1px solid var(--line);padding:10px 12px;background:#faf7ff;display:flex;align-items:center;gap:9px}
+.quickMealIcon{width:28px;height:28px;border-radius:50%;background:#eee6fa;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-size:14px}
+.quickMealMain{flex:1;min-width:0}
+.quickMealName{font-size:13px;font-weight:900;line-height:1.25}
+.quickMealMeta{font-size:10px;color:#786d87;margin-top:3px}
+.quickNoteRow{margin:8px 12px 2px;padding:9px 10px;border-radius:12px;background:#fff9e9;border:1px solid #f0dfac;font-size:12px;line-height:1.4;display:flex;gap:8px;align-items:flex-start}
+.quickNoteRow button{margin-left:auto;border:0;background:transparent;color:#174f86;font-weight:900;font-size:10px}
+.quickSheetOverlay{position:fixed;inset:0;z-index:120;background:rgba(15,23,42,.45);display:none;align-items:flex-end;justify-content:center}
+.quickSheetOverlay.open{display:flex}
+.quickSheet{background:#f8fafc;width:100%;max-width:720px;max-height:82vh;overflow:auto;border-radius:24px 24px 0 0;padding:12px 13px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(15,23,42,.24)}
+.quickSheetHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:sticky;top:-12px;z-index:2;background:#f8fafc;padding:10px 0 9px;border-bottom:1px solid #e6ebf0}
+.quickSheetHead h2{margin:1px 0 0;font-size:20px;line-height:1.15}
+.quickSheetClose{border:1px solid #d2dbe4;background:#fff;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:900;color:#174f86}
+.quickSheetBody{padding-top:10px}
+.quickSection{background:#fff;border:1px solid #e0e6ec;border-radius:16px;padding:11px;margin-bottom:9px}
+.quickSectionTitle{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#718096;font-weight:950;margin-bottom:7px}
+.quickSelect{width:100%;border:1px solid #ccd6e0;border-radius:12px;background:#fff;padding:10px 11px;font-size:14px;color:#172033}
+.quickChoiceList{display:grid;grid-template-columns:1fr;gap:7px}
+.quickChoice{border:1px solid #d9e2ea;background:#fff;border-radius:14px;padding:10px 11px;text-align:left;color:#172033}
+.quickChoice b{display:block;font-size:13px}.quickChoice span{display:block;font-size:10px;color:#748091;margin-top:3px;line-height:1.3}
+.quickChoice.current{border-color:#8eb0cd;background:#eef5fb}
+.quickActionRow{display:flex;gap:7px;flex-wrap:wrap}
+.quickActionRow button{border:1px solid #d3dce5;background:#fff;border-radius:999px;padding:8px 10px;font-size:11px;font-weight:900;color:#174f86}
+.quickActionRow button.danger{color:#991b1b;border-color:#f0c7c7}
+.quickActionRow button.primary{background:#17385e;color:#fff;border-color:#17385e}
+.quickDestList{display:grid;gap:6px}
+.quickDest{border:1px solid #d9e2ea;background:#fff;border-radius:12px;padding:9px 10px;text-align:left;color:#203040}
+.quickDest b{display:block;font-size:12px}.quickDest span{display:block;font-size:10px;color:#788491;margin-top:2px}
+.quickSheet textarea{width:100%;min-height:110px;border:1px solid #ccd6e0;border-radius:12px;padding:10px 11px;font:inherit;resize:vertical}
+.quickHint{font-size:10px;color:#7b8794;line-height:1.4;margin-top:6px}
+@media(min-width:650px){.quickSheetOverlay{align-items:center}.quickSheet{border-radius:24px;max-height:86vh}.quickChoiceList{grid-template-columns:1fr 1fr}}
 
 </style>
 </head>
@@ -367,7 +419,7 @@ body{background:#f4f2ed}
   <a href="https://disneyworld.disney.go.com/en_US/plan/" target="_blank" rel="noopener">Disney My Plans</a>
  </div>
  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v1.5 • visual block editor • area-only choices • Sep 18, 2026</div>
+<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v1.6 • direct itinerary controls • area-only choices • Sep 18, 2026</div>
 </section>
 </main>
 
@@ -402,6 +454,14 @@ body{background:#f4f2ed}
    <div class="plannerButtons"><button class="primary" onclick="savePlannerEditor()">Save</button><button onclick="closePlannerEditor()">Cancel</button></div>
    <div id="plannerEditorMessage"></div>
   </div>
+ </div>
+</div>
+
+
+<div class="quickSheetOverlay" id="quickSheetOverlay" onclick="quickSheetBackdrop(event)">
+ <div class="quickSheet" role="dialog" aria-modal="true" aria-label="Edit itinerary item">
+  <div class="quickSheetHead"><div><div class="eyebrow" id="quickSheetEyebrow">Itinerary</div><h2 id="quickSheetTitle">Choose</h2></div><button class="quickSheetClose" onclick="closeQuickSheet()">Done</button></div>
+  <div class="quickSheetBody" id="quickSheetBody"></div>
  </div>
 </div>
 
@@ -1553,32 +1613,117 @@ function lightningSummary(d){
  return `<details class="info compactDetails"><summary>Lightning Lane</summary>${lines}<div class="small" style="margin-top:7px">Book and modify in My Disney Experience. Save confirmed arrival times on attraction cards.</div></details>`;
 }
 
+
+// v1.6 direct itinerary controls. The large planner editor remains as a fallback in Trip settings.
+let quickSheetContext=null;
+let quickSaveTimer=null;
+let quickSaveRevision=0;
+function quickSaveLabel(text,cls=''){
+ const el=document.getElementById('quickSaveState');
+ if(el){el.textContent=text||'';el.className='quickSaveState'+(cls?' '+cls:'')}
+}
+function queuePlannerSave(){
+ if(!plannerConnected||!plannerInitialized)return;
+ const rev=++quickSaveRevision;
+ clearTimeout(quickSaveTimer);
+ quickSaveLabel('Saving…');
+ quickSaveTimer=setTimeout(async()=>{
+  try{
+   await plannerRequest('saveAll',{days:DAYS,meals:MEALS,reservations:RESERVATIONS,settings:plannerSettings});
+   if(rev===quickSaveRevision)quickSaveLabel('Saved');
+  }catch(err){if(rev===quickSaveRevision)quickSaveLabel('Save failed');console.error(err)}
+ },500);
+}
+function openQuickSheet(mode,blockIndex,arg=''){
+ if(!plannerConnected||!plannerInitialized){setPlannerState('warn','Cloud planner not ready','Connect the planner first.');return}
+ quickSheetContext={mode,dayIndex:currentDay,blockIndex,arg};
+ renderQuickSheet();
+ document.getElementById('quickSheetOverlay').classList.add('open');
+ document.body.style.overflow='hidden';
+}
+function closeQuickSheet(){document.getElementById('quickSheetOverlay').classList.remove('open');document.body.style.overflow='';quickSheetContext=null}
+function quickSheetBackdrop(e){if(e.target===document.getElementById('quickSheetOverlay'))closeQuickSheet()}
+function quickBlock(){const c=quickSheetContext;return c?DAYS[c.dayIndex]?.blocks?.[c.blockIndex]:null}
+function quickTitle(t,e='Itinerary'){document.getElementById('quickSheetTitle').textContent=t;document.getElementById('quickSheetEyebrow').textContent=e}
+function renderQuickSheet(){
+ const c=quickSheetContext,b=quickBlock(),d=c?DAYS[c.dayIndex]:null,body=document.getElementById('quickSheetBody');
+ if(!c||!b||!d){body.innerHTML='<div class="quickSection">This item is no longer available.</div>';return}
+ if(c.mode==='block')return renderQuickBlockSheet(d,b,c.blockIndex,body);
+ if(c.mode==='addAttraction')return renderQuickAddAttraction(d,b,c.blockIndex,body);
+ if(c.mode==='attraction')return renderQuickAttractionSheet(d,b,c.blockIndex,c.arg,body);
+ if(c.mode==='meal')return renderQuickMealSheet(d,b,c.blockIndex,c.arg||'meal',body);
+ if(c.mode==='note')return renderQuickNoteSheet(d,b,c.blockIndex,body);
+}
+function renderQuickBlockSheet(d,b,bi,body){
+ quickTitle('Time & area','Edit block');
+ const p=blockPark(d,b),areas=areaOptionsForBlock(d,b),times=[...TIME_OPTIONS];if(b.time&&!times.includes(b.time))times.unshift(b.time);
+ body.innerHTML=`<div class="quickSection"><div class="quickSectionTitle">Time</div><select class="quickSelect" onchange="quickSetBlockTime(${bi},this.value)">${times.map(x=>`<option value="${escAttr(x)}"${x===b.time?' selected':''}>${escAttr(x)}</option>`).join('')}</select></div>
+ <div class="quickSection"><div class="quickSectionTitle">Area${p?` · ${escAttr(p)}`:''}</div><select class="quickSelect" onchange="quickSetBlockArea(${bi},this.value)">${areas.map(x=>`<option value="${escAttr(x)}"${x===b.area?' selected':''}>${escAttr(x)}</option>`).join('')}</select><div class="quickHint">Changing the area changes the attraction and restaurant choices shown for this block.</div></div>
+ <div class="quickSection"><div class="quickSectionTitle">Block order</div><div class="quickActionRow"><button onclick="quickMoveBlock(${bi},-1)">Move earlier</button><button onclick="quickMoveBlock(${bi},1)">Move later</button><button onclick="openQuickSheet('note',${bi})">${getUserNote(b)?'Edit note':'Add note'}</button><button class="danger" onclick="quickDeleteBlock(${bi})">Delete block</button></div></div>`;
+}
+function renderQuickAddAttraction(d,b,bi,body){
+ const area=blockChoiceArea(d,b),p=blockPark(d,b);quickTitle('Add attraction',area||'Choose an area');
+ const current=new Set(b.ids||[]),rows=attractionsForBlock(d,b).filter(x=>!current.has(x.id));
+ body.innerHTML=`<div class="quickSection"><div class="quickSectionTitle">${escAttr(area||'Current area')}</div>${rows.length?`<div class="quickChoiceList">${rows.map(x=>`<button class="quickChoice" onclick="quickAddAttraction(${bi},'${x.id}')"><b>${escAttr(x.name)}</b><span>${escAttr([x.type,x.height].filter(Boolean).join(' · '))}</span></button>`).join('')}</div>`:`<div class="emptyChoice">No additional attractions are tagged to ${escAttr(area||p||'this block')}.</div>`}</div>`;
+}
+function renderQuickAttractionSheet(d,b,bi,id,body){
+ const x=BY_ID[id];if(!x){body.innerHTML='<div class="quickSection">Attraction not found.</div>';return}
+ const ids=b.ids||[],idx=ids.indexOf(id),s=status(id,currentDay);quickTitle(x.name,x.area||'Attraction');
+ const targets=(d.blocks||[]).map((tb,ti)=>({tb,ti})).filter(o=>o.ti!==bi && blockPark(d,o.tb)===x.park);
+ body.innerHTML=`<div class="quickSection"><div class="quickActionRow"><button class="${s==='done'?'primary':''}" onclick="quickToggleDone('${id}')">${s==='done'?'✓ Completed':'Mark completed'}</button><button onclick="quickReorderAttraction(${bi},'${id}',-1)" ${idx<=0?'disabled':''}>Move up</button><button onclick="quickReorderAttraction(${bi},'${id}',1)" ${idx<0||idx>=ids.length-1?'disabled':''}>Move down</button><button class="danger" onclick="quickRemoveAttraction(${bi},'${id}')">Remove</button></div></div>
+ ${targets.length?`<div class="quickSection"><div class="quickSectionTitle">Move to another block</div><div class="quickDestList">${targets.map(({tb,ti})=>`<button class="quickDest" onclick="quickMoveAttraction(${bi},'${id}',${ti})"><b>${escAttr(tb.time||'Flexible')}</b><span>${escAttr(tb.area||'')}</span></button>`).join('')}</div></div>`:''}
+ ${(x.description||x.height||x.ll)?`<div class="quickSection"><div class="quickSectionTitle">Details</div>${x.description?`<div class="small">${escAttr(x.description)}</div>`:''}${x.height?`<div class="small"><b>Height:</b> ${escAttr(x.height)}</div>`:''}${x.ll?`<div class="small"><b>Lightning Lane:</b> ${escAttr(x.ll)}</div>`:''}</div>`:''}`;
+}
+function renderQuickMealSheet(d,b,bi,slot,body){
+ const currentId=b[slot],m=currentId?MEALS[currentId]:null,rows=restaurantsForBlock(d,b),area=blockChoiceArea(d,b)||resortDiningLocationForBlock(b)||b.area||'This area';
+ quickTitle(currentId?'Change meal':'Add meal',area);
+ body.innerHTML=`${m?`<div class="quickSection"><div class="quickSectionTitle">Current</div><div class="currentChoice"><div class="currentChoiceName">${escAttr(m.name)}</div><div class="currentChoiceMeta">${escAttr(m.meta||'')}</div><div class="choiceActions"><button onclick="quickRemoveMeal(${bi},'${slot}')">Remove</button></div></div></div>`:''}
+ <div class="quickSection"><div class="quickSectionTitle">Dining in ${escAttr(area)}</div>${rows.length?`<div class="quickChoiceList">${rows.map(x=>`<button class="quickChoice${m&&m.name===x.name?' current':''}" data-restaurant="${escAttr(x.name)}" onclick="quickChooseMeal(this,${bi},'${slot}')"><b>${escAttr(x.name)}</b><span>${escAttr([x.type,x.cuisine].filter(Boolean).join(' · '))}</span></button>`).join('')}</div>`:`<div class="emptyChoice">No restaurants are tagged to this exact area yet.</div>`}</div>`;
+}
+function renderQuickNoteSheet(d,b,bi,body){
+ quickTitle(getUserNote(b)?'Edit note':'Add note',b.area||'Itinerary note');
+ body.innerHTML=`<div class="quickSection"><textarea id="quickNoteText" placeholder="Add your own note…">${escAttr(getUserNote(b))}</textarea><div class="quickActionRow" style="margin-top:8px"><button class="primary" onclick="quickSaveNote(${bi})">Save note</button>${getUserNote(b)?`<button class="danger" onclick="quickClearNote(${bi})">Remove note</button>`:''}</div></div>`;
+}
+function quickSetBlockTime(bi,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.time=value;renderDay();queuePlannerSave();renderQuickSheet()}
+function quickSetBlockArea(bi,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.area=value;renderDay();queuePlannerSave();renderQuickSheet()}
+function quickMoveBlock(bi,dir){const a=DAYS[currentDay].blocks,j=bi+dir;if(j<0||j>=a.length)return;[a[bi],a[j]]=[a[j],a[bi]];quickSheetContext.blockIndex=j;renderDay();queuePlannerSave();renderQuickSheet()}
+function quickDeleteBlock(bi){if(!confirm('Delete this time block?'))return;DAYS[currentDay].blocks.splice(bi,1);closeQuickSheet();renderDay();queuePlannerSave()}
+function quickAddBlock(){const d=DAYS[currentDay],p=d.parks?.[0]||'',area=PARK_AREAS[p]?.[0]||'Resort / flexible';d.blocks.push({time:'Flexible',area,ids:[]});renderDay();queuePlannerSave();openQuickSheet('block',d.blocks.length-1)}
+function quickAddAttraction(bi,id){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.ids=b.ids||[];if(!b.ids.includes(id))b.ids.push(id);renderDay();queuePlannerSave();renderQuickSheet()}
+function quickRemoveAttraction(bi,id){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.ids=(b.ids||[]).filter(x=>x!==id);closeQuickSheet();renderDay();queuePlannerSave()}
+function quickReorderAttraction(bi,id,dir){const b=DAYS[currentDay].blocks[bi],a=b?.ids||[],i=a.indexOf(id),j=i+dir;if(i<0||j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];renderDay();queuePlannerSave();renderQuickSheet()}
+function quickMoveAttraction(from,id,to){const d=DAYS[currentDay],a=d.blocks[from],b=d.blocks[to];if(!a||!b)return;a.ids=(a.ids||[]).filter(x=>x!==id);b.ids=b.ids||[];if(!b.ids.includes(id))b.ids.push(id);closeQuickSheet();renderDay();queuePlannerSave()}
+function quickToggleDone(id){const s=status(id,currentDay);setStatus(id,s==='done'?'':'done',currentDay);setTimeout(()=>{if(quickSheetContext)renderQuickSheet()},0)}
+function quickChooseMeal(btn,bi,slot){const b=DAYS[currentDay].blocks[bi],name=btn?.dataset?.restaurant||'';if(!b||!name)return;b[slot]=ensureMealFromDiningName(name);closeQuickSheet();renderDay();queuePlannerSave()}
+function quickRemoveMeal(bi,slot){const b=DAYS[currentDay].blocks[bi];if(!b)return;delete b[slot];closeQuickSheet();renderDay();queuePlannerSave()}
+function quickSaveNote(bi){const b=DAYS[currentDay].blocks[bi];if(!b)return;setUserNote(b,document.getElementById('quickNoteText')?.value||'');closeQuickSheet();renderDay();queuePlannerSave()}
+function quickClearNote(bi){const b=DAYS[currentDay].blocks[bi];if(!b)return;setUserNote(b,'');closeQuickSheet();renderDay();queuePlannerSave()}
+function renderItineraryAttraction(id,bi,moved=false){
+ const x=BY_ID[id];if(!x)return'';const done=status(id,currentDay)==='done';const meta=[x.height?`Height ${x.height}`:'',moved?'Moved here':''].filter(Boolean).join(' · ');
+ return `<div class="itinItem${done?' done':''}"><button class="itinCheck" aria-label="${done?'Mark not completed':'Mark completed'}" onclick="quickToggleDone('${id}')">${done?'✓':''}</button><div class="itinMain" onclick="openQuickSheet('attraction',${bi},'${id}')"><div class="itinName">${escAttr(displayName(x))}</div>${meta?`<div class="itinMeta">${escAttr(meta)}</div>`:''}</div><button class="itinMore" aria-label="More options" onclick="openQuickSheet('attraction',${bi},'${id}')">•••</button></div>`;
+}
+function renderItineraryMeal(mid,bi,slot){const m=MEALS[mid];if(!m)return'';const rec=findDiningRecord(m.name);return `<div class="quickMealRow"><div class="quickMealIcon">🍽</div><div class="quickMealMain" onclick="openQuickSheet('meal',${bi},'${slot}')"><div class="quickMealName">${escAttr(m.name)}</div>${m.meta?`<div class="quickMealMeta">${escAttr(m.meta)}</div>`:''}</div>${rec&&rec.menu?`<a class="cleanMapLink" href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:''}<button class="itinMore" onclick="openQuickSheet('meal',${bi},'${slot}')">•••</button></div>`}
+
 function renderDay(){
  const d=DAYS[currentDay], carry=carryMapForDay(currentDay);
  let total=0,done=0;
  d.blocks.forEach(b=>(b.ids||[]).forEach(id=>{total++;if(status(id,currentDay)==="done")done++}));
- let h=`<div class="hero"><h1>${d.title}</h1><div class="muted">${d.label}</div><div class="hours">${d.hours}</div><div class="progress"><div class="bar" style="width:${total?done/total*100:0}%"></div></div><div class="dayCleanTools">${plannerConnected&&plannerInitialized?`<button onclick="openPlannerEditor(currentDay)">Edit day</button>`:""}<button class="${remainingOnly?"on":""}" onclick="toggleRemaining()">${remainingOnly?"Show all":"Remaining only"}</button>${d.parks.map(p=>MAPS[p]?`<a href="${MAPS[p]}" target="_blank" rel="noopener">${p} map</a>`:"").join("")}</div></div>`;
+ let h=`<div class="hero"><h1>${escAttr(d.title)}</h1><div class="muted">${escAttr(d.label)}</div><div class="hours">${escAttr(d.hours)}</div><div class="progress"><div class="bar" style="width:${total?done/total*100:0}%"></div></div><div class="dayPrimaryTools"><button class="${remainingOnly?"on":""}" onclick="toggleRemaining()">${remainingOnly?"Show all":"Remaining only"}</button>${d.parks.map(p=>MAPS[p]?`<a href="${MAPS[p]}" target="_blank" rel="noopener">${escAttr(p)} map</a>`:"").join("")}${plannerConnected&&plannerInitialized?`<button onclick="quickAddBlock()">+ Add block</button><span id="quickSaveState" class="quickSaveState"></span>`:""}</div></div>`;
  const carried=Object.values(carry).flat();
- if(carried.length)h+=`<div class="carrycard"><h3>Moved to this day</h3>${carried.map(c=>`<div class="carryline"><b>${BY_ID[c.id].name}</b></div>`).join("")}</div>`;
+ if(carried.length)h+=`<div class="carrycard"><h3>Moved to this day</h3>${carried.map(c=>`<div class="carryline"><b>${escAttr(BY_ID[c.id]?.name||c.id)}</b></div>`).join("")}</div>`;
  d.blocks.forEach((b,bi)=>{
    const carriedHere=(carry[bi]||[]).filter(c=>visibleOnDay(c.id));
    const normal=(b.ids||[]).filter(id=>visibleOnDay(id));
    const hasMeal=b.meal||b.meal2||b.reservation;
    const userNote=getUserNote(b);
    if(remainingOnly&&!carriedHere.length&&!normal.length&&!hasMeal&&!userNote)return;
-   h+=`<div class="block"><div class="blockhead">${plannerConnected&&plannerInitialized?`<button class="editBlockBtn" onclick="openPlannerAtBlock(${bi})">Edit</button>`:""}<div class="blocktime">${escAttr(b.time||'Flexible')}</div><h2>${escAttr(b.area||'')}</h2></div>`;
-   carriedHere.forEach(c=>h+=renderItem(c.id,true));
-   normal.forEach(id=>h+=renderItem(id,false));
-   if(b.reservation){
-     const r=RESERVATIONS[b.reservation];
-     h+=`<div class="item reservationItem"><div class="name">${escAttr(r.name)}</div>${r.meta?`<div class="cleanItemMeta">${escAttr(r.meta)}</div>`:""}</div>`;
-   }
-   [['meal',b.meal],['meal2',b.meal2]].filter(x=>x[1]).forEach(([slot,mid])=>{
-     const m=MEALS[mid]; if(!m)return;
-     const rec=findDiningRecord(m.name);
-     h+=`<div class="item mealItem"><div class="cleanMeal"><div><div class="name">${escAttr(m.name)}</div>${m.meta?`<div class="cleanItemMeta">${escAttr(m.meta)}</div>`:""}</div><div class="cleanMealActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${plannerConnected&&plannerInitialized?`<button onclick="openPlannerMealPicker(${bi},'${slot}')">Change</button>`:""}</div></div></div>`;
-   });
-   if(userNote)h+=`<div class="userNote">${escAttr(userNote)}</div>`;
+   h+=`<div class="block"><div class="blockhead quickBlockHead"><div class="blockHeadText"><div class="blocktime">${escAttr(b.time||'Flexible')}</div><h2>${escAttr(b.area||'')}</h2></div>${plannerConnected&&plannerInitialized?`<button class="blockMenuBtn" aria-label="Edit time block" onclick="openQuickSheet('block',${bi})">•••</button>`:''}</div>`;
+   carriedHere.forEach(c=>h+=renderItineraryAttraction(c.id,bi,true));
+   normal.forEach(id=>h+=renderItineraryAttraction(id,bi,false));
+   if(b.reservation){const r=RESERVATIONS[b.reservation];if(r)h+=`<div class="quickMealRow"><div class="quickMealIcon">📅</div><div class="quickMealMain"><div class="quickMealName">${escAttr(r.name)}</div>${r.meta?`<div class="quickMealMeta">${escAttr(r.meta)}</div>`:''}</div></div>`}
+   [['meal',b.meal],['meal2',b.meal2]].filter(x=>x[1]).forEach(([slot,mid])=>h+=renderItineraryMeal(mid,bi,slot));
+   if(userNote)h+=`<div class="quickNoteRow"><div>${escAttr(userNote)}</div>${plannerConnected&&plannerInitialized?`<button onclick="openQuickSheet('note',${bi})">Edit</button>`:''}</div>`;
+   if(plannerConnected&&plannerInitialized){const nextSlot=!b.meal?'meal':(!b.meal2?'meal2':'meal');h+=`<div class="blockQuickAdd"><button class="primary" onclick="openQuickSheet('addAttraction',${bi})">+ Attraction</button><button onclick="openQuickSheet('meal',${bi},'${nextSlot}')">${b.meal||b.meal2?'Change meal':'+ Meal'}</button><button onclick="openQuickSheet('note',${bi})">${userNote?'Edit note':'+ Note'}</button></div>`}
    h+=`</div>`;
  });
  day.innerHTML=h;
