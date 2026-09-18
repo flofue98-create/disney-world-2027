@@ -176,6 +176,73 @@ main{padding-bottom:88px}
 .plannerConnectionDetails{margin-top:8px;border:1px solid #dbe3ec;border-radius:12px;background:#f8fafc;padding:0 10px 10px}.plannerConnectionDetails summary{cursor:pointer;font-weight:900;color:#174f86;padding:10px 0}.plannerConnectionDetails .plannerFields{margin-top:2px}.plannerQuickRow{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:8px}.plannerBasicsDetails{padding:0}.plannerBasicsDetails summary{cursor:pointer;font-size:15px;font-weight:900;padding:13px}.plannerBasicsDetails .plannerGrid{padding:0 13px 13px}.contextEditBtn{border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900}.mealEditBtn{border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900}
 @media(min-width:650px){.plannerFields,.plannerGrid{grid-template-columns:1fr 1fr}.plannerOverlay{align-items:center}.plannerEditor{border-radius:22px;max-height:90vh;padding:18px}.plannerEditorHead{top:-18px}}
 
+
+/* v1.5 — clean visual planner */
+:root{--accent:#17385e;--accent2:#2f6f9f;--soft:#f7f8fa;--softblue:#eef5fb;--warm:#fffdf9}
+body{background:#f4f2ed}
+.hero,.block,.info,.reservation,.attrgroup,.plannerCard,.dashSection,.metricCard{box-shadow:0 3px 14px rgba(31,45,61,.045)}
+.block{border-radius:20px}
+.blockhead{background:linear-gradient(180deg,#fbfcfd,#f8fafc);padding:14px 15px}
+.block h2{font-size:17px}
+.item{padding:11px 14px}
+.item .meta{font-size:11px}
+.statusrow{grid-template-columns:repeat(3,1fr);gap:5px}
+.statusbtn{justify-content:center;padding:6px 5px;font-size:10px;border-radius:999px}
+.statusbtn .box{width:14px;height:14px;border-radius:50%}
+.cleanItemMeta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:10px;color:#64748b;margin-top:5px}
+.cleanMapLink{font-size:10px;font-weight:850;color:#174f86;text-decoration:none}
+.userNote{margin:8px 12px 12px;padding:9px 10px;background:#fff9e9;border:1px solid #f0dfac;border-radius:12px;font-size:12px;line-height:1.4}
+.cleanMeal{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.cleanMealActions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.cleanMealActions a,.cleanMealActions button{border:1px solid #d2dae3;background:#fff;border-radius:999px;padding:6px 8px;font-size:10px;font-weight:850;color:#174f86;text-decoration:none}
+.dayCleanTools{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.dayCleanTools button,.dayCleanTools a{border:1px solid #cdd6df;background:#fff;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:850;color:#174f86;text-decoration:none}
+.plannerEditor{background:#f5f7fa}
+.plannerEditorHead{background:#f5f7fa}
+.plannerSection{border:0;box-shadow:0 2px 12px rgba(25,40,60,.06);border-radius:20px;padding:14px}
+.visualDayBar{display:grid;grid-template-columns:1fr;gap:8px}
+.visualDayBar label,.visualBlockField label{font-size:10px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.visualDayBar select,.visualBlockField select,.visualBlockField input[type="time"]{width:100%;border:1px solid #ccd6e0;border-radius:12px;background:#fff;padding:10px 11px;font-size:14px;color:#172033}
+.visualBlock{border:1px solid #dce4ec;border-radius:18px;background:#fff;margin-top:12px;overflow:hidden}
+.visualBlockHead{padding:12px 13px;background:#f8fafc;border-bottom:1px solid #e8edf2}
+.visualBlockHeadTop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.visualBlockTitle{font-size:14px;font-weight:950;color:#17385e}
+.visualBlockSub{font-size:11px;color:#64748b;margin-top:2px}
+.visualBlockActions{display:flex;gap:5px}
+.visualIconBtn{border:1px solid #d3dbe4;background:#fff;border-radius:10px;padding:6px 8px;font-size:11px;font-weight:900;color:#334155}
+.visualBlockBody{padding:12px}
+.visualBlockField{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}
+.choiceSection{margin-top:12px}
+.choiceTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:950;color:#22384e;margin-bottom:7px}
+.choiceHint{font-size:10px;color:#7a8795;font-weight:600}
+.currentList{display:flex;flex-direction:column;gap:7px}
+.currentChoice{border:1px solid #d9e1e8;border-radius:14px;padding:9px 10px;background:#fff}
+.currentChoiceTop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.currentChoiceName{font-size:13px;font-weight:900;line-height:1.25}
+.currentChoiceMeta{font-size:10px;color:#718096;margin-top:3px}
+.choiceActions{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.choiceActions button,.choiceActions select{border:1px solid #d5dde6;background:#fff;border-radius:999px;padding:6px 8px;font-size:10px;font-weight:850;color:#174f86}
+.choiceGrid{display:grid;grid-template-columns:1fr;gap:7px}
+.choiceCard{width:100%;text-align:left;border:1px solid #d9e2ea;background:#fff;border-radius:14px;padding:10px 11px;color:#172033}
+.choiceCard:hover,.choiceCard:active{background:#f4f8fc;border-color:#a9bfd2}
+.choiceCard b{font-size:13px;display:block}
+.choiceCard span{font-size:10px;color:#718096;display:block;margin-top:3px;line-height:1.3}
+.emptyChoice{border:1px dashed #ccd6df;border-radius:14px;padding:11px;color:#718096;font-size:11px;background:#fafbfc}
+.noteDetails{margin-top:11px;border-top:1px solid #edf0f3;padding-top:9px}
+.noteDetails summary{cursor:pointer;font-size:11px;font-weight:900;color:#174f86}
+.noteDetails textarea{margin-top:8px;min-height:58px}
+.focusBadge{display:inline-block;font-size:9px;font-weight:900;background:#eaf2f9;color:#174f86;border-radius:999px;padding:4px 7px;margin-top:4px}
+.tripSetupGrid{display:grid;grid-template-columns:1fr;gap:8px;padding:0 13px 13px}
+.tripSetupGrid label{font-size:10px;font-weight:900;color:#64748b}
+.tripSetupGrid select{width:100%;border:1px solid #ccd6e0;border-radius:12px;background:#fff;padding:10px 11px;font-size:13px}
+.plannerSaveBar .plannerButtons{justify-content:flex-end}
+.plannerSaveBar .plannerButtons button.primary{padding:10px 16px}
+@media(min-width:650px){
+ .visualDayBar{grid-template-columns:1fr 1fr}
+ .choiceGrid{grid-template-columns:1fr 1fr}
+ .tripSetupGrid{grid-template-columns:1fr 1fr}
+}
+
 </style>
 </head>
 <body>
@@ -204,9 +271,9 @@ main{padding-bottom:88px}
  </div>
  <div class="dashboardGrid" id="dashboardMetrics"></div>
  <div id="dashboardOverview"></div>
- <div id="dashboardDecisions"></div>
  <div id="dashboardDates"></div>
- <div id="dashboardAgents"></div>
+ <div id="dashboardDecisions" style="display:none"></div>
+ <div id="dashboardAgents" style="display:none"></div>
  <div class="dashActions">
   <button class="primary" onclick="loadDashboardFeed(true)">Refresh live data</button>
   <a href="https://docs.google.com/spreadsheets/d/1354BrauPx4K97Ml1T9J5S21u6ZwzLNL0P7FT9JE_7KY/edit" target="_blank" rel="noopener">Open Master Planner</a>
@@ -214,7 +281,7 @@ main{padding-bottom:88px}
 </section>
 <section id="itinerary" class="screen"><div class="daytabs" id="daytabs"></div><div id="day"></div></section>
 <section id="attractions" class="screen">
- <div class="hero"><h1>Attractions & Experiences</h1><div class="muted">Your full master checklist by park and land. Use search and filters to plan without scrolling through everything.</div></div>
+ <div class="hero"><h1>Attractions & Experiences</h1><div class="muted">Browse by park and land. Details stay tucked away until you want them.</div></div>
  <div class="attrTools">
   <input id="attrSearch" class="diningSearch" type="search" placeholder="Search ride, show, character or land">
   <div class="parkfilters" id="parkfilters"></div>
@@ -225,7 +292,6 @@ main{padding-bottom:88px}
    <button class="attrFilter" data-afilter="character">Characters</button>
    <button class="attrFilter" data-afilter="show">Shows</button>
    <button class="attrFilter" data-afilter="adult">Adult rides</button>
-   <button class="attrFilter" data-afilter="verify">Verify 2027</button>
   </div>
  </div>
  <div class="small" id="attrCount" style="margin:8px 0 10px"></div>
@@ -234,20 +300,13 @@ main{padding-bottom:88px}
 <section id="dining" class="screen">
  <div class="hero">
   <h1>Dining</h1>
-  <div class="muted">Every restaurant in our master planner stays available here — including restaurants we did not choose. Use this as the backup dining directory if reservation times force us to change plans. Every card includes a direct menu or official dining-page link.</div>
+  <div class="muted">Planned meals first, with the full restaurant directory below.</div>
  </div>
  <div class="info">
   <div class="eyebrow">Our Planned Meals</div>
   <div id="plannedDining"></div>
  </div>
- <div class="info diningBackup">
-  <b>Backup restaurant planning</b>
-  <div class="small" style="margin-top:5px">If a reservation time does not fit our itinerary, switch to All Dining, filter by the park or resort we will already be in, and compare menus without leaving this directory.</div>
- </div>
- <div class="quickActions">
-  <a href="https://disneyworld.disney.go.com/dining/" target="_blank" rel="noopener">Disney Dining & Reservations</a>
-  <a href="https://disneyworld.disney.go.com/guest-services/mobile-food-orders/" target="_blank" rel="noopener">Mobile Order Info</a>
- </div>
+ <div class="quickActions"><a href="https://disneyworld.disney.go.com/dining/" target="_blank" rel="noopener">Disney Dining</a></div>
  <div class="diningTools">
   <input id="diningSearch" class="diningSearch" type="search" placeholder="Search restaurant, park, resort or cuisine">
   <div class="diningFilterRow">
@@ -267,7 +326,7 @@ main{padding-bottom:88px}
  <div class="grid" id="dininglist"></div>
 </section>
 <section id="maps" class="screen">
- <div class="hero"><h1>Maps</h1><div class="muted">Use our guide-map PDFs for planning and map numbers. Use Disney’s live map in the parks for GPS, wait times and directions.</div>
+ <div class="hero"><h1>Maps</h1><div class="muted">Park guide maps and Disney’s live map.</div>
   <a class="mapbtn primaryAction" href="https://disneyworld.disney.go.com/maps/" target="_blank" rel="noopener">Open Disney Live Map</a>
  </div>
  <div class="grid" id="maplist"></div>
@@ -286,7 +345,7 @@ main{padding-bottom:88px}
   <h2>Planner sync</h2>
   <div class="plannerStatus"><span class="plannerDot" id="plannerDot"></span><b id="plannerStatusText">Not connected</b></div>
   <div class="plannerQuickRow">
-   <button id="plannerEditBtn" onclick="openPlannerEditor()" disabled>Trip settings</button>
+   <button id="plannerEditBtn" onclick="openPlannerEditor()" disabled>Edit trip</button>
    <button onclick="refreshPlannerData(true)">Refresh</button>
    <button id="plannerInitBtn" onclick="initializeCloudPlanner()" disabled>Initialize planner</button>
   </div>
@@ -308,43 +367,43 @@ main{padding-bottom:88px}
   <a href="https://disneyworld.disney.go.com/en_US/plan/" target="_blank" rel="noopener">Disney My Plans</a>
  </div>
  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
- <div class="info"><b>Family ride key</b><div style="margin-top:7px"><span class="badge bfamily">Family Ride</span><span class="badge blili">Liliana Optional</span><span class="badge badult">Adult Ride</span><span class="badge bnonna">Nonna sits out</span><span class="badge brider">Rider Switch available</span></div><div class="small">Runaway Railway is within Nonna’s comfortable range. Tiana’s Bayou Adventure stays a decide-later attraction. Liliana’s optional rides can be adjusted as her comfort level becomes clearer.</div></div>
- <div id="needsvisit"></div>
-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v1.4 • park-filtered meal choices • protected audited base • Sep 18, 2026</div>
+<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v1.5 • visual block editor • area-only choices • Sep 18, 2026</div>
 </section>
 </main>
 
 <div class="plannerOverlay" id="plannerOverlay" onclick="plannerOverlayBackdrop(event)">
  <div class="plannerEditor" role="dialog" aria-modal="true" aria-label="Edit Disney trip planner">
-  <div class="plannerEditorHead"><div><div class="eyebrow">Live Planner</div><h2>Edit trip</h2><div class="small" id="plannerEditorSync">Changes save to the Master Trip Planner.</div></div><button class="plannerClose" onclick="closePlannerEditor()">Close</button></div>
-  <div class="plannerSection">
-   <h3>Daily itinerary</h3>
-   <div class="plannerGrid">
-    <label>Day<select id="editDaySelect" onchange="renderPlannerDayEditor()"></select></label>
-    <label>Date<input id="editDayDate" type="date"></label>
-    <label>Day label<input id="editDayLabel"></label>
-    <label>Day title<input id="editDayTitle"></label>
-    <label>Park hours<input id="editDayHours"></label>
-    <label>Parks (comma separated)<input id="editDayParks"></label>
+  <div class="plannerEditorHead">
+   <div><div class="eyebrow">Live Planner</div><h2 id="plannerEditorTitle">Plan your day</h2><div class="small" id="plannerEditorSync">Tap choices to update the plan.</div></div>
+   <button class="plannerClose" onclick="closePlannerEditor()">Close</button>
+  </div>
+
+  <div class="plannerSection" id="plannerDaySection">
+   <div class="visualDayBar">
+    <label>Day<select id="editDaySelect" onchange="plannerDayChanged()"></select></label>
+    <div id="plannerDayContext"></div>
    </div>
    <div id="plannerBlocks"></div>
-   <div class="plannerButtons"><button onclick="addPlannerBlock()">Add time block</button></div>
+   <div class="plannerButtons" id="plannerAddBlockRow"><button type="button" onclick="addPlannerBlock()">+ Add time block</button></div>
   </div>
-  <details class="plannerSection plannerBasicsDetails">
-   <summary>Trip basics</summary>
-   <div class="plannerGrid">
-    <label>Planning window<input id="editPlanningWindow"></label>
-    <label>Working itinerary<input id="editWorkingItinerary"></label>
-    <label>Resort<input id="editResort"></label>
-    <label>Party<input id="editParty"></label>
-    <label>Tickets<input id="editTickets"></label>
-    <label>Dining strategy<input id="editDiningStrategy"></label>
+
+  <details class="plannerSection plannerBasicsDetails" id="plannerTripSetup">
+   <summary>Trip setup</summary>
+   <div class="tripSetupGrid">
+    <label>Working dates<select id="editWorkingItinerary"></select></label>
+    <label>Resort<select id="editResort"></select></label>
+    <label>Party<select id="editParty"></select></label>
+    <label>Tickets<select id="editTickets"></select></label>
+    <label>Dining strategy<select id="editDiningStrategy"></select></label>
    </div>
   </details>
-  <div class="plannerSaveBar"><div class="plannerButtons"><button class="primary" onclick="savePlannerEditor()">Save changes</button><button onclick="closePlannerEditor()">Cancel</button></div><div id="plannerEditorMessage"></div></div>
+
+  <div class="plannerSaveBar">
+   <div class="plannerButtons"><button class="primary" onclick="savePlannerEditor()">Save</button><button onclick="closePlannerEditor()">Cancel</button></div>
+   <div id="plannerEditorMessage"></div>
+  </div>
  </div>
 </div>
-
 
 <script>
 const DASHBOARD_FEED_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRfHQAFUttU6dBzGeU2UfPXRrXPaJvBagNrHM_FOqQHRMTOsaSWRh6PUY9PQwr3Fkn_jHaeYBdv3RM4/pub?gid=1193476012&single=true&output=csv";
@@ -568,19 +627,256 @@ async function initializeCloudPlanner(){
 function plannerStatusRecord(id,dayIndex=null){const day=(REPEATABLE_IDS.has(id)&&dayIndex!==null&&DAYS[dayIndex])?DAYS[dayIndex].date:'';return {attraction_id:id,day_date:day,status:status(id,dayIndex),ll_time:llTime(id)}}
 async function syncPlannerStatus(id,dayIndex=null){if(!plannerConnected||!plannerInitialized)return;try{await plannerRequest('saveStatus',{record:plannerStatusRecord(id,dayIndex)})}catch(e){console.warn('Planner status sync failed',e)}}
 
-function openPlannerEditor(dayIndex=currentDay){
- if(!plannerConnected||!plannerInitialized){setPlannerState('warn','Cloud planner not ready','Connect and initialize the planner first.');return}
- plannerEditorDay=Math.max(0,Math.min(dayIndex,DAYS.length-1));
- const sel=document.getElementById('editDaySelect');sel.innerHTML=DAYS.map((d,i)=>`<option value="${i}" ${i===plannerEditorDay?'selected':''}>${d.label} — ${d.title}</option>`).join('');
- document.getElementById('editPlanningWindow').value=plannerSettings.planning_window||'';document.getElementById('editWorkingItinerary').value=plannerSettings.working_itinerary||'';document.getElementById('editResort').value=plannerSettings.resort||'';document.getElementById('editParty').value=plannerSettings.party||'';document.getElementById('editTickets').value=plannerSettings.tickets||'';document.getElementById('editDiningStrategy').value=plannerSettings.dining_strategy||'';
- renderPlannerDayEditor();document.getElementById('plannerOverlay').classList.add('open');document.body.style.overflow='hidden';
+
+let plannerFocusedBlock=null;
+let plannerFocusMode='day';
+let plannerMealTargetSlot='meal';
+
+const WORKING_DATE_OPTIONS=[
+ "August 18–26, 2027","August 19–27, 2027","August 20–28, 2027","August 21–29, 2027","August 22–30, 2027"
+];
+const RESORT_OPTIONS=[
+ "Deluxe shortlist — not locked","Disney’s Beach Club Resort","Disney’s BoardWalk Inn","Bay Lake Tower at Disney’s Contemporary Resort",
+ "Disney’s Contemporary Resort","Disney’s Wilderness Lodge","Disney’s Grand Floridian Resort & Spa","Disney’s Polynesian Village Resort","Saratoga Springs Resort"
+];
+const PARTY_OPTIONS=["6 travelers","7 travelers"];
+const TICKET_OPTIONS=["Park Hopper — 7 vs 8 days open","Park Hopper — 7 days","Park Hopper — 8 days"];
+const DINING_STRATEGY_OPTIONS=["Cash-first","Disney Dining Plan","Undecided"];
+const TIME_OPTIONS=[
+ "Early Entry","8:00 AM","8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
+ "12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM",
+ "5:00 PM","5:30 PM","6:00 PM","6:30 PM","7:00 PM","7:30 PM","8:00 PM","8:30 PM","9:00 PM","9:30 PM",
+ "10:00 PM","Morning","Afternoon","Evening","Flexible"
+];
+const PARK_AREAS={
+ "Magic Kingdom":["Main Street, U.S.A.","Adventureland","Frontierland","Liberty Square","Fantasyland","Storybook Circus","Tomorrowland"],
+ "EPCOT":["World Celebration","World Discovery","World Nature","Mexico","Norway","China","Germany","Italy","United States","Japan","Morocco","France","United Kingdom","Canada","World Showcase Lagoon"],
+ "Disney’s Hollywood Studios":["Hollywood Boulevard","Echo Lake","Commissary Lane","Grand Avenue","Star Wars: Galaxy’s Edge","Toy Story Land","Animation Courtyard","Pixar Plaza","Sunset Boulevard","Walt Disney Studios"],
+ "Disney’s Animal Kingdom":["Oasis","Discovery Island","Pandora","Africa","Rafiki’s Planet Watch","Asia"]
+};
+
+function selectOptions(values,current){
+ const vals=[...values];
+ if(current && !vals.includes(current)) vals.unshift(current);
+ return vals.map(v=>`<option value="${escAttr(v)}"${v===current?' selected':''}>${escAttr(v)}</option>`).join('');
 }
-function closePlannerEditor(){document.getElementById('plannerOverlay').classList.remove('open');document.body.style.overflow=''}
+function fillSelect(id,values,current){
+ const el=document.getElementById(id); if(!el)return;
+ el.innerHTML=selectOptions(values,current);
+}
+function getUserNote(b){
+ const n=(b.custom||[]).find(x=>String(x).startsWith('NOTE:'));
+ return n?String(n).slice(5).trim():'';
+}
+function setUserNote(b,note){
+ const legacy=(b.custom||[]).filter(x=>!String(x).startsWith('NOTE:'));
+ const clean=String(note||'').trim();
+ b.custom=clean?[...legacy,'NOTE:'+clean]:legacy;
+ if(!b.custom.length)delete b.custom;
+}
+function normalizeParkName(v){
+ const s=String(v||'').toLowerCase();
+ if(s.includes('magic kingdom'))return'Magic Kingdom';
+ if(s.includes('epcot'))return'EPCOT';
+ if(s.includes('hollywood'))return'Disney’s Hollywood Studios';
+ if(s.includes('animal kingdom')&&!s.includes('lodge'))return'Disney’s Animal Kingdom';
+ return'';
+}
+function normalizeAreaForPark(area,park){
+ let s=String(area||'').toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ').trim();
+ if(!s)return'';
+ if(park==='Magic Kingdom'){
+  if(s.includes('main street'))return'Main Street, U.S.A.';
+  if(s.includes('adventureland'))return'Adventureland';
+  if(s.includes('frontierland'))return'Frontierland';
+  if(s.includes('liberty square'))return'Liberty Square';
+  if(s.includes('fantasyland')||s.includes('cinderella castle'))return'Fantasyland';
+  if(s.includes('storybook'))return'Storybook Circus';
+  if(s.includes('tomorrowland'))return'Tomorrowland';
+ }
+ if(park==='EPCOT'){
+  if(s.includes('world celebration'))return'World Celebration';
+  if(s.includes('world discovery'))return'World Discovery';
+  if(s.includes('world nature')||s.includes('the land')||s.includes('the seas'))return'World Nature';
+  if(s.includes('mexico'))return'Mexico'; if(s.includes('norway'))return'Norway'; if(s.includes('china'))return'China';
+  if(s.includes('germany'))return'Germany'; if(s.includes('italy'))return'Italy';
+  if(s.includes('american adventure')||s.includes('united states'))return'United States';
+  if(s.includes('japan'))return'Japan'; if(s.includes('morocco'))return'Morocco'; if(s.includes('france'))return'France';
+  if(s.includes('united kingdom')||s==='uk')return'United Kingdom'; if(s.includes('canada'))return'Canada';
+  if(s.includes('lagoon'))return'World Showcase Lagoon';
+ }
+ if(park==='Disney’s Hollywood Studios'){
+  if(s.includes('hollywood boulevard'))return'Hollywood Boulevard';
+  if(s.includes('echo lake'))return'Echo Lake';
+  if(s.includes('commissary lane'))return'Commissary Lane';
+  if(s.includes('grand avenue'))return'Grand Avenue';
+  if(s.includes('galaxy'))return'Star Wars: Galaxy’s Edge';
+  if(s.includes('toy story'))return'Toy Story Land';
+  if(s.includes('animation courtyard'))return'Animation Courtyard';
+  if(s.includes('pixar plaza'))return'Pixar Plaza';
+  if(s.includes('sunset boulevard'))return'Sunset Boulevard';
+  if(s.includes('walt disney studios'))return'Walt Disney Studios';
+ }
+ if(park==='Disney’s Animal Kingdom'){
+  if(s.includes('oasis')||s.includes('entrance'))return'Oasis';
+  if(s.includes('discovery island'))return'Discovery Island';
+  if(s.includes('pandora'))return'Pandora';
+  if(s.includes('africa')||s.includes('harambe'))return'Africa';
+  if(s.includes('rafiki'))return'Rafiki’s Planet Watch';
+  if(s.includes('asia')||s.includes('anandapur'))return'Asia';
+ }
+ return'';
+}
+function blockPark(d,b){
+ const id=(b.ids||[]).find(x=>BY_ID[x]?.park); if(id)return BY_ID[id].park;
+ const inferred=normalizeParkName(b.area); if(inferred)return inferred;
+ if((d.parks||[]).length===1)return d.parks[0];
+ for(const p of (d.parks||[])){ if(normalizeAreaForPark(b.area,p))return p; }
+ return d.parks?.[0]||'';
+}
+function areaOptionsForBlock(d,b){
+ const p=blockPark(d,b);
+ if(PARK_AREAS[p])return PARK_AREAS[p];
+ const current=String(b.area||'').trim();
+ return current?[current]:["Resort / flexible"];
+}
+function blockChoiceArea(d,b){
+ const p=blockPark(d,b);
+ return normalizeAreaForPark(b.area,p);
+}
+function diningRecordArea(rec,park){
+ return normalizeAreaForPark(rec?.area||'',park);
+}
+function diningLocationMatchesPark(rec,park){
+ if(!park)return false;
+ return normalizeParkName(rec?.location||'')===park;
+}
+function resortDiningLocationForBlock(b){
+ return normalizeDiningLocation(b?.area||'');
+}
+function attractionsForBlock(d,b){
+ const p=blockPark(d,b), area=blockChoiceArea(d,b);
+ if(!p||!area)return[];
+ return (ATTRACTIONS[p]||[]).map(r=>BY_ID[r[0]]).filter(Boolean).filter(x=>normalizeAreaForPark(x.area,p)===area);
+}
+function restaurantsForBlock(d,b){
+ const p=blockPark(d,b), area=blockChoiceArea(d,b);
+ if(p&&area){
+  return DINING_MASTER.filter(x=>diningLocationMatchesPark(x,p)&&diningRecordArea(x,p)===area)
+   .sort((a,b)=>a.name.localeCompare(b.name));
+ }
+ const loc=resortDiningLocationForBlock(b);
+ if(loc){
+  return DINING_MASTER.filter(x=>normalizeDiningLocation(x.location)===loc).sort((a,b)=>a.name.localeCompare(b.name));
+ }
+ return[];
+}
+function timeSelectHTML(value){
+ const v=String(value||'Flexible');
+ const opts=[...TIME_OPTIONS];
+ if(v&&!opts.includes(v))opts.unshift(v);
+ return `<select data-field="time">${opts.map(x=>`<option value="${escAttr(x)}"${x===v?' selected':''}>${escAttr(x)}</option>`).join('')}</select>`;
+}
+function areaSelectHTML(d,b,i){
+ const current=String(b.area||'');
+ const opts=areaOptionsForBlock(d,b);
+ return `<select data-field="area" onchange="plannerAreaChanged(${i},this)">${selectOptions(opts,current)}</select>`;
+}
+function blockLabelForMove(b,i){
+ return `Block ${i+1} • ${b.time||'Flexible'} • ${b.area||'Area'}`;
+}
+function attractionCurrentHTML(b,i,d){
+ const rows=(b.ids||[]).map((id,idx)=>{
+  const x=BY_ID[id]; if(!x)return'';
+  const targets=(d.blocks||[]).map((tb,ti)=>ti===i?'':`<option value="${ti}">${escAttr(blockLabelForMove(tb,ti))}</option>`).join('');
+  return `<div class="currentChoice"><div class="currentChoiceTop"><div><div class="currentChoiceName">${escAttr(x.name)}</div><div class="currentChoiceMeta">${escAttr(x.area||'')}</div></div></div><div class="choiceActions"><button type="button" onclick="plannerMoveAttractionWithin(${i},'${id}',-1)">↑</button><button type="button" onclick="plannerMoveAttractionWithin(${i},'${id}',1)">↓</button><select onchange="plannerMoveAttractionToBlock(${i},'${id}',this.value);this.value=''"><option value="">Move to…</option>${targets}</select><button type="button" onclick="plannerRemoveAttraction(${i},'${id}')">Remove</button></div></div>`;
+ }).join('');
+ return rows||'<div class="emptyChoice">No attractions in this block yet.</div>';
+}
+function attractionChoicesHTML(b,i,d){
+ const area=blockChoiceArea(d,b), p=blockPark(d,b);
+ if(!area||!p)return'<div class="emptyChoice">Choose a park area above to see attractions from that area.</div>';
+ const current=new Set(b.ids||[]);
+ const rows=attractionsForBlock(d,b).filter(x=>!current.has(x.id));
+ if(!rows.length)return`<div class="emptyChoice">No additional attractions in ${escAttr(area)}.</div>`;
+ return `<div class="choiceGrid">${rows.map(x=>`<button type="button" class="choiceCard" onclick="plannerAddAttractionChoice(${i},'${x.id}')"><b>+ ${escAttr(x.name)}</b><span>${escAttr(x.area||'')}</span></button>`).join('')}</div>`;
+}
+function mealCurrentHTML(b,i,d){
+ const slots=[['meal',b.meal],['meal2',b.meal2]].filter(x=>x[1]);
+ if(!slots.length)return'<div class="emptyChoice">No meal in this block.</div>';
+ return slots.map(([slot,id])=>{
+  const m=MEALS[id]||{name:id}; const targets=(d.blocks||[]).map((tb,ti)=>ti===i?'':`<option value="${ti}">${escAttr(blockLabelForMove(tb,ti))}</option>`).join('');
+  return `<div class="currentChoice"><div class="currentChoiceTop"><div><div class="currentChoiceName">${escAttr(m.name)}</div><div class="currentChoiceMeta">${escAttr(m.area||'')}</div></div></div><div class="choiceActions"><select onchange="plannerMoveMealToBlock(${i},'${slot}',this.value);this.value=''"><option value="">Move to…</option>${targets}</select><button type="button" onclick="plannerRemoveMeal(${i},'${slot}')">Remove</button></div></div>`;
+ }).join('');
+}
+function restaurantChoicesHTML(b,i,d){
+ const rows=restaurantsForBlock(d,b), area=blockChoiceArea(d,b), p=blockPark(d,b);
+ const slot=plannerMealTargetSlot||(!b.meal?'meal':(!b.meal2?'meal2':'meal'));
+ if(!rows.length){
+  const label=area||resortDiningLocationForBlock(b)||'this area';
+  return `<div class="emptyChoice">No dining choices are tagged to ${escAttr(label)}. Choose another area above.</div>`;
+ }
+ return `<div class="choiceGrid">${rows.map(x=>{
+   const meta=[x.type,x.cuisine].filter(Boolean).join(' • ');
+   return `<button type="button" class="choiceCard" data-restaurant="${escAttr(x.name)}" onclick="plannerChooseMeal(this,${i},'${slot}')"><b>${escAttr(x.name)}</b><span>${escAttr(meta)}</span></button>`;
+  }).join('')}</div>`;
+}
+function plannerBlockHTML(b,i,d){
+ const p=blockPark(d,b), area=blockChoiceArea(d,b);
+ const focus=plannerFocusMode==='meal';
+ const note=getUserNote(b);
+ return `<div class="visualBlock" data-block-index="${i}">
+  <div class="visualBlockHead"><div class="visualBlockHeadTop"><div><div class="visualBlockTitle">${escAttr(b.time||'Flexible')} • ${escAttr(b.area||'Choose area')}</div><div class="visualBlockSub">${escAttr(p||'Resort / flexible')}${focus?`<div class="focusBadge">Changing meal</div>`:''}</div></div>
+  ${plannerFocusedBlock===null?`<div class="visualBlockActions"><button type="button" class="visualIconBtn" onclick="movePlannerBlock(${i},-1)">↑</button><button type="button" class="visualIconBtn" onclick="movePlannerBlock(${i},1)">↓</button><button type="button" class="visualIconBtn" onclick="deletePlannerBlock(${i})">Delete</button></div>`:''}</div></div>
+  <div class="visualBlockBody">
+   <div class="visualBlockField"><label>Time${timeSelectHTML(b.time||'')}</label><label>Area${areaSelectHTML(d,b,i)}</label></div>
+   ${focus?'':`<div class="choiceSection"><div class="choiceTitle"><span>Planned attractions</span><span class="choiceHint">${area?escAttr(area):'Choose area'}</span></div><div class="currentList">${attractionCurrentHTML(b,i,d)}</div></div>
+   <div class="choiceSection"><div class="choiceTitle"><span>Add from this area</span><span class="choiceHint">Tap to add</span></div>${attractionChoicesHTML(b,i,d)}</div>`}
+   <div class="choiceSection"><div class="choiceTitle"><span>Meal</span><span class="choiceHint">${area?escAttr(area):escAttr(resortDiningLocationForBlock(b)||'Choose area')}</span></div><div class="currentList">${mealCurrentHTML(b,i,d)}</div></div>
+   <div class="choiceSection"><div class="choiceTitle"><span>${focus?'Choose a restaurant':'Dining in this area'}</span><span class="choiceHint">Tap to choose</span></div>${restaurantChoicesHTML(b,i,d)}</div>
+   ${focus?'':`<details class="noteDetails"${note?' open':''}><summary>${note?'Edit your note':'Add a note'}</summary><textarea data-field="usernote" placeholder="Your note only">${escAttr(note)}</textarea></details>`}
+  </div>
+ </div>`;
+}
+function openPlannerEditor(dayIndex=currentDay,focusedBlock=null,mode='day',mealSlot='meal'){
+ if(!plannerConnected||!plannerInitialized){setPlannerState('warn','Cloud planner not ready','Connect the planner first.');return}
+ plannerEditorDay=Math.max(0,Math.min(dayIndex,DAYS.length-1));
+ plannerFocusedBlock=Number.isInteger(focusedBlock)?focusedBlock:null;
+ plannerFocusMode=mode||'day';
+ plannerMealTargetSlot=mealSlot||'meal';
+ const sel=document.getElementById('editDaySelect');
+ sel.innerHTML=DAYS.map((d,i)=>`<option value="${i}" ${i===plannerEditorDay?'selected':''}>${escAttr(d.label)} — ${escAttr(d.title)}</option>`).join('');
+ fillSelect('editWorkingItinerary',WORKING_DATE_OPTIONS,plannerSettings.working_itinerary||'August 21–29, 2027');
+ fillSelect('editResort',RESORT_OPTIONS,plannerSettings.resort||RESORT_OPTIONS[0]);
+ fillSelect('editParty',PARTY_OPTIONS,plannerSettings.party||'6 travelers');
+ fillSelect('editTickets',TICKET_OPTIONS,plannerSettings.tickets||TICKET_OPTIONS[0]);
+ fillSelect('editDiningStrategy',DINING_STRATEGY_OPTIONS,plannerSettings.dining_strategy||'Cash-first');
+ const title=document.getElementById('plannerEditorTitle');
+ const setup=document.getElementById('plannerTripSetup');
+ const addRow=document.getElementById('plannerAddBlockRow');
+ if(plannerFocusedBlock!==null){
+  title.textContent=plannerFocusMode==='meal'?'Change meal':'Edit block';
+  if(setup)setup.style.display='none'; if(addRow)addRow.style.display='none'; sel.disabled=true;
+ }else{
+  title.textContent='Plan your day'; if(setup)setup.style.display=''; if(addRow)addRow.style.display=''; sel.disabled=false;
+ }
+ renderPlannerDayEditor();
+ document.getElementById('plannerOverlay').classList.add('open');document.body.style.overflow='hidden';
+}
+function closePlannerEditor(){document.getElementById('plannerOverlay').classList.remove('open');document.body.style.overflow='';plannerFocusedBlock=null;plannerFocusMode='day';plannerMealTargetSlot='meal'}
 function plannerOverlayBackdrop(e){if(e.target===document.getElementById('plannerOverlay'))closePlannerEditor()}
+function plannerDayChanged(){collectPlannerDayFromForm();plannerEditorDay=Number(document.getElementById('editDaySelect').value||0);renderPlannerDayEditor()}
 function renderPlannerDayEditor(){
- const sel=document.getElementById('editDaySelect');plannerEditorDay=Number(sel.value||0);const d=DAYS[plannerEditorDay]; if(!d)return;
- document.getElementById('editDayDate').value=d.date||'';document.getElementById('editDayLabel').value=d.label||'';document.getElementById('editDayTitle').value=d.title||'';document.getElementById('editDayHours').value=d.hours||'';document.getElementById('editDayParks').value=(d.parks||[]).join(', ');
- document.getElementById('plannerBlocks').innerHTML=(d.blocks||[]).map((b,i)=>plannerBlockHTML(b,i,d)).join('');
+ const d=DAYS[plannerEditorDay]; if(!d)return;
+ const ctx=document.getElementById('plannerDayContext');
+ if(ctx)ctx.innerHTML=`<div class="currentChoice" style="margin:0"><div class="currentChoiceName">${escAttr(d.title)}</div><div class="currentChoiceMeta">${escAttr(d.hours||'')}</div></div>`;
+ const blocks=d.blocks||[];
+ if(plannerFocusedBlock!==null){
+  const b=blocks[plannerFocusedBlock];
+  document.getElementById('plannerBlocks').innerHTML=b?plannerBlockHTML(b,plannerFocusedBlock,d):'<div class="emptyChoice">This block no longer exists.</div>';
+ }else{
+  document.getElementById('plannerBlocks').innerHTML=blocks.map((b,i)=>plannerBlockHTML(b,i,d)).join('');
+ }
 }
 function escAttr(s){return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function mealNameForId(id){return id&&MEALS[id]?MEALS[id].name:''}
@@ -608,58 +904,46 @@ function normalizeDiningLocation(v){
  if(s.includes('port orleans'))return'Port Orleans Riverside';
  return'';
 }
-function inferDiningLocationFromArea(area){
- const a=String(area||'');
- const direct=normalizeDiningLocation(a); if(direct)return direct;
- const s=a.toLowerCase();
- if(/fantasyland|tomorrowland|adventureland|frontierland|liberty square|main street|cinderella castle/.test(s))return'Magic Kingdom';
- if(/world showcase|world nature|world celebration|world discovery|france pavilion|mexico pavilion|italy pavilion|american adventure/.test(s))return'EPCOT';
- if(/toy story land|galaxy|echo lake|sunset boulevard|hollywood boulevard|animation courtyard|commissary lane/.test(s))return'Hollywood Studios';
- if(/pandora|harambe|rafiki|discovery island|anandapur|asia|africa|oasis/.test(s))return'Animal Kingdom';
- return'';
-}
-function allowedDiningLocationsForBlock(d,b,value){
- const current=mealNameForId(value);
- const currentRec=current?DINING_MASTER.find(x=>x.name===current):null;
- const currentLoc=normalizeDiningLocation(currentRec?.location||'');
- if(currentLoc)return[currentLoc];
- const areaLoc=inferDiningLocationFromArea(b?.area||'');
- if(areaLoc)return[areaLoc];
- const dayLocs=[...new Set((d?.parks||[]).map(normalizeDiningLocation).filter(Boolean))];
- return dayLocs;
-}
-function mealSelectHTML(value,index,slot,d,b){
- const current=mealNameForId(value);
- const allowed=allowedDiningLocationsForBlock(d,b,value);
- const pool=allowed.length?DINING_MASTER.filter(x=>allowed.includes(normalizeDiningLocation(x.location))):DINING_MASTER;
- const names=[...new Set(pool.map(x=>x.name).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
- const inDirectory=!!current&&names.includes(current); let options=`<option value="">None</option>`;
- if(value&&current&&!inDirectory)options+=`<option value="mealid:${escAttr(value)}" selected>${escAttr(current)} — current</option>`;
- names.forEach(n=>{const selected=n===current?' selected':'';options+=`<option value="restaurant:${escAttr(n)}"${selected}>${escAttr(n)}</option>`});
- return `<select data-block="${index}" data-slot="${slot}" class="plannerMealSelect">${options}</select>${allowed.length?`<div class="small" style="margin-top:4px">Showing ${escAttr(allowed.join(' + '))} dining only</div>`:''}`;
-}
-function plannerBlockHTML(b,i,d){
- const chips=(b.ids||[]).map(id=>`<span class="plannerChip">${escAttr(BY_ID[id]?.name||id)} <button type="button" onclick="plannerRemoveAttraction(${i},'${id}')">×</button></span>`).join('');
- const dayParks=(d.parks||[]); let choices=[];dayParks.forEach(p=>(ATTRACTIONS[p]||[]).forEach(r=>choices.push(r[0]))); if(!choices.length)choices=Object.keys(BY_ID); choices=[...new Set(choices)].filter(id=>!(b.ids||[]).includes(id)).sort((a,b)=>(BY_ID[a]?.name||a).localeCompare(BY_ID[b]?.name||b));
- return `<div class="plannerBlock" data-block-index="${i}"><div class="plannerBlockTop"><div class="plannerBlockTitle">Block ${i+1}</div><div class="plannerBlockActions"><button type="button" onclick="movePlannerBlock(${i},-1)">↑</button><button type="button" onclick="movePlannerBlock(${i},1)">↓</button><button type="button" onclick="deletePlannerBlock(${i})">Delete</button></div></div><div class="plannerGrid"><label>Time<input data-field="time" value="${escAttr(b.time||'')}"></label><label>Area<input data-field="area" value="${escAttr(b.area||'')}"></label><label>Meal 1${mealSelectHTML(b.meal||'',i,'meal',d,b)}</label><label>Meal 2${mealSelectHTML(b.meal2||'',i,'meal2',d,b)}</label></div><label style="display:block;margin-top:8px">Custom note<textarea data-field="custom">${escAttr((b.custom||[]).join('\n'))}</textarea></label><div class="plannerAttractions">${chips||'<span class="small">No attractions in this block.</span>'}</div><div class="plannerGrid"><label>Add attraction<select class="plannerAddAttr"><option value="">Choose attraction…</option>${choices.map(id=>`<option value="${id}">${escAttr(BY_ID[id]?.name||id)}</option>`).join('')}</select></label><div class="plannerButtons"><button type="button" onclick="plannerAddAttraction(${i},this)">Add attraction</button></div></div></div>`;
-}
 function collectPlannerDayFromForm(){
- const d=DAYS[plannerEditorDay]; d.date=document.getElementById('editDayDate').value||d.date; d.label=document.getElementById('editDayLabel').value; d.title=document.getElementById('editDayTitle').value; d.hours=document.getElementById('editDayHours').value; d.parks=document.getElementById('editDayParks').value.split(',').map(x=>x.trim()).filter(Boolean);
- document.querySelectorAll('#plannerBlocks .plannerBlock').forEach((el,i)=>{const b=d.blocks[i];b.time=el.querySelector('[data-field="time"]').value;b.area=el.querySelector('[data-field="area"]').value;const c=el.querySelector('[data-field="custom"]').value.split('\n').map(x=>x.trim()).filter(Boolean);if(c.length)b.custom=c;else delete b.custom;['meal','meal2'].forEach(slot=>{const v=el.querySelector(`select[data-slot="${slot}"]`).value;const id=plannerMealValueToId(v);if(id)b[slot]=id;else delete b[slot]})});
+ const d=DAYS[plannerEditorDay]; if(!d)return;
+ document.querySelectorAll('#plannerBlocks .visualBlock').forEach(el=>{
+  const i=Number(el.dataset.blockIndex),b=d.blocks[i]; if(!b)return;
+  const time=el.querySelector('[data-field="time"]'); if(time)b.time=time.value;
+  const area=el.querySelector('[data-field="area"]'); if(area)b.area=area.value;
+  const note=el.querySelector('[data-field="usernote"]'); if(note)setUserNote(b,note.value);
+ });
 }
-function plannerMealValueToId(v){if(!v)return'';if(v.startsWith('mealid:'))return v.slice(7);if(v.startsWith('restaurant:'))return ensureMealFromDiningName(v.slice(11));return''}
+function plannerAreaChanged(i,sel){collectPlannerDayFromForm();const b=DAYS[plannerEditorDay].blocks[i];if(!b)return;b.area=sel.value;renderPlannerDayEditor()}
 function ensureMealFromDiningName(name){let existing=Object.keys(MEALS).find(id=>MEALS[id].name===name);if(existing)return existing;const rec=DINING_MASTER.find(x=>x.name===name)||{};let base='custom-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,35);let id=base||('custom-'+Date.now());let n=2;while(MEALS[id])id=base+'-'+n++;MEALS[id]={name,area:rec.area||rec.location||'',meta:rec.type||rec.meal||''};return id}
-function plannerRemoveAttraction(blockIndex,id){collectPlannerDayFromForm();const b=DAYS[plannerEditorDay].blocks[blockIndex];b.ids=(b.ids||[]).filter(x=>x!==id);renderPlannerDayEditor()}
-function plannerAddAttraction(blockIndex,btn){collectPlannerDayFromForm();const el=btn.closest('.plannerBlock');const id=el.querySelector('.plannerAddAttr').value;if(!id)return;const b=DAYS[plannerEditorDay].blocks[blockIndex];b.ids=b.ids||[];if(!b.ids.includes(id))b.ids.push(id);renderPlannerDayEditor()}
+function plannerAddAttractionChoice(blockIndex,id){collectPlannerDayFromForm();const b=DAYS[plannerEditorDay].blocks[blockIndex];if(!b)return;b.ids=b.ids||[];if(!b.ids.includes(id))b.ids.push(id);renderPlannerDayEditor()}
+function plannerRemoveAttraction(blockIndex,id){collectPlannerDayFromForm();const b=DAYS[plannerEditorDay].blocks[blockIndex];if(!b)return;b.ids=(b.ids||[]).filter(x=>x!==id);renderPlannerDayEditor()}
+function plannerMoveAttractionWithin(blockIndex,id,dir){collectPlannerDayFromForm();const b=DAYS[plannerEditorDay].blocks[blockIndex];if(!b)return;const a=b.ids||[],i=a.indexOf(id),j=i+dir;if(i<0||j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];renderPlannerDayEditor()}
+function plannerMoveAttractionToBlock(fromIndex,id,target){if(target==='')return;collectPlannerDayFromForm();const d=DAYS[plannerEditorDay],toIndex=Number(target);const from=d.blocks[fromIndex],to=d.blocks[toIndex];if(!from||!to)return;from.ids=(from.ids||[]).filter(x=>x!==id);to.ids=to.ids||[];if(!to.ids.includes(id))to.ids.push(id);renderPlannerDayEditor()}
+function plannerChooseMeal(btn,blockIndex,slot){collectPlannerDayFromForm();const b=DAYS[plannerEditorDay].blocks[blockIndex];if(!b)return;const name=btn?.dataset?.restaurant||'';if(!name)return;b[slot]=ensureMealFromDiningName(name);renderPlannerDayEditor()}
+function plannerRemoveMeal(blockIndex,slot){collectPlannerDayFromForm();const b=DAYS[plannerEditorDay].blocks[blockIndex];if(!b)return;delete b[slot];renderPlannerDayEditor()}
+function plannerMoveMealToBlock(fromIndex,slot,target){if(target==='')return;collectPlannerDayFromForm();const d=DAYS[plannerEditorDay],toIndex=Number(target);const from=d.blocks[fromIndex],to=d.blocks[toIndex];if(!from||!to||!from[slot])return;const id=from[slot];delete from[slot];if(!to.meal)to.meal=id;else if(!to.meal2)to.meal2=id;else{to.meal=id}renderPlannerDayEditor()}
 function movePlannerBlock(i,dir){collectPlannerDayFromForm();const a=DAYS[plannerEditorDay].blocks,j=i+dir;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];renderPlannerDayEditor()}
-function deletePlannerBlock(i){collectPlannerDayFromForm();if(!confirm('Delete this time block from the itinerary?'))return;DAYS[plannerEditorDay].blocks.splice(i,1);renderPlannerDayEditor()}
-function addPlannerBlock(){collectPlannerDayFromForm();DAYS[plannerEditorDay].blocks.push({time:'',area:'',ids:[]});renderPlannerDayEditor();setTimeout(()=>{const e=document.getElementById('plannerBlocks');e.lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'})},50)}
+function deletePlannerBlock(i){collectPlannerDayFromForm();if(!confirm('Delete this time block?'))return;DAYS[plannerEditorDay].blocks.splice(i,1);renderPlannerDayEditor()}
+function addPlannerBlock(){collectPlannerDayFromForm();const d=DAYS[plannerEditorDay],p=d.parks?.[0]||'',area=PARK_AREAS[p]?.[0]||'Resort / flexible';d.blocks.push({time:'Flexible',area,ids:[]});renderPlannerDayEditor();setTimeout(()=>document.getElementById('plannerBlocks').lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'}),50)}
 async function savePlannerEditor(){
  const msg=document.getElementById('plannerEditorMessage');msg.className='';msg.textContent='Saving…';
- try{collectPlannerDayFromForm();plannerSettings={...plannerSettings,planning_window:document.getElementById('editPlanningWindow').value,working_itinerary:document.getElementById('editWorkingItinerary').value,resort:document.getElementById('editResort').value,party:document.getElementById('editParty').value,tickets:document.getElementById('editTickets').value,dining_strategy:document.getElementById('editDiningStrategy').value};await plannerRequest('saveAll',{days:DAYS,meals:MEALS,reservations:RESERVATIONS,settings:plannerSettings});msg.className='plannerSuccess';msg.textContent='Saved to the Master Trip Planner.';updatePlannerSummary();renderAll();setTimeout(closePlannerEditor,450)}catch(err){msg.className='plannerError';msg.textContent=String(err.message||err)}
+ try{
+  collectPlannerDayFromForm();
+  plannerSettings={...plannerSettings,
+   working_itinerary:document.getElementById('editWorkingItinerary')?.value||plannerSettings.working_itinerary,
+   resort:document.getElementById('editResort')?.value||plannerSettings.resort,
+   party:document.getElementById('editParty')?.value||plannerSettings.party,
+   tickets:document.getElementById('editTickets')?.value||plannerSettings.tickets,
+   dining_strategy:document.getElementById('editDiningStrategy')?.value||plannerSettings.dining_strategy
+  };
+  await plannerRequest('saveAll',{days:DAYS,meals:MEALS,reservations:RESERVATIONS,settings:plannerSettings});
+  msg.className='plannerSuccess';msg.textContent='Saved';updatePlannerSummary();renderAll();setTimeout(closePlannerEditor,250)
+ }catch(err){msg.className='plannerError';msg.textContent=String(err.message||err)}
 }
 function openPlannerAtBlock(blockIndex){openPlannerAtBlockOnDay(currentDay,blockIndex)}
-function openPlannerAtBlockOnDay(dayIndex,blockIndex){currentDay=dayIndex;openPlannerEditor(dayIndex);setTimeout(()=>document.querySelector(`[data-block-index="${blockIndex}"]`)?.scrollIntoView({behavior:'smooth',block:'center'}),80)}
+function openPlannerAtBlockOnDay(dayIndex,blockIndex){currentDay=dayIndex;openPlannerEditor(dayIndex,blockIndex,'block')}
+function openPlannerMealPicker(blockIndex,slot='meal'){currentDay=currentDay;openPlannerEditor(currentDay,blockIndex,'meal',slot)}
+function openPlannerMealPickerOnDay(dayIndex,blockIndex,slot='meal'){currentDay=dayIndex;openPlannerEditor(dayIndex,blockIndex,'meal',slot)}
 
 const MAPS={
  "Magic Kingdom":"https://cdn1.parksmedia.wdprapps.disney.com/vision-dam/digital/parks-platform/parks-global-assets/disney-world/guest-services/guide-maps/MK_0626_EN-DIGITAL.pdf?2026-06-23T16:48:45+00:00",
@@ -1158,18 +1442,16 @@ function controls(id,daySpecific=false){
 }
 function itemDetails(x){
  const parts=[];
- if(x.description) parts.push(`<div class="detailLine">${x.description}</div>`);
- if(x.height) parts.push(`<div class="detailLine"><b>Height:</b> ${x.height}</div>`);
- const fp=familyPlan(x);
- if(fp) parts.push(`<div class="detailLine"><b>Family plan:</b> ${fp}</div>`);
- if(x.verify==="Yes") parts.push(`<div class="detailLine"><b>Before the trip:</b> Reconfirm this experience for 2027.</div>`);
- if(x.ll) parts.push(lightningPanel(x));
+ if(x.description)parts.push(`<div class="detailLine">${x.description}</div>`);
+ if(x.height)parts.push(`<div class="detailLine"><b>Height:</b> ${x.height}</div>`);
+ if(x.ll)parts.push(`<div class="detailLine"><b>Lightning Lane:</b> ${x.ll}</div>`);
  if(!parts.length)return "";
  return `<details class="itemDetails"><summary>Details</summary>${parts.join("")}</details>`;
 }
 function renderItem(id,moved=false){
- const x=BY_ID[id];
- return `<div class="item ${itemClass(x)}">${x.time?`<div class="time">${x.time}</div>`:""}<div class="name">${displayName(x)}</div>${x.meta?`<div class="meta">${x.meta}</div>`:""}${badges(x,moved)}${itemDetails(x)}${controls(id,true)}</div>`;
+ const x=BY_ID[id]; if(!x)return"";
+ const meta=[x.height?`Height ${x.height}`:"",x.ll?x.ll:"",moved?"Moved here":""].filter(Boolean).join(" • ");
+ return `<div class="item ${itemClass(x)}"><div class="name">${displayName(x)}</div>${meta?`<div class="cleanItemMeta">${escAttr(meta)}${x.map?` • <a class="cleanMapLink" href="${MAPS[x.park]}" target="_blank" rel="noopener">Map ${x.map}</a>`:""}</div>`:(x.map?`<div class="cleanItemMeta"><a class="cleanMapLink" href="${MAPS[x.park]}" target="_blank" rel="noopener">Map ${x.map}</a></div>`:"")}${itemDetails(x)}${controls(id,true)}</div>`;
 }
 function activeSequence(di){
  const d=DAYS[di], carry=carryMapForDay(di), arr=[];
@@ -1272,43 +1554,35 @@ function lightningSummary(d){
 }
 
 function renderDay(){
- const d=DAYS[currentDay], carry=carryMapForDay(currentDay), seq=activeSequence(currentDay);
+ const d=DAYS[currentDay], carry=carryMapForDay(currentDay);
  let total=0,done=0;
  d.blocks.forEach(b=>(b.ids||[]).forEach(id=>{total++;if(status(id,currentDay)==="done")done++}));
- let h=`<div class="hero"><h1>${d.title}</h1><div class="muted">${d.label}</div><div class="hours">${d.hours}</div><div class="progress"><div class="bar" style="width:${total?done/total*100:0}%"></div></div><div class="muted" style="margin-top:7px">${done} of ${total} planned items completed</div><div class="heroActions">${plannerConnected&&plannerInitialized?`<button class="contextEditBtn" onclick="openPlannerEditor(currentDay)">Edit this day</button>`:""}<button class="remainingBtn ${remainingOnly?"active":""}" onclick="toggleRemaining()">Show remaining only</button>${d.parks.map(p=>MAPS[p]?`<a class="mapbtn" href="${MAPS[p]}" target="_blank" rel="noopener">Open ${p} Map</a>`:"").join("")}</div></div>`;
- if(seq.length){
-   const n=BY_ID[seq[0].id], second=seq[1]?BY_ID[seq[1].id]:null, third=seq[2]?BY_ID[seq[2].id]:null;
-   h+=`<div class="nextcard"><div class="eyebrow">Up Next</div><div class="nextname">${displayName(n)}</div><div class="nextmeta">${n.map?`Map ${n.map} • `:""}${n.area} • ${llTime(n.id)?`Lightning Lane ${formatClock(llTime(n.id))}`:seq[0].block.time}</div>${second?`<div class="then"><b>Then:</b> ${second.name}${second.map?` • Map ${second.map}`:""} • ${second.area}</div>`:""}${third?`<div class="then"><b>After:</b> ${third.name} • ${third.area}</div>`:""}</div>`;
- }
- h+=dayAnchors(d);
- h+=ropeDropCard(d);
- h+=lightningSummary(d);
+ let h=`<div class="hero"><h1>${d.title}</h1><div class="muted">${d.label}</div><div class="hours">${d.hours}</div><div class="progress"><div class="bar" style="width:${total?done/total*100:0}%"></div></div><div class="dayCleanTools">${plannerConnected&&plannerInitialized?`<button onclick="openPlannerEditor(currentDay)">Edit day</button>`:""}<button class="${remainingOnly?"on":""}" onclick="toggleRemaining()">${remainingOnly?"Show all":"Remaining only"}</button>${d.parks.map(p=>MAPS[p]?`<a href="${MAPS[p]}" target="_blank" rel="noopener">${p} map</a>`:"").join("")}</div></div>`;
  const carried=Object.values(carry).flat();
- if(carried.length)h+=`<div class="carrycard"><h3>Moved to this day</h3>${carried.map(c=>`<div class="carryline"><b>${BY_ID[c.id].name}</b><div class="small">Moved from ${DAYS[c.origin].label}</div></div>`).join("")}</div>`;
+ if(carried.length)h+=`<div class="carrycard"><h3>Moved to this day</h3>${carried.map(c=>`<div class="carryline"><b>${BY_ID[c.id].name}</b></div>`).join("")}</div>`;
  d.blocks.forEach((b,bi)=>{
    const carriedHere=(carry[bi]||[]).filter(c=>visibleOnDay(c.id));
    const normal=(b.ids||[]).filter(id=>visibleOnDay(id));
-   const hasFixed=b.meal||b.meal2||b.reservation||(b.custom&&b.custom.length);
-   if(remainingOnly && !carriedHere.length && !normal.length && !hasFixed)return;
-   h+=`<div class="block"><div class="blockhead">${plannerConnected&&plannerInitialized?`<button class="editBlockBtn" onclick="openPlannerAtBlock(${bi})">Edit</button>`:""}<div class="blocktime">${b.time}</div><h2>${b.area}</h2></div>`;
+   const hasMeal=b.meal||b.meal2||b.reservation;
+   const userNote=getUserNote(b);
+   if(remainingOnly&&!carriedHere.length&&!normal.length&&!hasMeal&&!userNote)return;
+   h+=`<div class="block"><div class="blockhead">${plannerConnected&&plannerInitialized?`<button class="editBlockBtn" onclick="openPlannerAtBlock(${bi})">Edit</button>`:""}<div class="blocktime">${escAttr(b.time||'Flexible')}</div><h2>${escAttr(b.area||'')}</h2></div>`;
    carriedHere.forEach(c=>h+=renderItem(c.id,true));
    normal.forEach(id=>h+=renderItem(id,false));
-   h+=nearbyForBlock(d,b);
    if(b.reservation){
      const r=RESERVATIONS[b.reservation];
-     h+=`<div class="item reservationItem"><div class="name">${r.name}</div><div class="meta">${r.meta||""}</div><span class="badge bmeal">Appointment / reservation</span></div>`;
+     h+=`<div class="item reservationItem"><div class="name">${escAttr(r.name)}</div>${r.meta?`<div class="cleanItemMeta">${escAttr(r.meta)}</div>`:""}</div>`;
    }
-   [b.meal,b.meal2].filter(Boolean).forEach(mid=>{
-     const m=MEALS[mid];
+   [['meal',b.meal],['meal2',b.meal2]].filter(x=>x[1]).forEach(([slot,mid])=>{
+     const m=MEALS[mid]; if(!m)return;
      const rec=findDiningRecord(m.name);
-     h+=`<div class="item mealItem"><div class="name">${m.name}</div><div class="meta">${m.meta||""}</div><span class="badge bmeal">Meal / reservation</span><div class="inlineActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${rec&&rec.details?`<a href="${rec.details}" target="_blank" rel="noopener">Restaurant</a>`:""}${plannerConnected&&plannerInitialized?`<button class="mealEditBtn" onclick="openPlannerAtBlock(${bi})">Change meal</button>`:""}</div></div>`;
+     h+=`<div class="item mealItem"><div class="cleanMeal"><div><div class="name">${escAttr(m.name)}</div>${m.meta?`<div class="cleanItemMeta">${escAttr(m.meta)}</div>`:""}</div><div class="cleanMealActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${plannerConnected&&plannerInitialized?`<button onclick="openPlannerMealPicker(${bi},'${slot}')">Change</button>`:""}</div></div></div>`;
    });
-   (b.custom||[]).forEach(name=>h+=`<div class="item"><div class="name">${name}</div></div>`);
+   if(userNote)h+=`<div class="userNote">${escAttr(userNote)}</div>`;
    h+=`</div>`;
  });
  day.innerHTML=h;
 }
-
 let currentPark="Magic Kingdom";
 function renderParkFilters(){
  parkfilters.innerHTML=Object.keys(ATTRACTIONS).map(p=>`<button class="${p===currentPark?"active":""}" data-park="${p}">${p}</button>`).join("");
@@ -1432,10 +1706,10 @@ function renderDiningCard(x){
 function renderDining(){
  const planned=[];
  DAYS.forEach((d,di)=>d.blocks.forEach((b,bi)=>{
-   [b.meal,b.meal2].filter(Boolean).forEach(mid=>{
+   [['meal',b.meal],['meal2',b.meal2]].filter(x=>x[1]).forEach(([slot,mid])=>{
      const m=MEALS[mid];
      const rec=findDiningRecord(m.name);
-     planned.push(`<div class="reservation"><b>${m.name}</b><div class="small">${d.label} • ${b.time} • ${m.area}${m.meta?" • "+m.meta:""}</div><div class="inlineActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${rec&&rec.details?`<a href="${rec.details}" target="_blank" rel="noopener">Details</a>`:""}${plannerConnected&&plannerInitialized?`<button class="mealEditBtn" onclick="openPlannerAtBlockOnDay(${di},${bi})">Change</button>`:""}</div></div>`);
+     planned.push(`<div class="reservation"><b>${m.name}</b><div class="small">${d.label} • ${b.time} • ${m.area}</div><div class="inlineActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${plannerConnected&&plannerInitialized?`<button class="mealEditBtn" onclick="openPlannerMealPickerOnDay(${di},${bi},'${slot}')">Change</button>`:""}</div></div>`);
    });
  }));
  plannedDining.innerHTML=planned.join("");
@@ -1481,7 +1755,7 @@ function updateTrip(){
  Object.values(BY_ID).forEach(x=>{total++;if(status(x.id)==="done")done++});
  tripbar.style.width=(total?done/total*100:0)+"%";tripprogress.textContent=`${done} of ${total} master attractions / shows completed`;
  const stranded=allMoved().filter(x=>x.dest<0);
- needsvisit.innerHTML=stranded.length?`<div class="notice"><b>No later visit is currently scheduled for:</b><br>${stranded.map(x=>`${BY_ID[x.id].name} — ${x.park}`).join("<br>")}</div>`:"";
+ const nv=document.getElementById("needsvisit");if(nv)nv.innerHTML=stranded.length?`<div class="notice"><b>No later visit is currently scheduled for:</b><br>${stranded.map(x=>`${BY_ID[x.id].name} — ${x.park}`).join("<br>")}</div>`:"";
 }
 function renderAll(){renderDashboard(false);renderTabs();renderDay();renderParkFilters();renderAttractions();renderDining();renderMaps();updateTrip();if(plannerConnected)updatePlannerSummary()}
 document.querySelectorAll(".bottomNav button").forEach(b=>b.onclick=()=>{
