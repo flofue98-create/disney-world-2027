@@ -1,0 +1,45 @@
+name: Apply Disney planner v2.4.1 index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/v241patch.b64'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply patch
+        shell: bash
+        run: |
+          base64 -d .github/v241patch.b64 | gunzip > /tmp/v241.patch
+          git apply --check /tmp/v241.patch
+          git apply /tmp/v241.patch
+      - name: Validate JavaScript
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text()
+          scripts=re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',s,flags=re.S|re.I)
+          Path('/tmp/index-scripts.js').write_text('\n'.join(scripts))
+          PY
+          node --check /tmp/index-scripts.js
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name "Disney Planner Update"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git rm .github/v241patch.b64
+          git rm .github/workflows/apply-v241-index.yml
+          git commit -m "Normalize appointment blocks on planner load"
+          git push
