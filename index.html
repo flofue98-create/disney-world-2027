@@ -493,7 +493,7 @@ body.familyView .editorOnly{display:none!important}
   <a href="https://disneyworld.disney.go.com/en_US/plan/" target="_blank" rel="noopener">Disney My Plans</a>
  </div>
  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.4 • smart placement + named appointments + auto areas • Sep 19, 2026</div>
+<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.4.1 • smart placement + named appointments + auto areas • Sep 19, 2026</div>
 </section>
 </main>
 
@@ -832,6 +832,10 @@ function applyPlannerPayload(p){
  if(Array.isArray(p.days)&&p.days.length){DAYS.splice(0,DAYS.length,...p.days);normalizeDayLabels()}
  if(p.meals&&Object.keys(p.meals).length){Object.keys(MEALS).forEach(k=>delete MEALS[k]);Object.assign(MEALS,p.meals)}
  if(p.reservations&&Object.keys(p.reservations).length){Object.keys(RESERVATIONS).forEach(k=>delete RESERVATIONS[k]);Object.assign(RESERVATIONS,p.reservations)}
+ const restoreDay=currentDay;
+ DAYS.forEach(d=>(d.blocks||[]).forEach(b=>{if(b.reservation)syncReservationBlock(b)}));
+ DAYS.forEach((d,i)=>{currentDay=i;autoOrderTimedBlocks()});
+ currentDay=Math.max(0,Math.min(restoreDay,DAYS.length-1));
  if(Array.isArray(p.diningMaster)&&p.diningMaster.length){DINING_MASTER.splice(0,DINING_MASTER.length,...p.diningMaster)}
  if(Array.isArray(p.attractionMaster)&&p.attractionMaster.length)applyAttractionMaster(p.attractionMaster);
  plannerSettings={...PLANNER_DEFAULT_SETTINGS,...(p.settings||{})};
