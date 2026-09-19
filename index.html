@@ -349,6 +349,7 @@ body.familyView .editorOnly{display:none!important}
 .agentHub .eyebrow{color:#dbeafe}.agentHub h2{margin:4px 0 3px;font-size:20px}.agentHub .small{color:#dbeafe}.agentHubTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.agentHubBtn{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900;white-space:nowrap}
 .agentMiniGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}.agentMini{background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.18);border-radius:13px;padding:9px}.agentMiniLabel{font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:#dbeafe}.agentMiniValue{font-size:12px;font-weight:900;margin-top:3px;line-height:1.25}.agentMiniMeta{font-size:9px;color:#dbeafe;margin-top:3px;line-height:1.3}
 .strategyPreview{margin-top:10px;background:#fff;color:#20364d;border-radius:14px;padding:10px}.strategyPreview b{font-size:12px}.strategyPreview .small{color:#687483}.strategyPreview .routeLine{font-size:11px;line-height:1.4;margin-top:5px}.strategyPreview .routeIds{display:flex;gap:5px;overflow-x:auto;margin-top:7px;padding-bottom:1px}.strategyChip{white-space:nowrap;border-radius:999px;background:#eef4fa;color:#174f86;padding:5px 7px;font-size:9px;font-weight:900}
+.agentReview{margin-top:10px;background:#fff8e8;border:1px solid #ead28b;border-radius:14px;padding:11px;color:#20364d}.agentReview.good{background:#eef8f0;border-color:#b8d9c0}.agentReview.warn{background:#fff0ef;border-color:#efc2bd}.agentReviewTitle{font-size:12px;font-weight:950}.agentReviewMeta{font-size:10px;line-height:1.45;color:#687483;margin-top:4px}.agentReviewActions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.agentReviewActions button{border:1px solid #cbd5e1;background:#fff;color:#174f86;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:900}.whatIfFlow{margin-top:9px;background:#fff;border:1px solid #dde4ea;border-radius:12px;padding:9px}.whatIfRow{display:grid;grid-template-columns:72px 1fr;gap:8px;padding:5px 0;border-top:1px solid #edf0f3;font-size:10px;line-height:1.35}.whatIfRow:first-child{border-top:0}.whatIfTime{font-weight:950;color:#174f86}.estimateBadge{display:inline-block;border-radius:999px;background:#fff1cf;color:#805700;padding:3px 6px;font-size:8px;font-weight:950;margin-left:5px;vertical-align:1px}
 .bookingStrip{display:grid;grid-template-columns:1fr;gap:9px;margin-bottom:11px}.bookingCard{background:#fff;border:1px solid #dfe3e8;border-radius:16px;padding:12px;box-shadow:var(--shadow)}.bookingCardTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.bookingName{font-size:13px;font-weight:900}.bookingDate{font-size:16px;font-weight:950;color:#17385e;margin-top:3px}.bookingMeta{font-size:10px;line-height:1.4;color:#687483;margin-top:4px}.bookingStatus{border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900;background:#eef3f8;color:#174f86;white-space:nowrap}.bookingStatus.open{background:#eaf7ed;color:#2c6a3f}.bookingStatus.soon{background:#fff1cf;color:#805700}
 .agentCenterIntro{background:#eef5fb;border:1px solid #c7d9e8;border-radius:16px;padding:13px;margin-bottom:11px}.agentCenterIntro h2{margin:2px 0 4px;font-size:20px}.agentSourceNote{font-size:10px;line-height:1.4;color:#64748b;margin-top:8px}.strategyCenter{background:#fff;border:1px solid #dfe3e8;border-radius:18px;padding:14px;margin-bottom:11px;box-shadow:var(--shadow)}.strategyCenter h2{margin:0 0 8px;font-size:17px}.strategyDay{padding:10px 0;border-top:1px solid #edf0f3}.strategyDay:first-of-type{border-top:0}.strategyDayName{font-weight:900;font-size:12px}.strategyDayDetail{font-size:10px;color:#687483;line-height:1.4;margin-top:3px}.strategyPills{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.strategyPills span{background:#f1f5f9;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:850;color:#334155}
 @media(min-width:620px){.bookingStrip{grid-template-columns:repeat(3,1fr)}.agentMiniGrid{grid-template-columns:repeat(4,1fr)}}
@@ -492,7 +493,7 @@ body.familyView .editorOnly{display:none!important}
   <a href="https://disneyworld.disney.go.com/en_US/plan/" target="_blank" rel="noopener">Disney My Plans</a>
  </div>
  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.2 • live preview + editable trip savings • Sep 19, 2026</div>
+<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.3 • 2026 showtime planning + dynamic agent review • Sep 19, 2026</div>
 </section>
 </main>
 
@@ -645,8 +646,30 @@ function renderPlanningAssistant(){
  const d=DAYS[currentDay]||DAYS[0], rope=ROPE_DROP[d?.date], ll=llPriorityForDay(d);
  const milestones=bookingMilestones(), dining=milestones[0], lane=milestones[1];
  const ropeNames=(rope?.ids||[]).map(id=>BY_ID[id]?.name).filter(Boolean);
- el.innerHTML=`<div class="agentHub"><div class="agentHubTop"><div><div class="eyebrow">Personal Travel Agent</div><h2>${d?.label||'Selected day'} strategy</h2><div class="small">Planning months out now • dynamic routing on park day</div></div><button class="agentHubBtn editorOnly" onclick="switchScreen('dashboard')">Travel Agent Center</button></div><div class="agentMiniGrid"><div class="agentMini"><div class="agentMiniLabel">Dining window</div><div class="agentMiniValue">${fmtMilestoneDate(dining.date)}</div><div class="agentMiniMeta">Current 60-day rule</div></div><div class="agentMini"><div class="agentMiniLabel">Lightning Lane</div><div class="agentMiniValue">${fmtMilestoneDate(lane.date)}</div><div class="agentMiniMeta">Current 7-day Resort rule</div></div><div class="agentMini"><div class="agentMiniLabel">Park</div><div class="agentMiniValue">${(d?.parks||[]).join(' + ')||'Flexible day'}</div><div class="agentMiniMeta">Route follows selected day</div></div><div class="agentMini"><div class="agentMiniLabel">Strategy state</div><div class="agentMiniValue">Reviewable</div><div class="agentMiniMeta">Agents never silently rewrite the plan</div></div></div>${rope?`<div class="strategyPreview"><b>${rope.title}</b><div class="small">${rope.note}</div>${ropeNames.length?`<div class="routeIds">${ropeNames.map(n=>`<span class="strategyChip">${n}</span>`).join('')}</div>`:''}${ll.length?`<div class="routeLine"><b>Lightning Lane targets:</b> ${ll.map(id=>BY_ID[id]?.name).filter(Boolean).join(' • ')}</div>`:''}</div>`:`<div class="strategyPreview"><b>Strategy will follow this day as plans lock</b><div class="small">Rope-drop order, Lightning Lane priorities and geographic routing will update as the park day becomes more defined.</div></div>`}</div>`;
+ const review=renderDayAgentReview(d);
+ el.innerHTML=`<div class="agentHub"><div class="agentHubTop"><div><div class="eyebrow">Personal Travel Agent</div><h2>${d?.label||'Selected day'} strategy</h2><div class="small">Planning months out now • dynamic routing on park day</div></div><button class="agentHubBtn editorOnly" onclick="switchScreen('dashboard')">Travel Agent Center</button></div><div class="agentMiniGrid"><div class="agentMini"><div class="agentMiniLabel">Dining window</div><div class="agentMiniValue">${fmtMilestoneDate(dining.date)}</div><div class="agentMiniMeta">Current 60-day rule</div></div><div class="agentMini"><div class="agentMiniLabel">Lightning Lane</div><div class="agentMiniValue">${fmtMilestoneDate(lane.date)}</div><div class="agentMiniMeta">Current 7-day Resort rule</div></div><div class="agentMini"><div class="agentMiniLabel">Park</div><div class="agentMiniValue">${(d?.parks||[]).join(' + ')||'Flexible day'}</div><div class="agentMiniMeta">Route follows selected day</div></div><div class="agentMini"><div class="agentMiniLabel">Showtimes</div><div class="agentMiniValue">2026 estimate mode</div><div class="agentMiniMeta">August 2026 patterns until 2027 times publish</div></div></div>${rope?`<div class="strategyPreview"><b>${rope.title}</b><div class="small">${rope.note}</div>${ropeNames.length?`<div class="routeIds">${ropeNames.map(n=>`<span class="strategyChip">${n}</span>`).join('')}</div>`:''}${ll.length?`<div class="routeLine"><b>Lightning Lane targets:</b> ${ll.map(id=>BY_ID[id]?.name).filter(Boolean).join(' • ')}</div>`:''}</div>`:`<div class="strategyPreview"><b>Strategy will follow this day as plans lock</b><div class="small">Rope-drop order, Lightning Lane priorities and geographic routing will update as the park day becomes more defined.</div></div>`}${review}</div>`;
 }
+let bbbWhatIfOpen=false;
+function findMealSlotOnDay(d,mealId){for(let bi=0;bi<(d.blocks||[]).length;bi++){const b=d.blocks[bi];if(b.meal===mealId)return{bi,b,slot:'meal'};if(b.meal2===mealId)return{bi,b,slot:'meal2'}}return null}
+function renderDayAgentReview(d){
+ if(!d)return'';
+ const bbbBi=(d.blocks||[]).findIndex(b=>b.reservation==='mk-bbb'),crt=findMealSlotOnDay(d,'mk-crt');
+ if(bbbBi<0||!crt)return `<div class="agentReview good"><div class="agentReviewTitle">Agent review ready</div><div class="agentReviewMeta">As you add fixed dining, appointments, showtimes and Lightning Lane windows, I’ll flag timing conflicts and better sequencing here.</div></div>`;
+ const b=d.blocks[bbbBi],bbbTime=getReservationTime(b)||parsedBlockTimes(b).start||'',crtTime=getMealTime(crt.b,crt.slot)||parsedBlockTimes(crt.b).start||'17:30';
+ const bbbMin=timeToMinutes(bbbTime),crtMin=timeToMinutes(crtTime),target='15:15',targetMin=timeToMinutes(target);
+ let cls='',title='',meta='';
+ if(!bbbMin||bbbMin<13*60){
+  title='Agent suggestion: test an afternoon Bibbidi Bobbidi Boutique';
+  meta=`The current plan uses the makeover early. A ${from24Time(target)} target would protect the high-value morning ride window and keep Liliana’s hair and makeup much fresher for Cinderella’s Royal Table at ${from24Time(crtTime)}. Disney says the transformation can take up to 90 minutes, so this leaves about ${Math.max(0,Math.round((crtMin-targetMin)/60*10)/10)} hours before dinner.`;
+ }else if(bbbMin<=15*60+30 && crtMin-bbbMin>=105){
+  cls='good';title='Agent check: this makeover timing is well aligned';meta=`Bibbidi Bobbidi Boutique is now close enough to Cinderella’s Royal Table to keep the makeover fresh while still leaving a reasonable cushion before ${from24Time(crtTime)}.`;
+ }else{
+  cls='warn';title='Agent timing warning: the makeover may be too close to dinner';meta=`Disney says Bibbidi Bobbidi Boutique can take up to 90 minutes. With Cinderella’s Royal Table at ${from24Time(crtTime)}, I would target roughly 3:00–3:30 PM rather than pushing the appointment much later.`;
+ }
+ const preview=bbbWhatIfOpen?`<div class="whatIfFlow"><div class="whatIfRow"><div class="whatIfTime">8:30 AM</div><div>Use Early Entry for Fantasyland priorities instead of spending the best low-wait window at the makeover.</div></div><div class="whatIfRow"><div class="whatIfTime">11:35 AM</div><div>Mickey’s Magical Friendship Faire <span class="estimateBadge">2026 estimate</span></div></div><div class="whatIfRow"><div class="whatIfTime">12:15 PM</div><div>Quick-Service lunch in Fantasyland.</div></div><div class="whatIfRow"><div class="whatIfTime">2:00 PM</div><div>Festival of Fantasy Parade <span class="estimateBadge">2026 estimate</span></div></div><div class="whatIfRow"><div class="whatIfTime">3:15 PM</div><div>Bibbidi Bobbidi Boutique. Budget up to 90 minutes, then castle-area photos.</div></div><div class="whatIfRow"><div class="whatIfTime">5:30 PM</div><div>Cinderella’s Royal Table — makeover still fresh for the princess dinner.</div></div><div class="agentReviewMeta"><b>Tradeoff:</b> the current 2:35–5:00 Liberty Square / Adventureland stretch would need to move later or to the second Magic Kingdom day. This preview does not change your itinerary.</div></div>`:'';
+ return `<div class="agentReview ${cls}"><div class="agentReviewTitle">${title}</div><div class="agentReviewMeta">${meta}</div><div class="agentReviewActions"><button onclick="bbbWhatIfOpen=!bbbWhatIfOpen;renderPlanningAssistant()">${bbbWhatIfOpen?'Hide what-if':'Preview what-if'}</button><button onclick="openQuickSheet('reservation',${bbbBi})">Open BBB timing</button></div>${preview}</div>`;
+}
+
 function renderStrategyCenter(){
  const el=document.getElementById('dashboardStrategy');if(!el)return;
  const useful=DAYS.filter(d=>ROPE_DROP[d.date]||llPriorityForDay(d).length);
@@ -1938,7 +1961,7 @@ function renderQuickAttractionSheet(d,b,bi,id,body){
  const ids=b.ids||[],idx=ids.indexOf(id),s=status(id,currentDay);quickTitle(x.name,x.area||'Attraction');
  const targets=(d.blocks||[]).map((tb,ti)=>({tb,ti})).filter(o=>o.ti!==bi && blockPark(d,o.tb)===x.park);
  const ll=llEligibility(x),lp=llPlan(id);
- const showBox=x.kind==='show'?renderPublishedShowTimeBox(x,b,bi):'';
+ const showBox=isTimeScheduledExperience(x)?renderPublishedShowTimeBox(x,b,bi):'';
  const llBox=ll?`<div class="llPlanBox"><div class="llPlanTitle">Lightning Lane · ${escAttr(ll.label)}</div><div class="llPlanGrid"><label>Status<select onchange="saveLLPlan('${id}',{state:this.value})"><option value="">Not planned</option><option value="target"${lp.state==='target'?' selected':''}>Target</option><option value="booked"${lp.state==='booked'?' selected':''}>Booked</option><option value="redeemed"${lp.state==='redeemed'?' selected':''}>Redeemed</option></select></label><label>Start<input type="time" step="300" value="${escAttr(lp.start||'')}" onchange="saveLLPlan('${id}',{start:this.value})"></label><label>End<input type="time" step="300" value="${escAttr(lp.end||'')}" onchange="saveLLPlan('${id}',{end:this.value})"></label><div class="quickActionRow" style="align-items:end"><button onclick="clearLLPlan('${id}')">Clear</button><a class="tinyAction" href="https://disneyworld.disney.go.com/lightning-lane-passes/" target="_blank" rel="noopener">Open Disney</a></div></div></div>`:'';
  body.innerHTML=`<div class="quickSection"><div class="quickActionRow"><button class="${s==='done'?'primary':''}" onclick="quickToggleDone('${id}')">${s==='done'?'✓ Completed':'Mark completed'}</button><button onclick="quickReorderAttraction(${bi},'${id}',-1)" ${idx<=0?'disabled':''}>Move up</button><button onclick="quickReorderAttraction(${bi},'${id}',1)" ${idx<0||idx>=ids.length-1?'disabled':''}>Move down</button><button class="danger" onclick="quickRemoveAttraction(${bi},'${id}')">Remove</button></div>${x.map&&MAPS[x.park]?`<div class="quickHint"><a class="cleanMapLink" href="${MAPS[x.park]}" target="_blank" rel="noopener">Map ${x.map} · Open park map</a></div>`:''}</div>
  ${showBox}${llBox}${ll?`<div class="quickHint">Lightning Lane eligibility shown here follows Disney’s current system and may change before 2027.</div>`:''}
@@ -1947,9 +1970,34 @@ function renderQuickAttractionSheet(d,b,bi,id,body){
 }
 
 
+const AUG2026_ESTIMATED_SHOW_TIMES={
+ 'mk-friendshipfaire':['10:00','11:35','12:45','14:55','16:00'],
+ 'mk-parade':['14:00'],
+ 'mk-starlight':['21:00','23:00'],
+ 'mk-fireworks':['22:00'],
+ 'ep-voices':['11:15','12:00','12:45','13:30','14:15','15:00','15:45'],
+ 'ep-matsuriza':['11:00','12:00','13:00','14:00','15:00','16:00','16:45'],
+ 'ep-american':['11:45','12:30','13:15','14:00','14:45','15:30','16:30','17:30','18:30','19:30'],
+ 'ep-night':['21:00'],
+ 'hs-frozen':['09:30','10:30','11:30','12:30','13:30','14:30','15:30','16:30','17:30','18:30'],
+ 'hs-indiana':['10:45','12:00','13:15','15:15','16:30'],
+ 'hs-beauty':['11:00','13:00','14:00','16:00','17:00'],
+ 'hs-villains':['10:30','11:10','11:50','12:30','13:10','13:50','14:30','15:10','15:50','16:30','17:10','17:50','18:30','19:10','19:50'],
+ 'hs-mermaid':['10:00','10:35','11:10','11:45','12:20','12:55','13:30','14:05','14:40','15:15','15:50','16:25','17:00','17:35','18:10','18:45','19:20','19:55'],
+ 'hs-disneyjr':['10:15','11:15','12:15','13:15','15:05','15:55','16:45','17:35'],
+ 'hs-fantasmic':['21:00'],
+ 'ak-lion':['10:00','11:00','12:00','13:00','14:00','15:00','16:00'],
+ 'ak-birds':['10:45','11:45','13:45','14:45','15:45'],
+ 'ak-nemo':['11:00','12:00','13:00','14:30','15:30','16:30'],
+ 'ak-winged':['08:15','09:15','10:15','11:15','12:15']
+};
+function estimatedShowTimes2026(x){return x&&AUG2026_ESTIMATED_SHOW_TIMES[x.id]?AUG2026_ESTIMATED_SHOW_TIMES[x.id]:[]}
+function isTimeScheduledExperience(x){return !!(x&&(x.kind==='show'||estimatedShowTimes2026(x).length))}
 function showTimePrefix(id){return 'SHOW_TIME:'+id+':'}
+function showSourcePrefix(id){return 'SHOW_SOURCE:'+id+':'}
 function getChosenShowTime(b,id){return customTokenValue(b,showTimePrefix(id))}
-function setChosenShowTime(b,id,val){setCustomToken(b,showTimePrefix(id),val)}
+function getChosenShowSource(b,id){return customTokenValue(b,showSourcePrefix(id))}
+function setChosenShowTime(b,id,val,source='official'){setCustomToken(b,showTimePrefix(id),val);setCustomToken(b,showSourcePrefix(id),val?source:'')}
 function liveEntryForAttraction(x){
  const pd=liveDayCache[x?.park];if(!pd||!Array.isArray(pd.live))return null;const n=normName(x.name);
  return pd.live.find(r=>normName(r.name)===n)||pd.live.find(r=>normName(r.name).includes(n)||n.includes(normName(r.name)))||null;
@@ -1957,13 +2005,18 @@ function liveEntryForAttraction(x){
 function isoToParkTime(iso){if(!iso)return'';try{return new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit',hour12:true,timeZone:'America/New_York'}).format(new Date(iso))}catch(_){return''}}
 function isoTo24(iso){if(!iso)return'';try{const parts=new Intl.DateTimeFormat('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/New_York'}).formatToParts(new Date(iso));const h=parts.find(x=>x.type==='hour')?.value,m=parts.find(x=>x.type==='minute')?.value;return h&&m?`${h}:${m}`:''}catch(_){return''}}
 function renderPublishedShowTimeBox(x,b,bi){
- const live=liveEntryForAttraction(x),chosen=getChosenShowTime(b,x.id),actual=isSelectedDayToday();
- if(!actual)return `<div class="quickSection"><div class="quickSectionTitle">Showtime</div><div class="liveEmpty">Disney has not published the selectable times for this 2027 date yet. This app will only offer published times when they are available.</div></div>`;
+ const live=liveEntryForAttraction(x),chosen=getChosenShowTime(b,x.id),source=getChosenShowSource(b,x.id),actual=isSelectedDayToday();
+ if(!actual){
+  const est=estimatedShowTimes2026(x);
+  if(!est.length)return `<div class="quickSection"><div class="quickSectionTitle">Showtime</div><div class="liveEmpty">No August 2026 planning pattern is loaded for this experience yet. Leave it flexible for now.</div></div>`;
+  return `<div class="quickSection"><div class="quickSectionTitle">Planning showtime <span class="estimateBadge">AUG 2026 ESTIMATE</span></div><div class="showTimeChoices">${est.map(v=>`<button class="showTimeChoice${chosen===v?' current':''}" onclick="chooseShowTime(${bi},'${x.id}','${v}','aug2026')">${escAttr(from24Time(v))}</button>`).join('')}</div><div class="quickHint">Use these historical August 2026 times to build the 2027 trip now. They are planning estimates, not published 2027 showtimes. When Disney publishes your actual date, this selector will switch to current official times.</div>${chosen&&source==='aug2026'?`<div class="quickActionRow" style="margin-top:8px"><button onclick="chooseShowTime(${bi},'${x.id}','','')">Clear estimate</button></div>`:''}</div>`;
+ }
  if(!live||!Array.isArray(live.showtimes)||!live.showtimes.length)return `<div class="quickSection"><div class="quickSectionTitle">Showtime</div><div class="liveEmpty">No published showtimes are available in the live feed right now.</div><div class="quickActionRow"><button onclick="loadLiveDayData('${escAttr(x.park)}',true).then(()=>renderQuickSheet())">Refresh published times</button></div></div>`;
  const times=live.showtimes.map(t=>({v:isoTo24(t.startTime),label:isoToParkTime(t.startTime)})).filter(t=>t.v);
- return `<div class="quickSection"><div class="quickSectionTitle">Published showtime</div><div class="showTimeChoices">${times.map(t=>`<button class="showTimeChoice${chosen===t.v?' current':''}" onclick="chooseShowTime(${bi},'${x.id}','${t.v}')">${escAttr(t.label)}</button>`).join('')}</div><div class="quickHint">Only currently published times from the live park feed are shown. Verify final times in My Disney Experience.</div></div>`;
+ return `<div class="quickSection"><div class="quickSectionTitle">Published showtime</div><div class="showTimeChoices">${times.map(t=>`<button class="showTimeChoice${chosen===t.v&&source!=='aug2026'?' current':''}" onclick="chooseShowTime(${bi},'${x.id}','${t.v}','official')">${escAttr(t.label)}</button>`).join('')}</div><div class="quickHint">Only currently published times from the live park feed are shown. Verify final times in My Disney Experience.</div></div>`;
 }
-function chooseShowTime(bi,id,val){const b=DAYS[currentDay].blocks[bi];if(!b)return;setChosenShowTime(b,id,val);renderDay();queuePlannerSave();renderQuickSheet()}
+function chooseShowTime(bi,id,val,source='official'){const b=DAYS[currentDay].blocks[bi];if(!b)return;setChosenShowTime(b,id,val,source);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}
+
 function renderQuickMealSheet(d,b,bi,slot,body){
  const currentId=b[slot],m=currentId?MEALS[currentId]:null,rows=restaurantsForBlock(d,b),area=blockChoiceArea(d,b)||resortDiningLocationForBlock(b)||b.area||'This area';
  const mt=getMealTime(b,slot),rec=m?findDiningRecord(m.name):null;
@@ -2038,7 +2091,7 @@ function moveAttractionToPosition(fromBi,id,toBi,beforeId){
 }
 function renderItineraryAttraction(id,bi,moved=false){
  const x=BY_ID[id];if(!x)return'';const done=status(id,currentDay)==='done',b=DAYS[currentDay].blocks[bi];
- const meta=[x.height?`Height ${x.height}`:'',moved?'Moved here':''].filter(Boolean);const st=x.kind==='show'?getChosenShowTime(b,id):'';const lp=llPlan(id);if(st)meta.unshift(from24Time(st));if(lp.start)meta.push('LL '+llWindowText(id));
+ const meta=[x.height?`Height ${x.height}`:'',moved?'Moved here':''].filter(Boolean);const st=isTimeScheduledExperience(x)?getChosenShowTime(b,id):'',ss=st?getChosenShowSource(b,id):'';const lp=llPlan(id);if(st)meta.unshift(from24Time(st)+(ss==='aug2026'?' estimate':''));if(lp.start)meta.push('LL '+llWindowText(id));
  const mapLink=x.map&&MAPS[x.park]?`<a href="${MAPS[x.park]}" target="_blank" rel="noopener">Map ${x.map}</a>`:'';
  if(FAMILY_VIEW)return `<div class="itinItem${done?' done':''}"><div class="itinMain"><div class="itinName">${displayName(x)}</div><div class="itinMapMeta">${meta.length?`<span>${escAttr(meta.join(' · '))}</span>`:''}${mapLink}</div></div></div>`;
  return `<div class="itinItem${done?' done':''}" data-bi="${bi}" data-id="${id}" draggable="true" ondragstart="itinDragStart(event,${bi},'${id}')" ondragend="itinDragEnd(event)" ondragover="itinDragOverItem(event)" ondragleave="itinDragLeaveItem(event)" ondrop="itinDropOnItem(event,${bi},'${id}')"><span class="dragHandle" title="Drag to move" onpointerdown="touchItinStart(event,${bi},'${id}')">☰</span><button class="itinCheck" aria-label="${done?'Mark not completed':'Mark completed'}" onclick="quickToggleDone('${id}')">${done?'✓':''}</button><div class="itinMain" onclick="openQuickSheet('attraction',${bi},'${id}')"><div class="itinName">${displayName(x)}</div><div class="itinMapMeta">${meta.length?`<span>${escAttr(meta.join(' · '))}</span>`:''}${mapLink}</div></div><button class="itinMore" aria-label="More options" onclick="openQuickSheet('attraction',${bi},'${id}')">•••</button></div>`;
@@ -2156,7 +2209,7 @@ function plannedIdsForPark(d,park){const out=[];d.blocks.forEach((b,bi)=>(b.ids|
 function timeToMinutes(t){if(!t)return null;const [h,m]=t.split(':').map(Number);return Number.isFinite(h)&&Number.isFinite(m)?h*60+m:null}
 function nowMinutes(){const d=new Date(),parts=new Intl.DateTimeFormat('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/New_York'}).formatToParts(d),h=Number(parts.find(x=>x.type==='hour')?.value),m=Number(parts.find(x=>x.type==='minute')?.value);return h*60+m}
 function nextAnchorForDay(d){
- const now=isSelectedDayToday()?nowMinutes():0,arr=[];d.blocks.forEach((b,bi)=>{if(b.reservation){const t=getReservationTime(b);if(t)arr.push({t,name:'Appointment',meta:b.area||'',bi})}[['meal',b.meal],['meal2',b.meal2]].forEach(([slot,mid])=>{if(mid){const t=getMealTime(b,slot);if(t)arr.push({t,name:MEALS[mid]?.name||'Meal',meta:b.area||'',bi})}});(b.ids||[]).forEach(id=>{const x=BY_ID[id],t=x?.kind==='show'?getChosenShowTime(b,id):'';if(t)arr.push({t,name:x.name,meta:'Show',bi})})});
+ const now=isSelectedDayToday()?nowMinutes():0,arr=[];d.blocks.forEach((b,bi)=>{if(b.reservation){const t=getReservationTime(b);if(t)arr.push({t,name:'Appointment',meta:b.area||'',bi})}[['meal',b.meal],['meal2',b.meal2]].forEach(([slot,mid])=>{if(mid){const t=getMealTime(b,slot);if(t)arr.push({t,name:MEALS[mid]?.name||'Meal',meta:b.area||'',bi})}});(b.ids||[]).forEach(id=>{const x=BY_ID[id],t=isTimeScheduledExperience(x)?getChosenShowTime(b,id):'',src=t?getChosenShowSource(b,id):'';if(t&&(!isSelectedDayToday()||src!=='aug2026'))arr.push({t,name:x.name,meta:src==='aug2026'?'Show estimate':'Show',bi})})});
  plannedIdsForPark(d,liveDayPark).forEach(o=>{const p=llPlan(o.id);if(p.start&&p.state!=='redeemed')arr.push({t:p.start,name:o.x.name,meta:'Lightning Lane',bi:o.bi})});
  arr.sort((a,b)=>timeToMinutes(a.t)-timeToMinutes(b.t));return arr.find(a=>timeToMinutes(a.t)>=now)||arr[0]||null;
 }
