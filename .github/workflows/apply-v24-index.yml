@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/v24-patch/**'
+      - '.github/run-v24.txt'
 
 permissions:
   contents: write
@@ -17,29 +17,96 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check patch parts
-        id: parts
+      - name: Apply intuitive itinerary fixes
         shell: bash
         run: |
-          count=$(find .github/v24-patch -maxdepth 1 -name 'part*.txt' 2>/dev/null | wc -l | tr -d ' ')
-          echo "count=$count" >> "$GITHUB_OUTPUT"
-          if [ "$count" = "4" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "Waiting for all 4 patch parts; found $count."
-          fi
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          def rep(old,new):
+              global s
+              if old not in s:
+                  raise SystemExit('Expected text not found: '+old[:90])
+              s=s.replace(old,new,1)
 
-      - name: Apply v2.4 patch
-        if: steps.parts.outputs.ready == 'true'
-        shell: bash
-        run: |
-          cat $(find .github/v24-patch -maxdepth 1 -name 'part*.txt' | sort) > /tmp/v24.patch
-          git apply --check /tmp/v24.patch
-          git apply /tmp/v24.patch
+          rep('Build: Dynamic planner v2.3 • 2026 showtime planning + dynamic agent review • Sep 19, 2026','Build: Dynamic planner v2.4 • smart placement + named appointments + auto areas • Sep 19, 2026')
+          rep('if(Array.isArray(p.days)&&p.days.length){DAYS.splice(0,DAYS.length,...p.days)}','if(Array.isArray(p.days)&&p.days.length){DAYS.splice(0,DAYS.length,...p.days);normalizeDayLabels()}')
+          rep('"mk-bbb":{name:"Bibbidi Bobbidi Boutique",area:"Cinderella Castle",meta:"Princess makeover appointment"}','"mk-bbb":{name:"Bibbidi Bobbidi Boutique",area:"Cinderella Castle",meta:"Princess makeover appointment",durationMinutes:90}')
+
+          anchor="""function from24Time(raw){
+ const m=String(raw||'').match(/^(\\d{2}):(\\d{2})$/);if(!m)return'';
+ let h=Number(m[1]),min=m[2],ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+min+' '+ap;
+}
+"""
+          helpers=anchor+"""function addMinutes24(raw,mins){
+ const m=String(raw||'').match(/^(\\d{2}):(\\d{2})$/);if(!m)return'';
+ const total=(Number(m[1])*60+Number(m[2])+Number(mins||0))%(24*60);
+ return String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0');
+}
+function computedDayLabel(d){
+ if(!d?.date)return d?.label||'';
+ const dt=new Date(d.date+'T12:00:00');
+ if(Number.isNaN(dt.getTime()))return d.label||'';
+ return dt.toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'}).replace(',', '');
+}
+function normalizeDayLabels(){DAYS.forEach(d=>{const label=computedDayLabel(d);if(label)d.label=label})}
+function blockPrimaryMinutes(b){
+ const bt=parsedBlockTimes(b);if(bt.start)return timeToMinutes(bt.start);
+ const rt=getReservationTime(b);if(rt)return timeToMinutes(rt);
+ const mealTimes=['meal','meal2'].map(slot=>getMealTime(b,slot)).filter(Boolean).map(timeToMinutes).filter(Number.isFinite);
+ const showTimes=(b.ids||[]).map(id=>getChosenShowTime(b,id)).filter(Boolean).map(timeToMinutes).filter(Number.isFinite);
+ const all=[...mealTimes,...showTimes];return all.length?Math.min(...all):null;
+}
+function autoOrderTimedBlocks(focusBlock=null){
+ const blocks=DAYS[currentDay]?.blocks;if(!Array.isArray(blocks))return -1;
+ const slots=[],timed=[];
+ blocks.forEach((b,i)=>{const key=blockPrimaryMinutes(b);if(Number.isFinite(key)){slots.push(i);timed.push({b,key,order:i})}});
+ timed.sort((a,b)=>a.key-b.key||a.order-b.order);
+ const next=blocks.slice();slots.forEach((slot,i)=>{next[slot]=timed[i].b});
+ blocks.splice(0,blocks.length,...next);
+ const idx=focusBlock?blocks.indexOf(focusBlock):-1;
+ if(idx>=0&&quickSheetContext)quickSheetContext.blockIndex=idx;
+ return idx;
+}
+function syncReservationBlock(b){
+ if(!b?.reservation)return;const r=RESERVATIONS[b.reservation];if(r?.area)b.area=r.area;
+ const rt=getReservationTime(b);if(!rt)return;
+ setCustomToken(b,'START:',rt);
+ if(r?.durationMinutes)setCustomToken(b,'END:',addMinutes24(rt,r.durationMinutes));
+ const t=parsedBlockTimes(b);b.time=t.start&&t.end?from24Time(t.start)+'–'+from24Time(t.end):t.start?from24Time(t.start):'';
+}
+"""
+          rep(anchor,helpers)
+
+          rep("""function quickSetBlockClock(bi,which,value){
+ const b=DAYS[currentDay].blocks[bi];if(!b)return;
+ setCustomToken(b,which==='start'?'START:':'END:',value);
+ const t=parsedBlockTimes(b);b.time=t.start&&t.end?from24Time(t.start)+'–'+from24Time(t.end):t.start?from24Time(t.start):t.end?'Until '+from24Time(t.end):'';
+ renderDay();queuePlannerSave();renderQuickSheet();
+}""","""function quickSetBlockClock(bi,which,value){
+ const b=DAYS[currentDay].blocks[bi];if(!b)return;
+ setCustomToken(b,which==='start'?'START:':'END:',value);
+ const t=parsedBlockTimes(b);b.time=t.start&&t.end?from24Time(t.start)+'–'+from24Time(t.end):t.start?from24Time(t.start):t.end?'Until '+from24Time(t.end):'';
+ autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant();
+}""")
+          rep("function chooseShowTime(bi,id,val,source='official'){const b=DAYS[currentDay].blocks[bi];if(!b)return;setChosenShowTime(b,id,val,source);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}","function chooseShowTime(bi,id,val,source='official'){const b=DAYS[currentDay].blocks[bi];if(!b)return;setChosenShowTime(b,id,val,source);autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}")
+          rep("function quickSetMealClock(bi,slot,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;setMealTime(b,slot,value);renderDay();queuePlannerSave();renderQuickSheet()}","function quickSetMealClock(bi,slot,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;setMealTime(b,slot,value);autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}")
+          rep("function quickSetReservationClock(bi,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;setReservationTime(b,value);renderDay();queuePlannerSave();renderQuickSheet()}","function quickSetReservationClock(bi,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;setReservationTime(b,value);syncReservationBlock(b);autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}")
+          rep("function quickChooseReservation(bi,id){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.reservation=id;renderDay();queuePlannerSave();renderQuickSheet()}","function quickChooseReservation(bi,id){const b=DAYS[currentDay].blocks[bi],r=RESERVATIONS[id];if(!b||!r)return;b.reservation=id;if(r.area)b.area=r.area;syncReservationBlock(b);autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}")
+          rep("function quickAddAttraction(bi,id){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.ids=b.ids||[];if(!b.ids.includes(id))b.ids.push(id);renderDay();queuePlannerSave();renderQuickSheet()}","function quickAddAttraction(bi,id){const b=DAYS[currentDay].blocks[bi],x=BY_ID[id];if(!b||!x)return;b.ids=b.ids||[];const wasEmpty=!b.ids.length&&!b.meal&&!b.meal2&&!b.reservation;if(!b.ids.includes(id))b.ids.push(id);if(wasEmpty&&x.area)b.area=x.area;renderDay();queuePlannerSave();renderQuickSheet()}")
+          rep("function quickChooseMeal(btn,bi,slot){const b=DAYS[currentDay].blocks[bi],name=btn?.dataset?.restaurant||'';if(!b||!name)return;b[slot]=ensureMealFromDiningName(name);closeQuickSheet();renderDay();queuePlannerSave()}","function quickChooseMeal(btn,bi,slot){const b=DAYS[currentDay].blocks[bi],name=btn?.dataset?.restaurant||'';if(!b||!name)return;const wasEmpty=!(b.ids||[]).length&&!b.meal&&!b.meal2&&!b.reservation;b[slot]=ensureMealFromDiningName(name);const m=MEALS[b[slot]],rec=findDiningRecord(name);if(wasEmpty&&(m?.area||rec?.area))b.area=m?.area||rec?.area;closeQuickSheet();renderDay();queuePlannerSave()}")
+
+          old="""function renderItineraryReservation(b,bi){if(!b.reservation)return'';const rt=getReservationTime(b);return `<div class="genericReservationRow"><div class="genericReservationIcon">📅</div><div class="genericReservationMain"${FAMILY_VIEW?'':` onclick="openQuickSheet('reservation',${bi})"`}><div class="genericReservationName">Appointment</div><div class="genericReservationMeta">${rt?escAttr(from24Time(rt)):'Time not set'}</div></div>${FAMILY_VIEW?'':`<button class="itinMore" onclick="openQuickSheet('reservation',${bi})">•••</button>`}</div>`}"""
+          new="""function renderItineraryReservation(b,bi){if(!b.reservation)return'';const r=RESERVATIONS[b.reservation],rt=getReservationTime(b),name=r?.name||'Appointment',area=r?.area||b.area||'';return `<div class="genericReservationRow"><div class="genericReservationIcon">📅</div><div class="genericReservationMain"${FAMILY_VIEW?'':` onclick="openQuickSheet('reservation',${bi})"`}><div class="genericReservationName">${escAttr(name)}</div><div class="genericReservationMeta">${rt?escAttr(from24Time(rt)):'Choose time'}${area?` · ${escAttr(area)}`:''}</div></div>${FAMILY_VIEW?'':`<button class="itinMore" onclick="openQuickSheet('reservation',${bi})">•••</button>`}</div>`}"""
+          rep(old,new)
+          rep("<button onclick=\"openQuickSheet('reservation',${bi})\">${b.reservation?'Appointment':'+ Appointment'}</button>","<button onclick=\"openQuickSheet('reservation',${bi})\">${b.reservation?'Change appointment':'+ Appointment'}</button>")
+          rep("autoDay();renderAll();loadDashboardFeed();hydratePlannerInputs();refreshPlannerData(false).then(()=>{renderToday();if(isSelectedDayToday()){","normalizeDayLabels();autoDay();renderAll();loadDashboardFeed();hydratePlannerInputs();refreshPlannerData(false).then(()=>{renderToday();if(isSelectedDayToday()){")
+
+          p.write_text(s)
+          PY
 
       - name: Validate JavaScript
-        if: steps.parts.outputs.ready == 'true'
         shell: bash
         run: |
           python - <<'PY'
@@ -53,13 +120,12 @@ jobs:
           node --check /tmp/index-scripts.js
 
       - name: Commit updated index
-        if: steps.parts.outputs.ready == 'true'
         shell: bash
         run: |
           git config user.name "Disney Planner Update"
           git config user.email "actions@users.noreply.github.com"
           git add index.html
-          git rm -r .github/v24-patch
+          git rm .github/run-v24.txt
           git rm .github/workflows/apply-v24-index.yml
           git commit -m "Make Disney planner itinerary placement intuitive"
           git push
