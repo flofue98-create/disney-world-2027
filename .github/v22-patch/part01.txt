@@ -1,0 +1,43 @@
+s open",dining_strategy:"Cash-first",cash_saved:"1000"
+ };
+ let plannerSettings={...PLANNER_DEFAULT_SETTINGS};
+ const QUERY_PARAMS=new URLSearchParams(location.search);
+@@ -2101,9 +2118,32 @@
+ function dateKeyLocal(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+ function isSelectedDayToday(){return DAYS[currentDay]?.date===dateKeyLocal()}
+ function canonicalParkClient(p){if(/magic kingdom/i.test(p))return'Magic Kingdom';if(/epcot/i.test(p))return'EPCOT';if(/hollywood/i.test(p))return'Disney’s Hollywood Studios';if(/animal kingdom/i.test(p))return'Disney’s Animal Kingdom';return''}
++const THEMEPARKS_ENTITY_IDS={
++ 'Magic Kingdom':'75ea578a-adc8-4116-a54d-dccb60765ef9',
++ 'EPCOT':'47f90d2c-e191-4239-a466-5892ef59a88b',
++ 'Disney’s Hollywood Studios':'288747d1-8b4f-4a64-867e-ea7c9b27bad8',
++ 'Disney’s Animal Kingdom':'1c84a229-8862-4648-9c71-378ddd2c7693'
++};
++async function directThemeParksLive(park){
++ const entityId=THEMEPARKS_ENTITY_IDS[park];if(!entityId)throw new Error('No live park feed is configured for this park.');
++ const base=`https://api.themeparks.wiki/v1/entity/${entityId}`;
++ const [lr,cr]=await Promise.all([fetch(base+'/live',{headers:{Accept:'application/json'}}),fetch(base+'/children',{headers:{Accept:'application/json'}})]);
++ if(!lr.ok||!cr.ok)throw new Error(`Live wait feed returned ${!lr.ok?lr.status:cr.status}.`);
++ const liveRaw=await lr.json(),childrenRaw=await cr.json(),childById={};
++ (childrenRaw.children||[]).forEach(x=>{if(x&&x.id)childById[x.id]=x});
++ const live=(liveRaw.liveData||[]).map(x=>{const child=childById[x.entityId]||{},q=x.queue||{},standby=q.STANDBY&&q.STANDBY.waitTime!=null?Number(q.STANDBY.waitTime):null;return{entityId:x.entityId||'',name:x.name||child.name||'',entityType:x.entityType||child.entityType||'',status:x.status||'',standby:Number.isFinite(standby)?standby:null,lastUpdated:x.lastUpdated||'',showtimes:Array.isArray(x.showtimes)?x.showtimes:[],returnTime:q.PAID_RETURN_TIME||q.RETURN_TIME||null,location:child.location||null}});
++ return{ok:true,park,entityId,fetchedAt:new Date().toISOString(),live,schedule:[],attribution:'Powered by ThemeParks.wiki',attribution_url:'https://themeparks.wiki/'};
++}
+ async function loadLiveDayData(park,force=false){
+- park=canonicalParkClient(park);if(!park||!plannerConnected)return null;const cached=liveDayCache[park];if(!force&&cached&&Date.now()-(cached._clientFetched||0)<240000)return cached;
+- liveDayLoading=true;renderToday();try{const p=await plannerLiveRequest(park);p._clientFetched=Date.now();liveDayCache[park]=p;return p}catch(e){console.warn(e);liveDayCache[park]={ok:false,error:String(e.message||e),_clientFetched:Date.now()};return liveDayCache[park]}finally{liveDayLoading=false;renderToday()}
++ park=canonicalParkClient(park);if(!park)return null;const cached=liveDayCache[park];if(!force&&cached&&Date.now()-(cached._clientFetched||0)<240000)return cached;
++ liveDayLoading=true;renderToday();
++ try{
++  let p=null,backendError=null;
++  if(plannerConnected){try{p=await plannerLiveRequest(park)}catch(e){backendError=e}}
++  if(!p||p.ok===false){try{p=await directThemeParksLive(park)}catch(e){if(backendError)throw backendError;throw e}}
++  p._clientFetched=Date.now();liveDayCache[park]=p;return p;
++ }catch(e){console.warn(e);liveDayCache[park]={ok:false,error:String(e.message||e),_clientFetched:Date.now()};return liveDayCache[park]}
++ finally{liveDayLoading=false;renderToday()}
+ }
+ function liveByName(park,name){const p=liveDayCache[park];if(!p||!Array.isArray(p.live))return null;const n=normName(name);return p.live.find(x=>normName(x.name)===n)||p.live.find(x=>normName(x.name).includes(n)||n.includes(normName(x.name)))||null}
+ function waitClass(w,status){if(status&&status!=='OPERATING')return'closed';if(w==null)return'';if(w<=25)return'low';if(w<=50)return'med';return'high'}
+@@ -2131,7 +2171,7 @@
+  const root=document.getElementById('todayContent');if(!root||!DAYS.length)return;const d=DAYS[currentDay],parks=(d.parks||[]).map(canonicalParkClient).filter(Boolean);if(!parks.length){root.innerHTML=`<div class="liveHero"><div class="eyebrow">Today</div><h1>${escAttr(d.title)}</h1><div class="muted">${escAttr(d.label)} · ${escAttr(d.hours)}</div></div><div class="livePanel"><div class="liveEmpty">This is a resort / travel day. Use Plan for the full itinerary.</div></div>`;return}
+  if(!parks.includes(liveDayPark))liveDayPark=parks[0];const park=liveDayPark,pd=liveDayCache[park],actual=isSelectedDayToday(),anchor=nextAnchorForDay(d),recs=pd?.ok!==false?liveRecommendations(d,park):[];const here=currentLocationLive(park);const freshness=pd?.fetchedAt?isoToParkTime(pd.fetchedAt):'';
+  root.innerHTML=`<div class="liveHero"><div class="eyebrow">${FAMILY_VIEW?'Family View · ':''}Live Day</div><h1>${escAttr(d.title)}</h1><div class="muted">${escAttr(d.label)} · ${escAttr(d.hours)}</div><div class="liveHeroRow"><span class="liveChip">${ac
