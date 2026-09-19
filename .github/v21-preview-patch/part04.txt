@@ -1,0 +1,117 @@
+nRows('overview');
+- dashboardOverview.innerHTML=dashboardSection('Current plan',overview)+dashboardSection('Savings & rewards',[...(rewards?[rewards]:[]),...(fetchR?[fetchR]:[])]);
++ dashboardOverview.innerHTML=dashboardSection('Current strategy',sectionRows('strategy'))+dashboardSection('Current plan',overview)+dashboardSection('Savings & rewards',[...(rewards?[rewards]:[]),...(fetchR?[fetchR]:[])]);
+  dashboardDecisions.innerHTML=dashboardSection('Next decisions',sectionRows('decision'));
+  const dates=sectionRows('date');
+  dashboardDates.innerHTML=dates.length?`<div class="dashSection"><h2>Flexible date windows</h2>${dates.map(r=>`<div class="dateCompare"><div class="dateName">${r.label}</div><div class="dateStatus">${r.value}</div><div class="dateDetail">${r.detail||''}</div></div>`).join('')}</div>`:'';
+- dashboardAgents.innerHTML=dashboardSection('Agent status',sectionRows('agent'));
++ dashboardAgents.innerHTML=dashboardSection('Active planning agents',sectionRows('agent'));
+  const tw=dashFind('overview','trip_window'),tl=dashFind('overview','trip_length'),res=dashFind('overview','resort'),party=dashFind('overview','party');
+  if(tw&&tl) dashHeroSub.textContent=`${tl.value} • ${tw.value}`;
+  if(tw&&res) headerTripStatus.textContent=`${tw.value} • ${res.value}`;
+@@ -573,11 +701,17 @@
+  planning_window:"August 18–30, 2027",working_itinerary:"August 21–29, 2027",resort:"Deluxe shortlist — not locked",party:"6 travelers",tickets:"Park Hopper — 7 vs 8 days open",dining_strategy:"Cash-first"
+ };
+ let plannerSettings={...PLANNER_DEFAULT_SETTINGS};
++const QUERY_PARAMS=new URLSearchParams(location.search);
++const FAMILY_TOKEN=(QUERY_PARAMS.get('family')||'').trim();
++const FAMILY_VIEW=!!FAMILY_TOKEN;
+ let plannerConnected=false;
+ let plannerInitialized=false;
+ let plannerLoading=false;
+ let plannerRemoteStatus=[];
++let plannerFamilyShareToken='';
+ let plannerEditorDay=0;
++function canEditPlanner(){return plannerConnected&&plannerInitialized&&!FAMILY_VIEW}
++if(FAMILY_VIEW)document.body.classList.add('familyView');
+ 
+ function plannerApiUrl(){return (localStorage.getItem('dw27_planner_api')||PLANNER_API_DEFAULT).trim()}
+ function plannerKey(){return (localStorage.getItem('dw27_planner_key')||'').trim()}
+@@ -585,32 +719,41 @@
+ function setPlannerState(kind,text,message=''){
+  const e=plannerEls(); if(!e.dot)return;
+  e.dot.className='plannerDot '+kind; e.status.textContent=text;
+- e.init.disabled=!plannerConnected||plannerInitialized||plannerLoading;
+- e.edit.disabled=!plannerConnected||!plannerInitialized||plannerLoading;
++ e.init.disabled=FAMILY_VIEW||!plannerConnected||plannerInitialized||plannerLoading;
++ e.edit.disabled=FAMILY_VIEW||!plannerConnected||!plannerInitialized||plannerLoading;
+  e.msg.className=message?(kind==='off'?'plannerError':'plannerSuccess'):''; e.msg.textContent=message;
+  const cd=document.getElementById('plannerConnectionDetails');if(cd)cd.open=!plannerConnected;
+- if(e.init)e.init.style.display=plannerInitialized?'none':'';
++ if(e.init)e.init.style.display=(FAMILY_VIEW||plannerInitialized)?'none':'';
++ if(e.edit)e.edit.style.display=FAMILY_VIEW?'none':'';
+ }
+-function hydratePlannerInputs(){const e=plannerEls();if(e.url)e.url.value=plannerApiUrl();if(e.key)e.key.value=plannerKey()}
++function hydratePlannerInputs(){const e=plannerEls();if(e.url)e.url.value=plannerApiUrl();if(e.key)e.key.value=FAMILY_VIEW?'':plannerKey();const cd=document.getElementById('plannerConnectionDetails');if(cd&&FAMILY_VIEW)cd.style.display='none';const sc=document.getElementById('plannerSyncCard');if(sc&&FAMILY_VIEW){const eyebrow=sc.querySelector('.eyebrow'),title=sc.querySelector('h2');if(eyebrow)eyebrow.textContent='Family View';if(title)title.textContent='Latest trip plan';sc.querySelectorAll('.plannerQuickRow button').forEach(btn=>{if(btn.textContent!=='Refresh')btn.style.display='none'});}}
+ function savePlannerConnection(){
+  const e=plannerEls(); localStorage.setItem('dw27_planner_api',(e.url.value||'').trim()); localStorage.setItem('dw27_planner_key',(e.key.value||'').trim());
+  refreshPlannerData(true);
+ }
+-function plannerJsonp(){
+- const url=plannerApiUrl(),key=plannerKey();
++function plannerJsonpParams(params={}){
++ const url=plannerApiUrl();
+  return new Promise((resolve,reject)=>{
+   const cb='__dw27_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+   const script=document.createElement('script');
+-  const timer=setTimeout(()=>finish(new Error('Planner connection timed out.')),12000);
++  const timer=setTimeout(()=>finish(new Error('Planner connection timed out.')),15000);
+   function cleanup(){clearTimeout(timer);try{delete window[cb]}catch(_){window[cb]=undefined}script.remove()}
+   function finish(err,data){cleanup();if(err)reject(err);else resolve(data)}
+   window[cb]=(data)=>{if(!data||!data.ok)finish(new Error((data&&data.error)||'Planner request failed'));else finish(null,data)};
+   script.onerror=()=>finish(new Error('Could not reach the Apps Script web app. Confirm the deployment allows Anyone access.'));
+-  const sep=url.includes('?')?'&':'?';
+-  script.src=url+sep+'key='+encodeURIComponent(key)+'&prefix='+encodeURIComponent(cb)+'&_='+Date.now();
++  const q=new URLSearchParams({...params,prefix:cb,_:Date.now().toString()});
++  script.src=url+(url.includes('?')?'&':'?')+q.toString();
+   document.head.appendChild(script);
+  });
+ }
++function plannerJsonp(){
++ if(FAMILY_VIEW)return plannerJsonpParams({action:'family',family:FAMILY_TOKEN});
++ return plannerJsonpParams({action:'get',key:plannerKey()});
++}
++function plannerLiveRequest(park){
++ const auth=FAMILY_VIEW?{family:FAMILY_TOKEN}:{key:plannerKey()};
++ return plannerJsonpParams({action:'live',park,...auth});
++}
+ function plannerFormPost(body){
+  const url=plannerApiUrl();
+  return new Promise((resolve)=>{
+@@ -624,7 +767,9 @@
+  });
+ }
+ async function plannerRequest(action,payload={}){
+- const url=plannerApiUrl(),key=plannerKey(); if(!url||!key)throw new Error('Enter the Apps Script URL and planner access key first.');
++ const url=plannerApiUrl(),key=plannerKey();
++ if(FAMILY_VIEW)throw new Error('Family View is read-only.');
++ if(!url||!key)throw new Error('Enter the Apps Script URL and planner access key first.');
+  if(action==='get')return plannerJsonp();
+  const request_id='req_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+  const body={...payload,key,action,request_id};
+@@ -637,6 +782,7 @@
+  }
+  throw new Error('The planner write was sent but could not be confirmed. Open Apps Script → Executions to check whether it completed.');
+ }
++
+ function applyAttractionMaster(records){
+  if(!Array.isArray(records)||!records.length)return;
+  Object.keys(ATTRACTIONS).forEach(k=>delete ATTRACTIONS[k]); Object.keys(BY_ID).forEach(k=>delete BY_ID[k]);
+@@ -649,6 +795,7 @@
+  if(Array.isArray(p.diningMaster)&&p.diningMaster.length){DINING_MASTER.splice(0,DINING_MASTER.length,...p.diningMaster)}
+  if(Array.isArray(p.attractionMaster)&&p.attractionMaster.length)applyAttractionMaster(p.attractionMaster);
+  plannerSettings={...PLANNER_DEFAULT_SETTINGS,...(p.settings||{})};
++ plannerFamilyShareToken=p.family_share_token||plannerFamilyShareToken;
+  plannerRemoteStatus=Array.isArray(p.status)?p.status:[]; applyRemoteStatusToLocal();
+  plannerInitialized=!!p.initialized; plannerConnected=true; updatePlannerSummary();
+  if(currentDay>=DAYS.length)currentDay=Math.max(0,DAYS.length-1);
+@@ -666,16 +813,23 @@
+   let di=day?DAYS.findIndex(d=>d.date===day):-1;
+   const statusKey=(REPEATABLE_IDS.has(id)&&di>=0)?`dw27_status_${id}_day${di}`:`dw27_status_${id}`;
+   if(r.status)localStorage.setItem(statusKey,r.status);else localStorage.removeItem(statusKey);
+-  if(r.ll_time)localStorage.setItem('dw27_lltime_'+id,r.ll_time);
++  if(r.ll_time)localStorage.setItem('dw27_lltime_'+id,r.ll_time);else localStorage.removeItem('dw27_lltime_'+id);
+  });
+ }
+ async function refreshPlannerData(showMessage=false){
+- hydratePlannerInputs(); if(!plannerApiUrl()||!plannerKey()){plannerConnected=false;plannerInitiali
