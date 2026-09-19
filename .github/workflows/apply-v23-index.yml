@@ -1,0 +1,65 @@
+name: Apply Disney planner v2.3 index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/v23-patch/**'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check patch parts
+        id: parts
+        shell: bash
+        run: |
+          count=$(find .github/v23-patch -maxdepth 1 -name 'part*.txt' 2>/dev/null | wc -l | tr -d ' ')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" = "4" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Waiting for all 4 patch parts; found $count."
+          fi
+
+      - name: Apply v2.3 patch
+        if: steps.parts.outputs.ready == 'true'
+        shell: bash
+        run: |
+          cat $(find .github/v23-patch -maxdepth 1 -name 'part*.txt' | sort) > /tmp/v23.patch
+          git apply --check /tmp/v23.patch
+          git apply /tmp/v23.patch
+
+      - name: Validate JavaScript
+        if: steps.parts.outputs.ready == 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text()
+          scripts=re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',s,flags=re.S|re.I)
+          Path('/tmp/index-scripts.js').write_text('\n'.join(scripts))
+          print(f'Validated {len(scripts)} script block(s).')
+          PY
+          node --check /tmp/index-scripts.js
+
+      - name: Commit updated index
+        if: steps.parts.outputs.ready == 'true'
+        shell: bash
+        run: |
+          git config user.name "Disney Planner Update"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git rm -r .github/v23-patch
+          git rm .github/workflows/apply-v23-index.yml
+          git commit -m "Add 2026 showtime estimates and dynamic planning review"
+          git push
