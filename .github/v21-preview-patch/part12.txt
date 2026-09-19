@@ -1,0 +1,59 @@
+t="_blank" rel="noopener">Park map</a>`:''}<a class="tinyAction" href="https://disneyworld.app.link/MyDisneyExperienceEN-US" target="_blank" rel="noopener">My Disney Experience</a></div>${!actual?'<div class="liveStale">Wait times shown here are today’s park data, not a prediction for your 2027 date. On your trip day this screen becomes your live navigator.</div>':''}</div>
++ <div class="livePanel"><h2>Where you are</h2>${here?`<div class="anchorRow"><div class="anchorMain"><div class="anchorName">${escAttr(here.name)}</div><div class="anchorMeta">Last completed / selected location</div></div></div>`:'<div class="muted">Mark an attraction completed or tap “I’m here” on a recommendation and routing will use that location.</div>'}</div>
++ <div class="livePanel"><h2>Next fixed plan</h2>${anchor?`<div class="anchorRow"><div class="anchorTime">${escAttr(from24Time(anchor.t))}</div><div class="anchorMain"><div class="anchorName">${escAttr(anchor.name)}</div><div class="anchorMeta">${escAttr(anchor.meta||'')}</div></div></div>`:'<div class="liveEmpty">No fixed reservation, showtime or Lightning Lane time ahead.</div>'}</div>
++ <div class="livePanel"><h2>${actual?'Best next move':'Planned options'}</h2>${pd&&pd.error?`<div class="liveEmpty">Live data unavailable: ${escAttr(pd.error)}</div>`:recs.length?recs.map(r=>`<div class="liveRec"><div><div class="liveRecName">${escAttr(r.x.name)}${r.planned===false?'<span class="unplannedTag">Nearby option</span>':''}</div><div class="liveRecMeta">${r.walk!=null?`${r.walk} min walk · `:''}${escAttr(r.x.area||'')}${r.live?.lastUpdated?` · updated ${escAttr(isoToParkTime(r.live.lastUpdated))}`:''}</div><div class="liveHeroRow"><button class="tinyAction" onclick="setLiveHere('${r.id}')">I’m here</button>${r.x.map&&MAPS[r.x.park]?`<a class="tinyAction" href="${MAPS[r.x.park]}" target="_blank" rel="noopener">Map ${r.x.map}</a>`:''}${canEditPlanner()?(r.planned===false?`<button class="tinyAction" onclick="addLiveSuggestion('${r.id}')">+ Add to plan</button>`:`<button class="tinyAction" onclick="openQuickSheet('attraction',${r.bi},'${r.id}')">Options</button>`):''}</div></div><span class="waitPill ${waitClass(r.live?.standby,r.live?.status)}">${escAttr(waitLabel(r.live))}</span></div>`).join(''):`<div class="liveEmpty">${pd?'No remaining planned attractions fit the current filters.':'Load live park data to see waits and route suggestions.'}</div>`}${pd?.attribution?`<div class="sourceCredit"><a href="${pd.attribution_url}" target="_blank" rel="noopener">${escAttr(pd.attribution)}</a> · live data is best-effort; Disney’s app remains the official source.</div>`:''}</div>
++ <div class="livePanel"><h2>Lightning Lane</h2>${renderLLToday(d,park)}${renderLLSuggestion(d,park)}<div class="sourceCredit">Book and modify Lightning Lane passes in My Disney Experience. Eligibility and availability can change.</div></div>
++ <div class="livePanel"><h2>What’s ahead</h2>${renderTodayUpcoming(d,park)}</div>`;
++}
+ let currentPark="Magic Kingdom";
+ function renderParkFilters(){
+  parkfilters.innerHTML=Object.keys(ATTRACTIONS).map(p=>`<button class="${p===currentPark?"active":""}" data-park="${p}">${p}</button>`).join("");
+@@ -1854,7 +2264,7 @@
+    [['meal',b.meal],['meal2',b.meal2]].filter(x=>x[1]).forEach(([slot,mid])=>{
+      const m=MEALS[mid];
+      const rec=findDiningRecord(m.name);
+-     planned.push(`<div class="reservation"><b>${m.name}</b><div class="small">${d.label} • ${b.time} • ${m.area}</div><div class="inlineActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${plannerConnected&&plannerInitialized?`<button class="mealEditBtn" onclick="openPlannerMealPickerOnDay(${di},${bi},'${slot}')">Change</button>`:""}</div></div>`);
++     planned.push(`<div class="reservation"><b>${m.name}</b><div class="small">${d.label} • ${b.time} • ${m.area}</div><div class="inlineActions">${rec&&rec.menu?`<a href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:""}${canEditPlanner()?`<button class="mealEditBtn" onclick="openPlannerMealPickerOnDay(${di},${bi},'${slot}')">Change</button>`:""}</div></div>`);
+    });
+  }));
+  plannedDining.innerHTML=planned.join("");
+@@ -1902,17 +2312,16 @@
+  const stranded=allMoved().filter(x=>x.dest<0);
+  const nv=document.getElementById("needsvisit");if(nv)nv.innerHTML=stranded.length?`<div class="notice"><b>No later visit is currently scheduled for:</b><br>${stranded.map(x=>`${BY_ID[x.id].name} — ${x.park}`).join("<br>")}</div>`:"";
+ }
+-function renderAll(){renderDashboard(false);renderTabs();renderDay();renderParkFilters();renderAttractions();renderDining();renderMaps();updateTrip();if(plannerConnected)updatePlannerSummary()}
+-document.querySelectorAll(".bottomNav button").forEach(b=>b.onclick=()=>{
+- document.querySelectorAll(".bottomNav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+- document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(b.dataset.screen).classList.add("active");
+- if(b.dataset.screen==="attractions"){
+-   const p=DAYS[currentDay].parks.find(x=>ATTRACTIONS[x]);
+-   if(p)currentPark=p;
+-   renderParkFilters();renderAttractions();
+- }
+- window.scrollTo({top:0,behavior:"smooth"});
+-});
++function renderAll(){renderDashboard(false);renderTabs();renderPlanningAssistant();renderToday();renderDay();renderParkFilters();renderAttractions();renderDining();renderMaps();updateTrip();if(plannerConnected)updatePlannerSummary()}
++function switchScreen(name){
++ document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('active',x.id===name));
++ document.querySelectorAll('.bottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
++ if(name==='itinerary')renderPlanningAssistant();
++ if(name==='today'&&isSelectedDayToday()){const p=(DAYS[currentDay].parks||[])[0];if(p)loadLiveDayData(p)}
++ if(name==='attractions'){const p=(DAYS[currentDay].parks||[]).find(x=>ATTRACTIONS[x]);if(p)currentPark=p;renderParkFilters();renderAttractions()}
++ window.scrollTo({top:0,behavior:'smooth'});
++}
++document.querySelectorAll(".bottomNav button").forEach(b=>b.onclick=()=>switchScreen(b.dataset.screen));
+ 
+ document.querySelectorAll(".attrFilter").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".attrFilter").forEach(x=>x.classList.remove("active"));
+@@ -1927,7 +2336,9 @@
+ diningSearch.addEventListener("input",e=>{diningQuery=e.target.value;renderDining()});
+ diningLocation.addEventListener("change",e=>{diningLoc=e.target.value;renderDining()});
+ 
+-autoDay();renderAll();loadDashboardFeed();hydratePlannerInputs();refreshPlannerData(false);
++let liveAutoRefreshTimer=setInterval(()=>{if(document.hidden||!isSelectedDayToday())return;const active=document.querySelector('.screen.active')?.id;if(active!=='today')return;const p=liveDayPark||canonicalParkClient((DAYS[currentDay].parks||[])[0]);if(p)loadLiveDayData(p,true)},300000);
++document.addEventListener('visibilitychange',()=>{if(document.hidden)return;refreshPlannerData(false).then(()=>{if(isSelectedDayToday()&&document.querySelector('.screen.active')?.id==='today'){const p=liveDayPark||canonicalParkClient((DAYS[currentDay].parks||[])[0]);if(p)loadLiveDayData(p)}})});
++autoDay();renderAll();loadDashboardFeed();hydratePlannerInputs();refreshPlannerData(false).then(()=>{renderToday();if(isSelectedDayToday()){const p=(DAYS[currentDay].parks||[])[0];if(p)loadLiveDayData(p)}});
+ </script>
+ </body>
+ </html>
+\ No newline at end of file
