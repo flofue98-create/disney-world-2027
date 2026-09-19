@@ -1,0 +1,54 @@
+s||[]).map((tb,ti)=>({tb,ti})).filter(o=>o.ti!==bi && blockPark(d,o.tb)===x.park);
+  const ll=llEligibility(x),lp=llPlan(id);
+- const showBox=x.kind==='show'?renderPublishedShowTimeBox(x,b,bi):'';
++ const showBox=isTimeScheduledExperience(x)?renderPublishedShowTimeBox(x,b,bi):'';
+  const llBox=ll?`<div class="llPlanBox"><div class="llPlanTitle">Lightning Lane · ${escAttr(ll.label)}</div><div class="llPlanGrid"><label>Status<select onchange="saveLLPlan('${id}',{state:this.value})"><option value="">Not planned</option><option value="target"${lp.state==='target'?' selected':''}>Target</option><option value="booked"${lp.state==='booked'?' selected':''}>Booked</option><option value="redeemed"${lp.state==='redeemed'?' selected':''}>Redeemed</option></select></label><label>Start<input type="time" step="300" value="${escAttr(lp.start||'')}" onchange="saveLLPlan('${id}',{start:this.value})"></label><label>End<input type="time" step="300" value="${escAttr(lp.end||'')}" onchange="saveLLPlan('${id}',{end:this.value})"></label><div class="quickActionRow" style="align-items:end"><button onclick="clearLLPlan('${id}')">Clear</button><a class="tinyAction" href="https://disneyworld.disney.go.com/lightning-lane-passes/" target="_blank" rel="noopener">Open Disney</a></div></div></div>`:'';
+  body.innerHTML=`<div class="quickSection"><div class="quickActionRow"><button class="${s==='done'?'primary':''}" onclick="quickToggleDone('${id}')">${s==='done'?'✓ Completed':'Mark completed'}</button><button onclick="quickReorderAttraction(${bi},'${id}',-1)" ${idx<=0?'disabled':''}>Move up</button><button onclick="quickReorderAttraction(${bi},'${id}',1)" ${idx<0||idx>=ids.length-1?'disabled':''}>Move down</button><button class="danger" onclick="quickRemoveAttraction(${bi},'${id}')">Remove</button></div>${x.map&&MAPS[x.park]?`<div class="quickHint"><a class="cleanMapLink" href="${MAPS[x.park]}" target="_blank" rel="noopener">Map ${x.map} · Open park map</a></div>`:''}</div>
+  ${showBox}${llBox}${ll?`<div class="quickHint">Lightning Lane eligibility shown here follows Disney’s current system and may change before 2027.</div>`:''}
+@@ -1947,9 +1970,34 @@
+ }
+ 
+ 
++const AUG2026_ESTIMATED_SHOW_TIMES={
++ 'mk-friendshipfaire':['10:00','11:35','12:45','14:55','16:00'],
++ 'mk-parade':['14:00'],
++ 'mk-starlight':['21:00','23:00'],
++ 'mk-fireworks':['22:00'],
++ 'ep-voices':['11:15','12:00','12:45','13:30','14:15','15:00','15:45'],
++ 'ep-matsuriza':['11:00','12:00','13:00','14:00','15:00','16:00','16:45'],
++ 'ep-american':['11:45','12:30','13:15','14:00','14:45','15:30','16:30','17:30','18:30','19:30'],
++ 'ep-night':['21:00'],
++ 'hs-frozen':['09:30','10:30','11:30','12:30','13:30','14:30','15:30','16:30','17:30','18:30'],
++ 'hs-indiana':['10:45','12:00','13:15','15:15','16:30'],
++ 'hs-beauty':['11:00','13:00','14:00','16:00','17:00'],
++ 'hs-villains':['10:30','11:10','11:50','12:30','13:10','13:50','14:30','15:10','15:50','16:30','17:10','17:50','18:30','19:10','19:50'],
++ 'hs-mermaid':['10:00','10:35','11:10','11:45','12:20','12:55','13:30','14:05','14:40','15:15','15:50','16:25','17:00','17:35','18:10','18:45','19:20','19:55'],
++ 'hs-disneyjr':['10:15','11:15','12:15','13:15','15:05','15:55','16:45','17:35'],
++ 'hs-fantasmic':['21:00'],
++ 'ak-lion':['10:00','11:00','12:00','13:00','14:00','15:00','16:00'],
++ 'ak-birds':['10:45','11:45','13:45','14:45','15:45'],
++ 'ak-nemo':['11:00','12:00','13:00','14:30','15:30','16:30'],
++ 'ak-winged':['08:15','09:15','10:15','11:15','12:15']
++};
++function estimatedShowTimes2026(x){return x&&AUG2026_ESTIMATED_SHOW_TIMES[x.id]?AUG2026_ESTIMATED_SHOW_TIMES[x.id]:[]}
++function isTimeScheduledExperience(x){return !!(x&&(x.kind==='show'||estimatedShowTimes2026(x).length))}
+ function showTimePrefix(id){return 'SHOW_TIME:'+id+':'}
++function showSourcePrefix(id){return 'SHOW_SOURCE:'+id+':'}
+ function getChosenShowTime(b,id){return customTokenValue(b,showTimePrefix(id))}
+-function setChosenShowTime(b,id,val){setCustomToken(b,showTimePrefix(id),val)}
++function getChosenShowSource(b,id){return customTokenValue(b,showSourcePrefix(id))}
++function setChosenShowTime(b,id,val,source='official'){setCustomToken(b,showTimePrefix(id),val);setCustomToken(b,showSourcePrefix(id),val?source:'')}
+ function liveEntryForAttraction(x){
+  const pd=liveDayCache[x?.park];if(!pd||!Array.isArray(pd.live))return null;const n=normName(x.name);
+  return pd.live.find(r=>normName(r.name)===n)||pd.live.find(r=>normName(r.name).includes(n)||n.includes(normName(r.name)))||null;
+@@ -1957,13 +2005,18 @@
+ function isoToParkTime(iso){if(!iso)return'';try{return new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit',hour12:true,timeZone:'America/New_York'}).format(new Date(iso))}catch(_){return''}}
+ function isoTo24(iso){if(!iso)return'';try{const parts=new Intl.DateTimeFormat('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/New_York'}).formatToParts(new Date(iso));const h=parts.find(x=>x.type==='hour')?.value,m=parts.find(x=>x.type==='minute')?.value;return h&&m?`${h}:${m}`:''}catch(_){return''}}
+ function renderPublishedShowTimeBox(x,b,bi){
+- const live=liveEntryForAttraction(x),chosen=getChosenShowTime(b,x.id),actual=isSelectedDayToday();
+- if(!actual)return `<div class="quickSection"><div class="quickSectionTitle">Showtime</div><div class="liveEmpty">Disney has not published the selectable times for this 2027 date yet. This app will only offer published times when they are available.</div></div>`;
++ const live=liveEntryForAttraction(x),chosen=getChosenShowTime(b,x.id),source=getChosenShowSource(b,x.id),actual=isSelectedDayToday();
++ if(!actual){
++  const est=estimatedShowTimes2026(x);
++  if(!est.length)return `<div class="quickSection"><div class="quickSectionTitle">Showtime</div><div class="liveEmpty">No August 2026 planning pattern is loaded for this experience yet. Leave it flexible for now.</div></div>`;
++  return `<div class="quickSection"><div class="quickSectionTitle">Planning showtime <span class="estimateBadge">AUG 2026 ESTIMATE</span></div><div class="showTimeChoices">${est.map(v=>`<button class="showTimeChoice${chosen===v?' current':''}" onclick="chooseShowTime(${bi},'${x.id}','${v}','aug2026')">${escAttr(from24Time(v))}</button>`).join('')}</div><div class="quickHint">Use these historical August 2026 times to build the 2027 tr
