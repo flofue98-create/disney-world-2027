@@ -859,7 +859,7 @@ const LL_RULES={
 };
 function normName(s){return String(s||'').toLowerCase().normalize('NFKD').replace(/[’‘]/g,"'").replace(/[^a-z0-9]+/g,' ').trim()}
 function llEligibility(x){
- if(!x)return null;const r=LL_RULES[x.park];if(!r)return null,n=normName(x.name);
+ if(!x)return null;const r=LL_RULES[x.park];if(!r)return null;const n=normName(x.name);
  const find=(a)=>a.some(v=>normName(v)===n);
  if(find(r.single))return{type:'single',label:'Single Pass'};
  if(find(r.group1))return{type:'multi',group:'1',label:'Multi Pass · advance group 1'};
