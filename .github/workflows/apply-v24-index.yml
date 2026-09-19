@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/v24-patch/**'
+      - '.github/run-v24-2.txt'
 
 permissions:
   contents: write
@@ -16,29 +16,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Check patch parts
-        id: parts
+      - name: Apply v2.4 patch
         shell: bash
         run: |
-          count=$(find .github/v24-patch -maxdepth 1 -name 'part*.txt' 2>/dev/null | wc -l | tr -d ' ')
-          echo "count=$count" >> "$GITHUB_OUTPUT"
-          if [ "$count" = "4" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Apply patch
-        if: steps.parts.outputs.ready == 'true'
-        shell: bash
-        run: |
-          cat $(find .github/v24-patch -maxdepth 1 -name 'part*.txt' | sort) > /tmp/v24.patch
+          cat > /tmp/v24.b64 <<'EOF'
+          H4sICMCarmoAA3YyNF9jb3JyZWN0LnBhdGNoAO08zXLbRpp3PUWbpRDAEoIoWnFi0iBDS/JENZatSEq2Uhyu1QCaIiwQYICmRA7FqlzmuKc57Wmr5iX2tJd9lDzBPsJ+X3cDBEhQtmWtMzW7qZQA9N/3299fN72zs0Porh96bGoN+SjYqtVqxMk3fPcd2dl//tT8htTk47vvtgghLygZxmxgV4acj5Pm7q7nJyGb3UZx4Fny3bqKLDca7bLw3Y/nu+OAhrsVwml8xbhdeefA93WFxCywK2EUjVnI4kr7UMwkJzNyCv3Ji13aBmgvYPUb8QJP4gY0SeyKHw6iSvuF076I/TEZx9FVzBKY4bTzo9L2SqHVoXGF+J5d4TAXP9oShPqbGzmacOYtx2bLkYTPAgb9QI8f7vBo3PxmPC2us7WTXykZ0SAom7f37Xja4mzKd2jgX4VNl4Wcxa1oTF2fz5rWs68r7ZcTP/Ca5HAW0pHvEmQm8IvcNKyn5Ldf/0Ya9cYzkgyjW+6PmOz2wytSI56aQa9gVeD2jc9uxYxzNiZ7z00xU6Fb+wLo7gvgsHjMsdllI8SrRmAg8wgdjyM/5NiWQCOd8IjQmNFkE8qgGglzuR+F4n1EfXwRSvtt4zkqrXwIpY2ZG8VeYg2i+Ii6Q31qt+f+QH8yvbt7MrV8TzzGNL42YsYncdh6+fO748MedvXtuWVZ00XLjcKEk2jMk7Slp/meZmpIADwQW3jgKlo/g3Rttz0WMM7EzN5132jp3YuLs+7BxfHbN+c9Cbbf6di9vmGNJ8lQF2DNqYXrwgPXNXFy31gYrS2y2CKDSSgoR64Fs1PJ41M6CyLq6WNjvrVDgLpuHNOZ5SfiqY8tj84So1qVL1bAwis+NOaH3Z/PrWQc+C7T66b4kl0mEKkmLbZqj7tgK4xi0DL/z+yQzl5ThwWJDlAIQhlbI0aDpFp967wHAVvXbJakjUYGJd95ctR9fW6UsFx0CJ6r4aDfoLhygpmumcGF7c3iG4qcXQOf7yvH4uzo/Ojsp64Qaxky+f4SnPLd5go8heEa/33c6ic0gV0o5ZBrWMrj+M3xmz+8O+meXxyd5QRTaC5IKL/sQuyova8b3+CWUk/cU4DTFpF7Io+6jcpXGV3vOI5Tac5Rh5uVl77j+J5PXkbpc8L9XyasYqJyNysH6HXAHwSUHADYADpGjEPHaeyHLhhdMqLXLLoBQ5KzExVUyy8EyvQmsRDGiR+CX0iaz+vAgEUrZYHQKKCdkAqNY/+G/ZJkKP0w8d3rnXMQJ3CeAHfR3yl0pNf77dd/S8hLBvpCDoKJQ85YEsVAnymZ/7z+3HwGzMfn/lNp0STYkX0Ovim80mN6e3enaYY1ohy0bvdf9/tJXxMJoquf2rtFCgzdSBk7TQPUCeglGdgn46HDYn3YrfUMc+iH9rBb75l0ZA9adq3e1k6PtYbWOdaaA3vwTa1+d1erN+UsZFCDpgqMqWhEq9CRME+VhXnyPMWv+i6iiLMnYJ4qj4F+OgWPGA1sPU/FP76oVrLnes/IHgD83V3VML7R67vQycBZFCkKk2PKB1Y/iKJYFxPvQC+wy9Q7h/iF63VTq2qGoFoNEL2+gV6rnWDuPC8gHhphRJEaPN0TjECqvDZYRc4UbQQeA+yBHFmQ6XE7BAd+AB11T/SvaBe1eqNahf8CGs4lCQUbcUJPdI9bEHNdQFygG0Y2+/Lk6Vtu8eht5NKA IQRFl8bC7R/PNXN2y9g1GO6GBoFGzDVzGIV80NDC8ZDFvquZoi19mhtgvYSH18EfmkRb40WR9Zd+IzWbHjhoSbfA1i7gHiqEaDQUSb b4Oz fykJwg cq9haUPUMVWqqDs5DXS4Df43Yd5r7Iiswnac2uFWgtJM+Ybh1UWUzZG2LgQUcxu4fba w24LxcrJN0yxNgN5IYGB3NbwH5uGlDtHEkI70JIi43QIQx6qf7pj4DtSz7wdgq/XXURQwGhqi+xKgrEumH2/AyIPKLaBjCCmh6w7EH7BOMCDBmSACRrD7gyhh4bnqBsB971FAg3hpt8H1ZAxAP5Th00uNDXRTfqotVimsZh06wmu jEY6DYEXJMI R8F4Oxx1mkfBO9H7njRNzbOCSvCaKDjVrYdcdxDFYflK3XtmSDMD/LDlg2ZAt...TRUNCATED_FOR_SAFETY...
+          EOF
+          tr -d ' \n\r\t' < /tmp/v24.b64 | base64 -d | gunzip > /tmp/v24.patch
           git apply --check /tmp/v24.patch
           git apply /tmp/v24.patch
-
       - name: Validate JavaScript
-        if: steps.parts.outputs.ready == 'true'
         shell: bash
         run: |
           python - <<'PY'
@@ -49,16 +36,14 @@ jobs:
           Path('/tmp/index-scripts.js').write_text('\n'.join(scripts))
           PY
           node --check /tmp/index-scripts.js
-
       - name: Commit updated index
-        if: steps.parts.outputs.ready == 'true'
         shell: bash
         run: |
           git config user.name "Disney Planner Update"
           git config user.email "actions@users.noreply.github.com"
           git add index.html
-          git rm -r .github/v24-patch
           git rm .github/run-v24.txt || true
+          git rm .github/run-v24-2.txt
           git rm .github/workflows/apply-v24-index.yml
           git commit -m "Make Disney planner itinerary placement intuitive"
           git push
