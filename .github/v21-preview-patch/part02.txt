@@ -1,0 +1,94 @@
+splay:flex;align-items:flex-start;justify-content:space-between;gap:10px}.agentHubBtn{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900;white-space:nowrap}
++.agentMiniGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}.agentMini{background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.18);border-radius:13px;padding:9px}.agentMiniLabel{font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:#dbeafe}.agentMiniValue{font-size:12px;font-weight:900;margin-top:3px;line-height:1.25}.agentMiniMeta{font-size:9px;color:#dbeafe;margin-top:3px;line-height:1.3}
++.strategyPreview{margin-top:10px;background:#fff;color:#20364d;border-radius:14px;padding:10px}.strategyPreview b{font-size:12px}.strategyPreview .small{color:#687483}.strategyPreview .routeLine{font-size:11px;line-height:1.4;margin-top:5px}.strategyPreview .routeIds{display:flex;gap:5px;overflow-x:auto;margin-top:7px;padding-bottom:1px}.strategyChip{white-space:nowrap;border-radius:999px;background:#eef4fa;color:#174f86;padding:5px 7px;font-size:9px;font-weight:900}
++.bookingStrip{display:grid;grid-template-columns:1fr;gap:9px;margin-bottom:11px}.bookingCard{background:#fff;border:1px solid #dfe3e8;border-radius:16px;padding:12px;box-shadow:var(--shadow)}.bookingCardTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.bookingName{font-size:13px;font-weight:900}.bookingDate{font-size:16px;font-weight:950;color:#17385e;margin-top:3px}.bookingMeta{font-size:10px;line-height:1.4;color:#687483;margin-top:4px}.bookingStatus{border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900;background:#eef3f8;color:#174f86;white-space:nowrap}.bookingStatus.open{background:#eaf7ed;color:#2c6a3f}.bookingStatus.soon{background:#fff1cf;color:#805700}
++.agentCenterIntro{background:#eef5fb;border:1px solid #c7d9e8;border-radius:16px;padding:13px;margin-bottom:11px}.agentCenterIntro h2{margin:2px 0 4px;font-size:20px}.agentSourceNote{font-size:10px;line-height:1.4;color:#64748b;margin-top:8px}.strategyCenter{background:#fff;border:1px solid #dfe3e8;border-radius:18px;padding:14px;margin-bottom:11px;box-shadow:var(--shadow)}.strategyCenter h2{margin:0 0 8px;font-size:17px}.strategyDay{padding:10px 0;border-top:1px solid #edf0f3}.strategyDay:first-of-type{border-top:0}.strategyDayName{font-weight:900;font-size:12px}.strategyDayDetail{font-size:10px;color:#687483;line-height:1.4;margin-top:3px}.strategyPills{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.strategyPills span{background:#f1f5f9;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:850;color:#334155}
++@media(min-width:620px){.bookingStrip{grid-template-columns:repeat(3,1fr)}.agentMiniGrid{grid-template-columns:repeat(4,1fr)}}
++
+ </style>
+ </head>
+ <body>
+@@ -305,33 +363,41 @@
+  </div>
+ </header>
+ <nav class="bottomNav" aria-label="Primary">
+- <button class="active" data-screen="dashboard">Home</button>
+- <button data-screen="itinerary">Itinerary</button>
++ <button class="active" data-screen="today">Today</button>
++ <button data-screen="itinerary">Plan</button>
+  <button data-screen="attractions">Attractions</button>
+  <button data-screen="dining">Dining</button>
+  <button data-screen="maps">Maps</button>
+- <button data-screen="trip">Trip</button>
++ <button data-screen="trip">More</button>
+ </nav>
+ 
+ <main>
+-<section id="dashboard" class="screen active">
++<section id="today" class="screen active"><div id="todayContent"></div></section>
++<section id="dashboard" class="screen">
+  <div class="dashboardHero">
+   <div class="eyebrow" style="color:#dbeafe">Trip Command Center</div>
+   <h1>Disney World 2027</h1>
+   <div class="muted" id="dashHeroSub">9 days / 8 nights • Flexible August 18–30, 2027</div>
+   <div class="liveRow"><span class="livePill"><span class="liveDot" id="liveDot"></span><span id="liveStatus">Connecting to Master Trip Planner…</span></span><span class="livePill" id="lastSync">Last sync: —</span></div>
+  </div>
++ <div class="agentCenterIntro"><div class="eyebrow">Personal Travel Agent</div><h2>Planning, booking & strategy center</h2><div class="small">Budget, booking deadlines, agent monitoring and park strategy in one place. Recommendations are reviewable — nothing changes your itinerary automatically.</div></div>
++ <div id="dashboardMilestones" class="bookingStrip"></div>
+  <div class="dashboardGrid" id="dashboardMetrics"></div>
++ <div id="dashboardStrategy"></div>
+  <div id="dashboardOverview"></div>
+  <div id="dashboardDates"></div>
+- <div id="dashboardDecisions" style="display:none"></div>
+- <div id="dashboardAgents" style="display:none"></div>
++ <div id="dashboardDecisions"></div>
++ <div id="dashboardAgents"></div>
+  <div class="dashActions">
+   <button class="primary" onclick="loadDashboardFeed(true)">Refresh live data</button>
+-  <a href="https://docs.google.com/spreadsheets/d/1354BrauPx4K97Ml1T9J5S21u6ZwzLNL0P7FT9JE_7KY/edit" target="_blank" rel="noopener">Open Master Planner</a>
++  <a class="editorOnly" href="https://docs.google.com/spreadsheets/d/1354BrauPx4K97Ml1T9J5S21u6ZwzLNL0P7FT9JE_7KY/edit" target="_blank" rel="noopener">Open Master Planner</a>
+  </div>
+ </section>
+-<section id="itinerary" class="screen"><div class="daytabs" id="daytabs"></div><div id="day"></div></section>
++<section id="itinerary" class="screen">
++ <div id="planningAssistant"></div>
++ <div class="daytabs" id="daytabs"></div>
++ <div id="day"></div>
++</section>
+ <section id="attractions" class="screen">
+  <div class="hero"><h1>Attractions & Experiences</h1><div class="muted">Browse by park and land. Details stay tucked away until you want them.</div></div>
+  <div class="attrTools">
+@@ -397,7 +463,7 @@
+   <h2>Planner sync</h2>
+   <div class="plannerStatus"><span class="plannerDot" id="plannerDot"></span><b id="plannerStatusText">Not connected</b></div>
+   <div class="plannerQuickRow">
+-   <button id="plannerEditBtn" onclick="openPlannerEditor()" disabled>Edit trip</button>
++   <button id="plannerEditBtn" onclick="openPlannerEditor()" disabled>Trip setup</button>
+    <button onclick="refreshPlannerData(true)">Refresh</button>
+    <button id="plannerInitBtn" onclick="initializeCloudPlanner()" disabled>Initialize planner</button>
+   </div>
+@@ -413,13 +479,20 @@
+   <div id="plannerMessage"></div>
+  </div>
+ 
++
++ <div class="familyCard editorOnly" id="familyShareCard" style="display:none">
++  <b>Family View</b>
++  <div class="small">Share a read-only version that always loads the latest plan. Family members cannot change anything.</div>
++  <div class="plannerButtons"><button onclick="copyFamilyViewLink()">Copy family link</button></div>
++ </div>
++ <div class="quickActions editorOnly"><button class="tinyAction" onclick="switchScreen('dashboard')">Travel Agent Center</button></div>
+  <div class="quickActions">
+   <a href="./Disney_World_2027_Blueprint.pdf" target="_blank" rel="noopener">Open Printable Blueprint</a>
+   <a href="https://disneyworld.app.link/MyDisneyExperienceEN-US" target="_blank" rel="noopener">Open My Disney Experience</a>
+   <a href="https://disneyworld.disney.go.com/en_US/plan/" target="_blank" rel="noopener">Disney My Plans</a>
+  </div>
+  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
+-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v1.6 • direct itinerary controls • area-only choices • Sep 18, 2026</div>
++<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.1 • Personal Travel Agent + Live Day + Family View • Sep 18, 2026</div>
+ </section>
+ </main>
+ 
+@@ -493,6 +566,7 @@
+  ["agent","flight_watch","Flight Watch","Active","Compares all five date windows for nonstop Newark–Orlando fares.","Watching","Sep 18, 2026","1"],
+  ["agent","deal_watch"
