@@ -1,0 +1,53 @@
+--- a/index.html
++++ b/index.html
+@@ -492,7 +492,7 @@
+   <a href="https://disneyworld.disney.go.com/en_US/plan/" target="_blank" rel="noopener">Disney My Plans</a>
+  </div>
+  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
+-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.1 • Personal Travel Agent + Live Day + Family View • Sep 18, 2026</div>
++<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.2 • live preview + editable trip savings • Sep 19, 2026</div>
+ </section>
+ </main>
+ 
+@@ -652,17 +652,34 @@
+  const useful=DAYS.filter(d=>ROPE_DROP[d.date]||llPriorityForDay(d).length);
+  el.innerHTML=`<div class="strategyCenter"><h2>Park-day strategy</h2><div class="small">Current planning logic. Strategy agents can recommend revisions, but you approve changes.</div>${useful.map(d=>{const r=ROPE_DROP[d.date],ll=llPriorityForDay(d);return `<div class="strategyDay"><div class="strategyDayName">${d.label} • ${(d.parks||[]).join(' + ')}</div><div class="strategyDayDetail">${r?.note||'Route still being refined.'}</div>${ll.length?`<div class="strategyPills">${ll.map(id=>`<span>LL: ${BY_ID[id]?.name||id}</span>`).join('')}</div>`:''}</div>`}).join('')}</div>`;
+ }
++async function editTripSavings(){
++ if(!canEditPlanner()){alert('Connect the cloud planner first so this amount can save across devices.');return}
++ const current=Number(plannerSettings.cash_saved||0)||0;
++ const raw=prompt('How much cash have you saved for the Disney trip so far?',String(current));
++ if(raw===null)return;
++ const clean=String(raw).replace(/[$,\s]/g,'');
++ const value=Number(clean);
++ if(!Number.isFinite(value)||value<0){alert('Enter a valid dollar amount.');return}
++ plannerSettings.cash_saved=String(Math.round(value*100)/100);
++ renderDashboard(true);
++ try{
++  await plannerRequest('saveAll',{days:DAYS,meals:MEALS,reservations:RESERVATIONS,settings:plannerSettings});
++  renderDashboard(true);
++ }catch(err){alert('The amount changed on this screen but could not sync. '+String(err.message||err));}
++}
++
+ function renderDashboard(live=false){
+  renderBookingMilestones('dashboardMilestones');
+  renderStrategyCenter();
+  const projected=dashFind('budget','projected_total'), target=dashFind('budget','target'), ceiling=dashFind('budget','ceiling');
+  const cash=dashFind('funding','cash_saved'), rewards=dashFind('funding','disney_rewards'), fetchR=dashFind('funding','fetch');
+  const p=Number(projected?.value||0),c=Number(ceiling?.value||0),t=Number(target?.value||0), cushion=c-p;
++ const saved=Number(plannerSettings.cash_saved ?? cash?.value ?? 0)||0;
+  dashboardMetrics.innerHTML=`
+   <div class="metricCard accent"><div class="metricLabel">Projected trip</div><div class="metricValue">${money(p)}</div><div class="metricDetail">Current planning estimate</div></div>
+   <div class="metricCard"><div class="metricLabel">Preferred target</div><div class="metricValue">${money(t)}</div><div class="metricDetail">Aim here when it still protects the experience</div></div>
+   <div class="metricCard ${cushion>=0?'good':'warn'}"><div class="metricLabel">Ceiling cushion</div><div class="metricValue">${money(cushion)}</div><div class="metricDetail">Against the ${money(c)} hard ceiling</div></div>
+-  <div class="metricCard"><div class="metricLabel">Already set aside</div><div class="metricValue">${money(cash?.value||0)}</div><div class="metricDetail">Cash saved • not a discount</div></div>`;
++  <div class="metricCard"><div class="metricLabel">Already set aside</div><div class="metricValue">${money(saved)}</div><div class="metricDetail">Cash saved • not a discount</div>${canEditPlanner()?'<button class="tinyAction" style="margin-top:8px" onclick="editTripSavings()">Update saved amount</button>':''}</div>`;
+  const overview=sectionRows('overview');
+  dashboardOverview.innerHTML=dashboardSection('Current strategy',sectionRows('strategy'))+dashboardSection('Current plan',overview)+dashboardSection('Savings & rewards',[...(rewards?[rewards]:[]),...(fetchR?[fetchR]:[])]);
+  dashboardDecisions.innerHTML=dashboardSection('Next decisions',sectionRows('decision'));
+@@ -698,7 +715,7 @@
+ const DYNAMIC_PLANNER_SOURCE_SHA="e38f74e72ae3d235da0917e87ba37714b5a6375220a631bec558ba688b11d48f";
+ const PLANNER_API_DEFAULT="https://script.google.com/macros/s/AKfycbyJqAu0eSXEjJVqoq4VQD2As3-10wlYE3J-kpaFIeuNunZtkIZWiYG6VSKG4blwggy2yA/exec";
+ const PLANNER_DEFAULT_SETTINGS={
+- planning_window:"August 18–30, 2027",working_itinerary:"August 21–29, 2027",resort:"Deluxe shortlist — not locked",party:"6 travelers",tickets:"Park Hopper — 7 vs 8 days open",dining_strategy:"Cash-first"
++ planning_window:"August 18–30, 2027",working_itinerary:"August 21–29, 2027",resort:"Deluxe shortlist — not locked",party:"6 travelers",tickets:"Park Hopper — 7 vs 8 day
