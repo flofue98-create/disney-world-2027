@@ -1,0 +1,155 @@
+familyplan">${familyPlan(x)}</div><div class="llactions"><input class="lltime" type="time" value="${t}" aria-label="Lightning Lane time" onchange="saveLLTime('${x.id}',this.value)"><a href="https://disneyworld.disney.go.com/lightning-lane-passes/" target="_blank" rel="noopener">Open Disney Lightning Lane</a></div>${t?`<div class="small">Booked arrival time saved: ${formatClock(t)}</div>`:""}</div>`;
++ const e=llEligibility(x);if(!e)return'';const p=llPlan(x.id);return `<div class="llpanel"><div class="lltitle">${escAttr(e.label)}</div><div class="llactions">${p.start?`<span class="modePill">${escAttr(llWindowText(x.id))}</span>`:'<span class="modePill">Not scheduled</span>'}<a href="https://disneyworld.disney.go.com/lightning-lane-passes/" target="_blank" rel="noopener">Open Disney Lightning Lane</a></div></div>`;
+ }
++
+ function formatClock(t){
+  if(!t)return "";
+  let [h,m]=t.split(":").map(Number),ap=h>=12?"PM":"AM"; h=h%12||12; return `${h}:${String(m).padStart(2,"0")} ${ap}`;
+@@ -1426,6 +1616,7 @@
+  return localStorage.getItem(key)||"";
+ }
+ function setStatus(id,val,dayIndex=null){
++ if(FAMILY_VIEW)return;
+  const key=REPEATABLE_IDS.has(id) && dayIndex!==null ? `dw27_status_${id}_day${dayIndex}` : `dw27_status_${id}`;
+  if(val)localStorage.setItem(key,val); else localStorage.removeItem(key);
+  renderAll(); syncPlannerStatus(id,dayIndex);
+@@ -1493,6 +1684,7 @@
+  return h;
+ }
+ function controls(id,daySpecific=false){
++ if(FAMILY_VIEW)return '';
+  const di=daySpecific?currentDay:null, s=status(id,di);
+  return `<div class="statusrow">
+  <button class="statusbtn complete ${s==="done"?"on":""}" onclick="setStatus('${id}',${s==="done"?"''":"'done'"},${daySpecific?"currentDay":"null"})"><span class="box"></span>Completed</button>
+@@ -1614,7 +1806,7 @@
+ }
+ 
+ 
+-// v1.6 direct itinerary controls. The large planner editor remains as a fallback in Trip settings.
++// v1.7 direct itinerary controls. The large planner editor remains as a fallback in Trip settings.
+ let quickSheetContext=null;
+ let quickSaveTimer=null;
+ let quickSaveRevision=0;
+@@ -1623,7 +1815,7 @@
+  if(el){el.textContent=text||'';el.className='quickSaveState'+(cls?' '+cls:'')}
+ }
+ function queuePlannerSave(){
+- if(!plannerConnected||!plannerInitialized)return;
++ if(!canEditPlanner())return;
+  const rev=++quickSaveRevision;
+  clearTimeout(quickSaveTimer);
+  quickSaveLabel('Saving…');
+@@ -1635,7 +1827,8 @@
+  },500);
+ }
+ function openQuickSheet(mode,blockIndex,arg=''){
+- if(!plannerConnected||!plannerInitialized){setPlannerState('warn','Cloud planner not ready','Connect the planner first.');return}
++ if(FAMILY_VIEW)return;
++ if(!canEditPlanner()){setPlannerState('warn','Cloud planner not ready','Connect the planner first.');return}
+  quickSheetContext={mode,dayIndex:currentDay,blockIndex,arg};
+  renderQuickSheet();
+  document.getElementById('quickSheetOverlay').classList.add('open');
+@@ -1652,14 +1845,71 @@
+  if(c.mode==='addAttraction')return renderQuickAddAttraction(d,b,c.blockIndex,body);
+  if(c.mode==='attraction')return renderQuickAttractionSheet(d,b,c.blockIndex,c.arg,body);
+  if(c.mode==='meal')return renderQuickMealSheet(d,b,c.blockIndex,c.arg||'meal',body);
++ if(c.mode==='reservation')return renderQuickReservationSheet(d,b,c.blockIndex,body);
+  if(c.mode==='note')return renderQuickNoteSheet(d,b,c.blockIndex,body);
+ }
++function customTokenValue(b,prefix){
++ const hit=(b.custom||[]).find(x=>String(x).startsWith(prefix));
++ return hit?String(hit).slice(prefix.length):'';
++}
++function setCustomToken(b,prefix,value){
++ const kept=(b.custom||[]).filter(x=>!String(x).startsWith(prefix));
++ if(value)kept.push(prefix+value);
++ b.custom=kept;
++ if(!b.custom.length)delete b.custom;
++}
++function to24Time(raw){
++ const m=String(raw||'').trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
++ if(!m)return'';
++ let h=Number(m[1]),min=m[2],ap=m[3].toUpperCase();
++ if(ap==='AM'&&h===12)h=0;if(ap==='PM'&&h!==12)h+=12;
++ return String(h).padStart(2,'0')+':'+min;
++}
++function from24Time(raw){
++ const m=String(raw||'').match(/^(\d{2}):(\d{2})$/);if(!m)return'';
++ let h=Number(m[1]),min=m[2],ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+min+' '+ap;
++}
++function parsedBlockTimes(b){
++ let start=customTokenValue(b,'START:'),end=customTokenValue(b,'END:');
++ if(start||end)return{start,end};
++ const t=String(b.time||'').replace(/—/g,'–').trim();
++ let m=t.match(/^(\d{1,2}:\d{2})\s*(AM|PM)?\s*[–-]\s*(\d{1,2}:\d{2})\s*(AM|PM)$/i);
++ if(m){
++   const endAp=m[4].toUpperCase();
++   const startAp=(m[2]||endAp).toUpperCase();
++   start=to24Time(m[1]+' '+startAp);end=to24Time(m[3]+' '+endAp);
++   return{start,end};
++ }
++ m=t.match(/^(\d{1,2}:\d{2})\s*(AM|PM)$/i);
++ if(m){start=to24Time(m[1]+' '+m[2]);return{start,end:''}}
++ return{start:'',end:''};
++}
++function blockDisplayTime(b){
++ const {start,end}=parsedBlockTimes(b);
++ if(start&&end)return from24Time(start)+' – '+from24Time(end);
++ if(start)return from24Time(start);
++ if(end)return 'Until '+from24Time(end);
++ return 'Choose time';
++}
++function quickSetBlockClock(bi,which,value){
++ const b=DAYS[currentDay].blocks[bi];if(!b)return;
++ setCustomToken(b,which==='start'?'START:':'END:',value);
++ const t=parsedBlockTimes(b);b.time=t.start&&t.end?from24Time(t.start)+'–'+from24Time(t.end):t.start?from24Time(t.start):t.end?'Until '+from24Time(t.end):'';
++ renderDay();queuePlannerSave();renderQuickSheet();
++}
++function mealTimePrefix(slot){return 'MEAL_TIME:'+slot+':'}
++function getMealTime(b,slot){return customTokenValue(b,mealTimePrefix(slot))}
++function setMealTime(b,slot,value){setCustomToken(b,mealTimePrefix(slot),value)}
++function getReservationTime(b){return customTokenValue(b,'RES_TIME:')}
++function setReservationTime(b,value){setCustomToken(b,'RES_TIME:',value)}
++function parkMapForBlock(d,b){const p=blockPark(d,b);return MAPS[p]||''}
++
+ function renderQuickBlockSheet(d,b,bi,body){
+- quickTitle('Time & area','Edit block');
+- const p=blockPark(d,b),areas=areaOptionsForBlock(d,b),times=[...TIME_OPTIONS];if(b.time&&!times.includes(b.time))times.unshift(b.time);
+- body.innerHTML=`<div class="quickSection"><div class="quickSectionTitle">Time</div><select class="quickSelect" onchange="quickSetBlockTime(${bi},this.value)">${times.map(x=>`<option value="${escAttr(x)}"${x===b.time?' selected':''}>${escAttr(x)}</option>`).join('')}</select></div>
+- <div class="quickSection"><div class="quickSectionTitle">Area${p?` · ${escAttr(p)}`:''}</div><select class="quickSelect" onchange="quickSetBlockArea(${bi},this.value)">${areas.map(x=>`<option value="${escAttr(x)}"${x===b.area?' selected':''}>${escAttr(x)}</option>`).join('')}</select><div class="quickHint">Changing the area changes the attraction and restaurant choices shown for this block.</div></div>
+- <div class="quickSection"><div class="quickSectionTitle">Block order</div><div class="quickActionRow"><button onclick="quickMoveBlock(${bi},-1)">Move earlier</button><button onclick="quickMoveBlock(${bi},1)">Move later</button><button onclick="openQuickSheet('note',${bi})">${getUserNote(b)?'Edit note':'Add note'}</button><button class="danger" onclick="quickDeleteBlock(${bi})">Delete block</button></div></div>`;
++ quickTitle('Block settings','Time & area');
++ const p=blockPark(d,b),areas=areaOptionsForBlock(d,b),bt=parsedBlockTimes(b);
++ body.innerHTML=`<div class="quickSection"><div class="quickSectionTitle">Start & end time</div><div class="quickTimeGrid"><label>Start<input type="time" step="900" value="${escAttr(bt.start)}" onchange="quickSetBlockClock(${bi},'start',this.value)"></label><label>End<input type="time" step="900" value="${escAttr(bt.end)}" onchange="quickSetBlockClock(${bi},'end',this.value)"></label></div></div>
++ <div class="quickSection"><div class="quickSectionTitle">Area${p?` · ${escAttr(p)}`:''}</div><select class="quickSelect" onchange="quickSetBlockArea(${bi},this.value)"><option value="">Choose area</option>${areas.map(x=>`<option value="${escAttr(x)}"${x===b.area?' selected':''}>${escAttr(x)}</option>`).join('')}</select></div>
++ <div class="quickSection"><div class="quickSectionTitle">Order</div><div class="quickActionRow"><button onclick="quickMoveBlock(${bi},-1)">Move earlier</button><button onclick="quickMoveBlock(${bi},1)">Move later</button><button onclick="openQuickSheet('note',${bi})">${getUserNote(b)?'Edit note':'Add note'}</button><button class="danger" onclick="quickDeleteBlock(${bi})">Delete block</button></div></div>`;
+ }
+ function renderQuickAddAttraction(d,b,bi,body){
+  const area=blockChoiceArea(d,b),p=blockPark(d,b);quickTitle('Add attraction',area||'Choose an area');
+@@ -1670,16 +1920,49 @@
+  const x=BY_ID[id];if(!x){body.innerHTML='<div class="quickSection">Attraction not found.</div>';return}
+  const ids=b.ids||[],idx=ids.indexOf(id),s=status(id,currentDay);quickTitle(x.name,x.area||'Attraction');
+  const targets=(d.blocks||[]).map((tb,ti)=>({tb,ti})).filter(o=>o.ti!==bi && blockPark(d,o.tb)===x.park);
+- body.innerHTML=`<div class="quickSection"><div class="quickActionRow"><button class="${s==='done'?'primary':''}" onclick="quickToggleDone('${id}')">${s==='done'?'✓ Completed':'Mark completed'}</button><button onclick="quickReorderAttraction(${bi},'${id}',-1)" ${idx<=0?'disabled':''}>Move up</button><button onclick="quickReorderAttraction(${bi},'${id}',1)" ${idx<0||idx>=ids.length-1?'disabled':''}>Move down</button><button class="danger" onclick="quickRemoveAttraction(${bi},'${id}')">Remove</button></div></div>
+- ${targets.length?`<div class="quickSection"><div class="quickSectionTitle">Move to another block</div><div class="quickDestList">${targets.map(({tb,ti})=>`<button class="quickDest" onclick="quickMoveAttraction(${bi},'${id}',${ti})"><b>${escAttr(tb.time||'Flexible')}</b><span>${escAttr(tb.area||'')}</span></button>`).join('')}</div></div>`:''}
+- ${(x.description||x.height||x.ll)?`<div class="quickSection"><div class="quickSectionTitle">Details</div>${x.description?`<div class="small">${escAttr(x.description)}</div>`:''}${x.height?`<div class="quickHint">Height: ${escAttr(x.height)}</div>`:''}${x.ll?`<div class="quickHint">Lightning Lane: ${escAttr(x.ll)}</div>`:''}</div>`:''}`;
++ body.innerHTML=`<div class="quickSection"><div class="quickActionRow"><button class="${s==='done'?'primary':''}" onclick="quickToggleDone('${id}')">${s==='done'?'✓ Completed':'Mark completed'}</button><button onclick="quickReorderAttraction(${bi},'${id}',-1)" ${idx<=0?'disabled':''}>Move up</button><button onclick="quickReorderAttraction(${bi},'${id}',1)" ${idx<0||idx>=ids.length-1?'disabled':''}>Move down</button><button class="danger" onclick="quickRemoveAttraction(${bi},'${id}')">Remove</button></div></div>
++ ${targets.length?`<div class="quickSection"><div class="quickSectionTitle">Move to another block</div><div class="quickDestList">${targets.map(({tb,ti})=>`<button class="quickDest" onclick="quickMoveAttraction(${bi},'${id}',${ti})"><b>${escAttr(blockDisplayTime(tb))}</b><span>${escAttr(tb.area||'')}</span></button>`).join('')}</div></div>`:''}
++ ${x.map&&MAPS[x.park]?`<div class="quickSection"><div class="quickSectionTitle">Map</div><a class="quickDest" href="${MAPS[x.park]}" target="_blank" rel="noopener"><b>Map ${x.map}</b><span>Open ${escAttr(x.park)} guide map</span></a></div>`:''}`;
+ }
+ function renderQuickMealSheet(d,b,bi,slot,body){
+  const current=b[slot]||'',records=restaurantsForBlock(d,b),area=blockChoiceArea(d,b),park=blockPark(d,b);quickTitle(slot==='meal2'?'Second meal':'Meal',area||park||'Choose a restaurant');
++ const mt=getMealTime(b,slot);
+  body.innerHTML=`${current?`<div class="quickSection"><div class="quickSectionTitle">Selected</div>${renderQuickMealChoice(current)}<div class="quickActionRow"><button class="danger" onclick="quickRemoveMeal(${bi},'${slot}')">Remove meal</button></div></div>`:''}
++ ${current?`<div class="quickSection"><div class="quickSectionTitle">Reservation / meal time</div><div class="quickTimeGrid"><label>Time<input type="time" step="300" value="${escAttr(mt)}" onchange="quickSetMealClock(${bi},'${slot}',this.value)"></label></div></div>`:''}
+  <div class="quickSection"><div class="quickSectionTitle">${area?escAttr(area)+' restaurants':park?escAttr(park)+' restaurants':'Restaurants'}</div><div class="quickChoiceList">${records.length?records.map(r=>`<button class="quickChoiceCard" onclick="quickChooseMeal(${bi},'${slot}','${escAttr(r.name)}')"><b>${escAttr(r.name)}</b><span>${[r.type,r.map?`Map ${r.map}`:''].filter(Boolean).join(' · ')}</span></button>`).join(''):'<div class="quickEmpty">Choose an area first or no matching dining locations are in the directory.</div>'}</div></div>`;
+ }
++function renderQuickReservationSheet(d,b,bi,body){
++ const current=b.reservation||'',r=current?RESERVATIONS[current]:null,rt=getReservationTime(b);quickTitle('Appointment','Choose or change');
++ const options=Object.entries(RESERVATIONS).filter(([id,x])=>{const p=blockPark(d,b);return !p||normalizeLocation(x.area||'',p)||id===current});
++ body.innerHTML=`${r?`<div class="quickSection"><div class="quickSectionTitle">Selected</div><div class="quickChoiceCard"><b>${escAttr(r.name)}</b><span>${escAttr(r.area||'')}</span></div><div class="quickTimeGrid" style="margin-top:9px"><label>Appointment time<input type="time" step="300" value="${escAttr(rt)}" onchange="quickSetReservationClock(${bi},this.value)"></label></div><div class="quickActionRow" style="margin-top:9px"><button class="danger" onclick="quickRemoveReservation(${bi})">Remove appointment</button></div></div>`:''}<div class="quickSection"><div class="quickSectionTitle">Appointments</div><div class="quickChoiceList">${options.length?options.map(([id,x])=>`<button class="quickChoiceCard" onclick="quickChooseReservation(${bi},'${id}')"><b>${escAttr(x.name)}</b><span>${escAttr(x.area||'')}</span></button>`).join(''):'<div class="quickEmpty">No appointment choices are available for this park.</div>'}</div></div>`;
++}
+ function renderQuickMealChoice(mid){
+  const m=MEALS[mid];if(!m)return'';const rec=findDiningRecord(m.name);return `<div class="quickChoiceCard"><b>${escAttr(m.name)}</b><span>${escAttr(m.area||'')}${rec&&rec.map?` · Map ${rec.map}`:''}</span></div>`;
+ }
+ function renderQuickNoteSheet(d,b,bi,body){
