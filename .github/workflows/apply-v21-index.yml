@@ -23,11 +23,11 @@ jobs:
         run: |
           count=$(find .github/v21-preview-patch -maxdepth 1 -name 'part*.txt' 2>/dev/null | wc -l | tr -d ' ')
           echo "count=$count" >> "$GITHUB_OUTPUT"
-          if [ "$count" = "12" ]; then
+          if [ "$count" = "5" ]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "Waiting for all 12 patch parts; found $count."
+            echo "Waiting for all 5 patch parts; found $count."
           fi
 
       - name: Apply v2.1 patch
