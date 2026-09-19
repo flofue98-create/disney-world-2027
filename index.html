@@ -493,7 +493,7 @@ body.familyView .editorOnly{display:none!important}
   <a href="https://disneyworld.disney.go.com/en_US/plan/" target="_blank" rel="noopener">Disney My Plans</a>
  </div>
  <div class="info"><b>Trip progress</b><div class="progress"><div class="bar" id="tripbar"></div></div><div class="muted" id="tripprogress" style="margin-top:7px"></div></div>
-<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.3 • 2026 showtime planning + dynamic agent review • Sep 19, 2026</div>
+<div class="small" style="margin-top:18px;text-align:center;opacity:.65">Build: Dynamic planner v2.4 • smart placement + named appointments + auto areas • Sep 19, 2026</div>
 </section>
 </main>
 
@@ -829,7 +829,7 @@ function applyAttractionMaster(records){
  records.forEach(x=>{if(!x||!x.id||!x.park)return;BY_ID[x.id]={...x};const opts={...x};['id','name','area','park'].forEach(k=>delete opts[k]);(ATTRACTIONS[x.park]??=[]).push([x.id,x.name,x.area,opts])});
 }
 function applyPlannerPayload(p){
- if(Array.isArray(p.days)&&p.days.length){DAYS.splice(0,DAYS.length,...p.days)}
+ if(Array.isArray(p.days)&&p.days.length){DAYS.splice(0,DAYS.length,...p.days);normalizeDayLabels()}
  if(p.meals&&Object.keys(p.meals).length){Object.keys(MEALS).forEach(k=>delete MEALS[k]);Object.assign(MEALS,p.meals)}
  if(p.reservations&&Object.keys(p.reservations).length){Object.keys(RESERVATIONS).forEach(k=>delete RESERVATIONS[k]);Object.assign(RESERVATIONS,p.reservations)}
  if(Array.isArray(p.diningMaster)&&p.diningMaster.length){DINING_MASTER.splice(0,DINING_MASTER.length,...p.diningMaster)}
@@ -1527,7 +1527,7 @@ function formatClock(t){
 }
 
 const RESERVATIONS={
- "mk-bbb":{name:"Bibbidi Bobbidi Boutique",area:"Cinderella Castle",meta:"Princess makeover appointment"}
+ "mk-bbb":{name:"Bibbidi Bobbidi Boutique",area:"Cinderella Castle",meta:"Princess makeover appointment",durationMinutes:90}
 };
 const MEALS={
  "arriveqs":{name:"Quick-Service dinner",area:"Disney’s Beach Club Resort"},
@@ -1909,6 +1909,43 @@ function from24Time(raw){
  const m=String(raw||'').match(/^(\d{2}):(\d{2})$/);if(!m)return'';
  let h=Number(m[1]),min=m[2],ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+min+' '+ap;
 }
+function addMinutes24(raw,mins){
+ const m=String(raw||'').match(/^(\d{2}):(\d{2})$/);if(!m)return'';
+ const total=(Number(m[1])*60+Number(m[2])+Number(mins||0))%(24*60);
+ return String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0');
+}
+function computedDayLabel(d){
+ if(!d?.date)return d?.label||'';
+ const dt=new Date(d.date+'T12:00:00');
+ if(Number.isNaN(dt.getTime()))return d.label||'';
+ return dt.toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'}).replace(',', '');
+}
+function normalizeDayLabels(){DAYS.forEach(d=>{const label=computedDayLabel(d);if(label)d.label=label})}
+function blockPrimaryMinutes(b){
+ const bt=parsedBlockTimes(b);if(bt.start)return timeToMinutes(bt.start);
+ const rt=getReservationTime(b);if(rt)return timeToMinutes(rt);
+ const mealTimes=['meal','meal2'].map(slot=>getMealTime(b,slot)).filter(Boolean).map(timeToMinutes).filter(Number.isFinite);
+ const showTimes=(b.ids||[]).map(id=>getChosenShowTime(b,id)).filter(Boolean).map(timeToMinutes).filter(Number.isFinite);
+ const all=[...mealTimes,...showTimes];return all.length?Math.min(...all):null;
+}
+function autoOrderTimedBlocks(focusBlock=null){
+ const blocks=DAYS[currentDay]?.blocks;if(!Array.isArray(blocks))return -1;
+ const slots=[],timed=[];
+ blocks.forEach((b,i)=>{const key=blockPrimaryMinutes(b);if(Number.isFinite(key)){slots.push(i);timed.push({b,key,order:i})}});
+ timed.sort((a,b)=>a.key-b.key||a.order-b.order);
+ const next=blocks.slice();slots.forEach((slot,i)=>{next[slot]=timed[i].b});
+ blocks.splice(0,blocks.length,...next);
+ const idx=focusBlock?blocks.indexOf(focusBlock):-1;
+ if(idx>=0&&quickSheetContext)quickSheetContext.blockIndex=idx;
+ return idx;
+}
+function syncReservationBlock(b){
+ if(!b?.reservation)return;const r=RESERVATIONS[b.reservation];if(r?.area)b.area=r.area;
+ const rt=getReservationTime(b);if(!rt)return;
+ setCustomToken(b,'START:',rt);
+ if(r?.durationMinutes)setCustomToken(b,'END:',addMinutes24(rt,r.durationMinutes));
+ const t=parsedBlockTimes(b);b.time=t.start&&t.end?from24Time(t.start)+'–'+from24Time(t.end):t.start?from24Time(t.start):'';
+}
 function parsedBlockTimes(b){
  let start=customTokenValue(b,'START:'),end=customTokenValue(b,'END:');
  if(start||end)return{start,end};
@@ -1935,7 +1972,7 @@ function quickSetBlockClock(bi,which,value){
  const b=DAYS[currentDay].blocks[bi];if(!b)return;
  setCustomToken(b,which==='start'?'START:':'END:',value);
  const t=parsedBlockTimes(b);b.time=t.start&&t.end?from24Time(t.start)+'–'+from24Time(t.end):t.start?from24Time(t.start):t.end?'Until '+from24Time(t.end):'';
- renderDay();queuePlannerSave();renderQuickSheet();
+ autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant();
 }
 function mealTimePrefix(slot){return 'MEAL_TIME:'+slot+':'}
 function getMealTime(b,slot){return customTokenValue(b,mealTimePrefix(slot))}
@@ -2015,7 +2052,7 @@ function renderPublishedShowTimeBox(x,b,bi){
  const times=live.showtimes.map(t=>({v:isoTo24(t.startTime),label:isoToParkTime(t.startTime)})).filter(t=>t.v);
  return `<div class="quickSection"><div class="quickSectionTitle">Published showtime</div><div class="showTimeChoices">${times.map(t=>`<button class="showTimeChoice${chosen===t.v&&source!=='aug2026'?' current':''}" onclick="chooseShowTime(${bi},'${x.id}','${t.v}','official')">${escAttr(t.label)}</button>`).join('')}</div><div class="quickHint">Only currently published times from the live park feed are shown. Verify final times in My Disney Experience.</div></div>`;
 }
-function chooseShowTime(bi,id,val,source='official'){const b=DAYS[currentDay].blocks[bi];if(!b)return;setChosenShowTime(b,id,val,source);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}
+function chooseShowTime(bi,id,val,source='official'){const b=DAYS[currentDay].blocks[bi];if(!b)return;setChosenShowTime(b,id,val,source);autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}
 
 function renderQuickMealSheet(d,b,bi,slot,body){
  const currentId=b[slot],m=currentId?MEALS[currentId]:null,rows=restaurantsForBlock(d,b),area=blockChoiceArea(d,b)||resortDiningLocationForBlock(b)||b.area||'This area';
@@ -2024,14 +2061,14 @@ function renderQuickMealSheet(d,b,bi,slot,body){
  body.innerHTML=`${m?`<div class="quickSection"><div class="quickSectionTitle">Selected restaurant</div><div class="currentChoice"><div class="currentChoiceName">${escAttr(m.name)}</div>${rec&&rec.map&&MAPS[diningMapKey(rec.location)]?`<div class="currentChoiceMeta"><a class="cleanMapLink" href="${MAPS[diningMapKey(rec.location)]}" target="_blank" rel="noopener">Map ${rec.map} · Open map</a></div>`:''}<div class="quickTimeGrid" style="margin-top:9px"><label>Reservation / meal time<input type="time" step="900" value="${escAttr(mt)}" onchange="quickSetMealClock(${bi},'${slot}',this.value)"></label></div><div class="choiceActions"><button onclick="quickRemoveMeal(${bi},'${slot}')">Remove</button></div></div></div>`:''}
  <div class="quickSection"><div class="quickSectionTitle">Dining in ${escAttr(area)}</div>${rows.length?`<div class="quickChoiceList">${rows.map(x=>`<button class="quickChoice${m&&m.name===x.name?' current':''}" data-restaurant="${escAttr(x.name)}" onclick="quickChooseMeal(this,${bi},'${slot}')"><b>${escAttr(x.name)}</b><span>${escAttr([x.type,x.map?`Map ${x.map}`:''].filter(Boolean).join(' · '))}</span></button>`).join('')}</div>`:`<div class="emptyChoice">No restaurants are tagged to this exact area yet.</div>`}</div>`;
 }
-function quickSetMealClock(bi,slot,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;setMealTime(b,slot,value);renderDay();queuePlannerSave();renderQuickSheet()}
+function quickSetMealClock(bi,slot,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;setMealTime(b,slot,value);autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}
 function renderQuickReservationSheet(d,b,bi,body){
  const current=b.reservation?RESERVATIONS[b.reservation]:null,rt=getReservationTime(b);quickTitle('Appointment','Select & schedule');
  const rows=Object.entries(RESERVATIONS);
  body.innerHTML=`${current?`<div class="quickSection"><div class="quickSectionTitle">Selected appointment</div><div class="currentChoice"><div class="currentChoiceName">${escAttr(current.name)}</div><div class="quickTimeGrid" style="margin-top:9px"><label>Appointment time<input type="time" step="900" value="${escAttr(rt)}" onchange="quickSetReservationClock(${bi},this.value)"></label></div><div class="choiceActions"><button onclick="quickRemoveReservation(${bi})">Remove</button></div></div></div>`:''}<div class="quickSection"><div class="quickSectionTitle">Choose appointment</div><div class="quickChoiceList">${rows.map(([id,r])=>`<button class="quickChoice${b.reservation===id?' current':''}" onclick="quickChooseReservation(${bi},'${id}')"><b>${escAttr(r.name)}</b><span>${escAttr(r.area||'')}</span></button>`).join('')}</div></div>`;
 }
-function quickSetReservationClock(bi,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;setReservationTime(b,value);renderDay();queuePlannerSave();renderQuickSheet()}
-function quickChooseReservation(bi,id){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.reservation=id;renderDay();queuePlannerSave();renderQuickSheet()}
+function quickSetReservationClock(bi,value){const b=DAYS[currentDay].blocks[bi];if(!b)return;setReservationTime(b,value);syncReservationBlock(b);autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}
+function quickChooseReservation(bi,id){const b=DAYS[currentDay].blocks[bi],r=RESERVATIONS[id];if(!b||!r)return;b.reservation=id;if(r.area)b.area=r.area;syncReservationBlock(b);autoOrderTimedBlocks(b);renderDay();queuePlannerSave();renderQuickSheet();renderPlanningAssistant()}
 function quickRemoveReservation(bi){const b=DAYS[currentDay].blocks[bi];if(!b)return;delete b.reservation;setReservationTime(b,'');closeQuickSheet();renderDay();queuePlannerSave()}
 function renderQuickNoteSheet(d,b,bi,body){
  quickTitle(getUserNote(b)?'Edit note':'Add note',b.area||'Itinerary note');
@@ -2042,12 +2079,12 @@ function quickSetBlockArea(bi,value){const b=DAYS[currentDay].blocks[bi];if(!b)r
 function quickMoveBlock(bi,dir){const a=DAYS[currentDay].blocks,j=bi+dir;if(j<0||j>=a.length)return;[a[bi],a[j]]=[a[j],a[bi]];quickSheetContext.blockIndex=j;renderDay();queuePlannerSave();renderQuickSheet()}
 function quickDeleteBlock(bi){if(!confirm('Delete this time block?'))return;DAYS[currentDay].blocks.splice(bi,1);closeQuickSheet();renderDay();queuePlannerSave()}
 function quickAddBlock(){const d=DAYS[currentDay],p=d.parks?.[0]||'',area=PARK_AREAS[p]?.[0]||'Resort / flexible';d.blocks.push({time:'Flexible',area,ids:[]});renderDay();queuePlannerSave();openQuickSheet('block',d.blocks.length-1)}
-function quickAddAttraction(bi,id){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.ids=b.ids||[];if(!b.ids.includes(id))b.ids.push(id);renderDay();queuePlannerSave();renderQuickSheet()}
+function quickAddAttraction(bi,id){const b=DAYS[currentDay].blocks[bi],x=BY_ID[id];if(!b||!x)return;b.ids=b.ids||[];const wasEmpty=!b.ids.length&&!b.meal&&!b.meal2&&!b.reservation;if(!b.ids.includes(id))b.ids.push(id);if(wasEmpty&&x.area)b.area=x.area;renderDay();queuePlannerSave();renderQuickSheet()}
 function quickRemoveAttraction(bi,id){const b=DAYS[currentDay].blocks[bi];if(!b)return;b.ids=(b.ids||[]).filter(x=>x!==id);closeQuickSheet();renderDay();queuePlannerSave()}
 function quickReorderAttraction(bi,id,dir){const b=DAYS[currentDay].blocks[bi],a=b?.ids||[],i=a.indexOf(id),j=i+dir;if(i<0||j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];renderDay();queuePlannerSave();renderQuickSheet()}
 function quickMoveAttraction(from,id,to){const d=DAYS[currentDay],a=d.blocks[from],b=d.blocks[to];if(!a||!b)return;a.ids=(a.ids||[]).filter(x=>x!==id);b.ids=b.ids||[];if(!b.ids.includes(id))b.ids.push(id);closeQuickSheet();renderDay();queuePlannerSave()}
 function quickToggleDone(id){const s=status(id,currentDay);setStatus(id,s==='done'?'':'done',currentDay);setTimeout(()=>{if(quickSheetContext)renderQuickSheet()},0)}
-function quickChooseMeal(btn,bi,slot){const b=DAYS[currentDay].blocks[bi],name=btn?.dataset?.restaurant||'';if(!b||!name)return;b[slot]=ensureMealFromDiningName(name);closeQuickSheet();renderDay();queuePlannerSave()}
+function quickChooseMeal(btn,bi,slot){const b=DAYS[currentDay].blocks[bi],name=btn?.dataset?.restaurant||'';if(!b||!name)return;const wasEmpty=!(b.ids||[]).length&&!b.meal&&!b.meal2&&!b.reservation;b[slot]=ensureMealFromDiningName(name);const m=MEALS[b[slot]],rec=findDiningRecord(name);if(wasEmpty&&(m?.area||rec?.area))b.area=m?.area||rec?.area;closeQuickSheet();renderDay();queuePlannerSave()}
 function quickRemoveMeal(bi,slot){const b=DAYS[currentDay].blocks[bi];if(!b)return;delete b[slot];setMealTime(b,slot,'');closeQuickSheet();renderDay();queuePlannerSave()}
 function quickSaveNote(bi){const b=DAYS[currentDay].blocks[bi];if(!b)return;setUserNote(b,document.getElementById('quickNoteText')?.value||'');closeQuickSheet();renderDay();queuePlannerSave()}
 function quickClearNote(bi){const b=DAYS[currentDay].blocks[bi];if(!b)return;setUserNote(b,'');closeQuickSheet();renderDay();queuePlannerSave()}
@@ -2103,7 +2140,7 @@ function renderItineraryMeal(mid,bi,slot){
  return `<div class="quickMealRow"><div class="quickMealIcon">🍽</div>${main}${rec&&rec.menu?`<a class="cleanMapLink" href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:''}${FAMILY_VIEW?'':`<button class="itinMore" onclick="openQuickSheet('meal',${bi},'${slot}')">•••</button>`}</div>`;
 }
 
-function renderItineraryReservation(b,bi){if(!b.reservation)return'';const rt=getReservationTime(b);return `<div class="genericReservationRow"><div class="genericReservationIcon">📅</div><div class="genericReservationMain"${FAMILY_VIEW?'':` onclick="openQuickSheet('reservation',${bi})"`}><div class="genericReservationName">Appointment</div><div class="genericReservationMeta">${rt?escAttr(from24Time(rt)):'Time not set'}</div></div>${FAMILY_VIEW?'':`<button class="itinMore" onclick="openQuickSheet('reservation',${bi})">•••</button>`}</div>`}
+function renderItineraryReservation(b,bi){if(!b.reservation)return'';const r=RESERVATIONS[b.reservation],rt=getReservationTime(b),name=r?.name||'Appointment',area=r?.area||b.area||'';return `<div class="genericReservationRow"><div class="genericReservationIcon">📅</div><div class="genericReservationMain"${FAMILY_VIEW?'':` onclick="openQuickSheet('reservation',${bi})"`}><div class="genericReservationName">${escAttr(name)}</div><div class="genericReservationMeta">${rt?escAttr(from24Time(rt)):'Choose time'}${area?` · ${escAttr(area)}`:''}</div></div>${FAMILY_VIEW?'':`<button class="itinMore" onclick="openQuickSheet('reservation',${bi})">•••</button>`}</div>`}
 
 
 function renderDay(){
@@ -2123,7 +2160,7 @@ function renderDay(){
    carriedHere.forEach(c=>h+=renderItineraryAttraction(c.id,bi,true));normal.forEach(id=>h+=renderItineraryAttraction(id,bi,false));
    if(b.reservation)h+=renderItineraryReservation(b,bi);[['meal',b.meal],['meal2',b.meal2]].filter(x=>x[1]).forEach(([slot,mid])=>h+=renderItineraryMeal(mid,bi,slot));
    if(userNote)h+=`<div class="quickNoteRow"><div>${escAttr(userNote)}</div>${canEditPlanner()?`<button onclick="openQuickSheet('note',${bi})">Edit</button>`:''}</div>`;
-   if(canEditPlanner()){const nextSlot=!b.meal?'meal':(!b.meal2?'meal2':'meal');h+=`<div class="blockQuickAdd"><button class="primary" onclick="openQuickSheet('addAttraction',${bi})">+ Attraction / Show</button><button onclick="openQuickSheet('meal',${bi},'${nextSlot}')">${b.meal||b.meal2?'Change meal':'+ Meal'}</button><button onclick="openQuickSheet('reservation',${bi})">${b.reservation?'Appointment':'+ Appointment'}</button><button onclick="openQuickSheet('note',${bi})">${userNote?'Edit note':'+ Note'}</button></div>`}
+   if(canEditPlanner()){const nextSlot=!b.meal?'meal':(!b.meal2?'meal2':'meal');h+=`<div class="blockQuickAdd"><button class="primary" onclick="openQuickSheet('addAttraction',${bi})">+ Attraction / Show</button><button onclick="openQuickSheet('meal',${bi},'${nextSlot}')">${b.meal||b.meal2?'Change meal':'+ Meal'}</button><button onclick="openQuickSheet('reservation',${bi})">${b.reservation?'Change appointment':'+ Appointment'}</button><button onclick="openQuickSheet('note',${bi})">${userNote?'Edit note':'+ Note'}</button></div>`}
    h+=`</div>`;
  });
  day.innerHTML=h;
@@ -2431,7 +2468,7 @@ diningLocation.addEventListener("change",e=>{diningLoc=e.target.value;renderDini
 
 let liveAutoRefreshTimer=setInterval(()=>{if(document.hidden||!isSelectedDayToday())return;const active=document.querySelector('.screen.active')?.id;if(active!=='today')return;const p=liveDayPark||canonicalParkClient((DAYS[currentDay].parks||[])[0]);if(p)loadLiveDayData(p,true)},300000);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)return;refreshPlannerData(false).then(()=>{if(isSelectedDayToday()&&document.querySelector('.screen.active')?.id==='today'){const p=liveDayPark||canonicalParkClient((DAYS[currentDay].parks||[])[0]);if(p)loadLiveDayData(p)}})});
-autoDay();renderAll();loadDashboardFeed();hydratePlannerInputs();refreshPlannerData(false).then(()=>{renderToday();if(isSelectedDayToday()){const p=(DAYS[currentDay].parks||[])[0];if(p)loadLiveDayData(p)}});
+normalizeDayLabels();autoDay();renderAll();loadDashboardFeed();hydratePlannerInputs();refreshPlannerData(false).then(()=>{renderToday();if(isSelectedDayToday()){const p=(DAYS[currentDay].parks||[])[0];if(p)loadLiveDayData(p)}});
 </script>
 </body>
 </html>
