@@ -1,0 +1,49 @@
+')}
++function itinDropOnItem(e,toBi,beforeId){if(!itineraryDrag)return;e.preventDefault();e.currentTarget.classList.remove('dropBefore');const {fromBi,id}=itineraryDrag;moveAttractionToPosition(fromBi,id,toBi,beforeId);}
++function itinDragOverBlock(e){if(!itineraryDrag)return;e.preventDefault();e.currentTarget.classList.add('dragTarget')}
++function itinDragLeaveBlock(e){e.currentTarget.classList.remove('dragTarget')}
++function itinDropOnBlock(e,toBi){if(!itineraryDrag)return;e.preventDefault();e.currentTarget.classList.remove('dragTarget');const {fromBi,id}=itineraryDrag;moveAttractionToPosition(fromBi,id,toBi,null)}
++function moveAttractionToPosition(fromBi,id,toBi,beforeId){
++ const blocks=DAYS[currentDay].blocks,from=blocks[fromBi],to=blocks[toBi];if(!from||!to)return;
++ from.ids=(from.ids||[]).filter(x=>x!==id);to.ids=(to.ids||[]).filter(x=>x!==id);
++ let at=beforeId?to.ids.indexOf(beforeId):-1;if(at<0)at=to.ids.length;to.ids.splice(at,0,id);
++ renderDay();queuePlannerSave();
++}
+ function renderItineraryAttraction(id,bi,moved=false){
+- const x=BY_ID[id];if(!x)return'';const done=status(id,currentDay)==='done';const meta=[x.height?`Height ${x.height}`:'',moved?'Moved here':''].filter(Boolean).join(' · ');
+- return `<div class="itinItem${done?' done':''}"><button class="itinCheck" aria-label="${done?'Mark not completed':'Mark completed'}" onclick="quickToggleDone('${id}')">${done?'✓':''}</button><div class="itinMain" onclick="openQuickSheet('attraction',${bi},'${id}')"><div class="itinName">${displayName(x)}</div>${meta?`<div class="itinMeta">${escAttr(meta)}</div>`:''}</div><button class="itinMore" aria-label="More options" onclick="openQuickSheet('attraction',${bi},'${id}')">•••</button></div>`;
++ const x=BY_ID[id];if(!x)return'';const done=status(id,currentDay)==='done',b=DAYS[currentDay].blocks[bi];
++ const meta=[x.height?`Height ${x.height}`:'',moved?'Moved here':''].filter(Boolean);const st=x.kind==='show'?getChosenShowTime(b,id):'';const lp=llPlan(id);if(st)meta.unshift(from24Time(st));if(lp.start)meta.push('LL '+llWindowText(id));
++ const mapLink=x.map&&MAPS[x.park]?`<a href="${MAPS[x.park]}" target="_blank" rel="noopener">Map ${x.map}</a>`:'';
++ if(FAMILY_VIEW)return `<div class="itinItem${done?' done':''}"><div class="itinMain"><div class="itinName">${displayName(x)}</div><div class="itinMapMeta">${meta.length?`<span>${escAttr(meta.join(' · '))}</span>`:''}${mapLink}</div></div></div>`;
++ return `<div class="itinItem${done?' done':''}" data-bi="${bi}" data-id="${id}" draggable="true" ondragstart="itinDragStart(event,${bi},'${id}')" ondragend="itinDragEnd(event)" ondragover="itinDragOverItem(event)" ondragleave="itinDragLeaveItem(event)" ondrop="itinDropOnItem(event,${bi},'${id}')"><span class="dragHandle" title="Drag to move" onpointerdown="touchItinStart(event,${bi},'${id}')">☰</span><button class="itinCheck" aria-label="${done?'Mark not completed':'Mark completed'}" onclick="quickToggleDone('${id}')">${done?'✓':''}</button><div class="itinMain" onclick="openQuickSheet('attraction',${bi},'${id}')"><div class="itinName">${displayName(x)}</div><div class="itinMapMeta">${meta.length?`<span>${escAttr(meta.join(' · '))}</span>`:''}${mapLink}</div></div><button class="itinMore" aria-label="More options" onclick="openQuickSheet('attraction',${bi},'${id}')">•••</button></div>`;
++}
++
++function renderItineraryMeal(mid,bi,slot){
++ const m=MEALS[mid];if(!m)return'';const rec=findDiningRecord(m.name),mt=getMealTime(DAYS[currentDay].blocks[bi],slot);const mapUrl=rec&&rec.map?MAPS[diningMapKey(rec.location)]:'';
++ const main=`<div class="quickMealMain"${FAMILY_VIEW?'':` onclick="openQuickSheet('meal',${bi},'${slot}')"`}><div class="quickMealName">${escAttr(m.name)}</div><div class="itinMapMeta">${mt?`<span>${escAttr(from24Time(mt))}</span>`:''}${rec&&rec.map&&mapUrl?`<a href="${mapUrl}" target="_blank" rel="noopener">Map ${rec.map}</a>`:''}</div></div>`;
++ return `<div class="quickMealRow"><div class="quickMealIcon">🍽</div>${main}${rec&&rec.menu?`<a class="cleanMapLink" href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:''}${FAMILY_VIEW?'':`<button class="itinMore" onclick="openQuickSheet('meal',${bi},'${slot}')">•••</button>`}</div>`;
+ }
+-function renderItineraryMeal(mid,bi,slot){const m=MEALS[mid];if(!m)return'';const rec=findDiningRecord(m.name);return `<div class="quickMealRow"><div class="quickMealIcon">🍽</div><div class="quickMealMain" onclick="openQuickSheet('meal',${bi},'${slot}')"><div class="quickMealName">${escAttr(m.name)}</div>${m.meta?`<div class="quickMealMeta">${escAttr(m.meta)}</div>`:''}</div>${rec&&rec.menu?`<a class="cleanMapLink" href="${rec.menu}" target="_blank" rel="noopener">Menu</a>`:''}<button class="itinMore" onclick="openQuickSheet('meal',${bi},'${slot}')">•••</button></div>`}
++
++function renderItineraryReservation(b,bi){if(!b.reservation)return'';const rt=getReservationTime(b);return `<div class="genericReservationRow"><div class="genericReservationIcon">📅</div><div class="genericReservationMain"${FAMILY_VIEW?'':` onclick="openQuickSheet('reservation',${bi})"`}><div class="genericReservationName">Appointment</div><div class="genericReservationMeta">${rt?escAttr(from24Time(rt)):'Time not set'}</div></div>${FAMILY_VIEW?'':`<button class="itinMore" onclick="openQuickSheet('reservation',${bi})">•••</button>`}</div>`}
++
+ 
+ function renderDay(){
+  const d=DAYS[currentDay], carry=carryMapForDay(currentDay);
+  let total=0,done=0;
+- d.blocks.forEach(b=>(b.ids||[]).forEach(id=>{total++;if(status(id,currentDay)==="done")done++}));
+- let h=`<div class="hero"><h1>${escAttr(d.title)}</h1><div class="muted">${escAttr(d.label)}</div><div class="hours">${escAttr(d.hours)}</div><div class="progress"><div class="bar" style="width:${total?done/total*100:0}%"></div></div><div class="dayPrimaryTools"><button class="${remainingOnly?"on":""}" onclick="toggleRemaining()">${remainingOnly?"Show all":"Remaining only"}</button>${d.parks.map(p=>MAPS[p]?`<a href="${MAPS[p]}" target="_blank" rel="noopener">${escAttr(p)} map</a>`:"").join("")}${plannerConnected&&plannerInitialized?`<button onclick="quickAddBlock()">+ Add block</button><span id="quickSaveState" class="quickSaveState"></span>`:""}</div></div>`;
+- const carried=Object.values(carry).flat();
+- if(carried.length)h+=`<div class="carrycard"><h3>Moved to this day</h3>${carried.map(c=>`<div class="carryline"><b>${escAttr(BY_ID[c.id]?.name||c.id)}</b></div>`).join("")}</div>`;
++ d.blocks.forEach(b=>(b.ids||[]).forEach(id=>{total++;if(status(id,currentDay)==='done')done++}));
++ let h=`<div class="hero"><h1>${escAttr(d.title)}</h1><div class="muted">${escAttr(d.label)}</div><div class="hours">${escAttr(d.hours)}</div><div class="progress"><div class="bar" style="width:${total?done/total*100:0}%"></div></div><div class="dayPrimaryTools"><button class="${remainingOnly?'on':''}" onclick="toggleRemaining()">${remainingOnly?'Show all':'Remaining only'}</button>${d.parks.map(p=>MAPS[p]?`<a href="${MAPS[p]}" target="_blank" rel="noopener">${escAttr(p)} map</a>`:'').join('')}${canEditPlanner()?`<button onclick="quickAddBlock()">+ Add block</button><span id="quickSaveState" class="quickSaveState"></span>`:''}</div></div>`;
+  d.blocks.forEach((b,bi)=>{
+    const carriedHere=(carry[bi]||[]).filter(c=>visibleOnDay(c.id));
+    const normal=(b.ids||[]).filter(id=>visibleOnDay(id));
+-   const hasMeal=b.meal||b.meal2||b.reservation;
+-   const userNote=getUserNote(b);
++   const hasMeal=b.meal||b.meal2||b.reservation;const userNote=getUserNote(b);
+    if(remainingOnly&&!carriedHere.length&&!normal.length&&!hasMeal&&!userNote)return;
+-   h+=`<div class="block"><div class="blockhead quickBlockHead"><div class="blockHeadText"><div class="blocktime">${escAttr(b.time||'Flexible')}</div><h2>${escAttr(b.area||'')}</h2></div>${plannerConnected&&plannerInitialized?`<button class="blockMenuBtn" aria-label="Edit time block" onclick="openQuickSheet('block',${bi})">•••</button>`:''}</div>`;
+-   carriedHere.forEach(c=>h+=
